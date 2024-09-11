@@ -1,10 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Routes from './rotas/rotas';
 
 function App() {
   return (
     <div className="divtotal">
+      <Routes/>
     </div>
   );
 }
