@@ -6,18 +6,18 @@ import Navbar from 'react-bootstrap/Navbar';
 
 export default function NavbarComponent()  {
     return (
-        <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: 'var(--primary-color)' }} variant='light'>
+        <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: 'var(--primary-color)' }} variant='dark'>
             <Container>
                 {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */} {/* Podemos usar de botão home depois */}
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="me-auto">
-                    <Nav.Link href="#dashboard">Dashboard</Nav.Link>
-                </Nav>
-                <Nav> 
-                    <Nav.Link href="#entrar">Entrar</Nav.Link>
-                </Nav>
+                    <Nav className="me-auto" style={{ fontSize: 'var(--nav-font-size)'}}>
+                        <Nav.Link href="#dashboard">Dashboard</Nav.Link>
+                    </Nav>
+                    <Nav className="ml-auto"> 
+                        <Nav.Link href="#entrar">Entrar</Nav.Link>
+                    </Nav>
                 </Navbar.Collapse>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             </Container>
         </Navbar>
     )

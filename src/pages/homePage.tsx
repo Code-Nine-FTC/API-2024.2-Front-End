@@ -6,9 +6,6 @@ import styles from '../component/home/Home.module.css';
 const Home = () => {
     return (
         <body>
-            <header className={styles.navbox}>
-                <h1>NavBar</h1>  {/* Método provisório */}
-            </header>
             <main className={styles.main}>
                 <section>
                     <form className={styles.formLimit}>
