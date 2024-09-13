@@ -1,94 +1,38 @@
 @import url('../variable.css');
 
-header {
-    display: flex;
-    justify-content: center;
+.navbox{
     width: 100vw;
     height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: var(--primary-color);
 }
 
-.flex_box{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+
+.main {
     width: 100vw;
     height: 90vh;
-    padding: 2%;
-}
-
-.form_box{
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
-.form_format {
+.flexbox {
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-}
-
-.form_format input {
-    width: 47vw;
-    height: 6vh;
-    border-radius: 0.5rem;
-    border: 0.1px solid var(--form-color);
-    box-shadow: 0 0 0.2rem var(--form-color);
-}
-
-.form:focus {
-    padding-left: 3%;
-}
-
-
-.form_format button {
-    width: 47vw;
-    height: 6vh;
-    border-radius: 0.5rem;
-    border: 0.1px solid var(--form-color);
-    background-color: var(--button-color);
-    color: white;
-}
-
-.form_format label {
-    color: black;
-}
-
-.form_format ::placeholder {
-    font-size: large;
-    padding-left: 3%;
-    color: var(--form-color);
-}
-
-.form_format input[type="date"] {
-    display: flex;
-}
-
-.projects_box {
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    padding: 3rem;
 }
 
-.projects_list {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    width: 47vw;
-    height: 6vh;
-    border-bottom: 0.1px solid var(--form-color);
-    margin-bottom: 3%;
-}
-
-.projects_list a {
-    color: black;
-    text-decoration: none;
+.formLimit {
+    width: 100%;
+    height: 100%;
+    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 1.5rem;
+    padding: auto;
 }
