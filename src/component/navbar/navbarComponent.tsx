@@ -3,18 +3,39 @@ import { useState, useEffect } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
+import { getAdminNavigationItems, getCoordenadorNavigationItems } from './navItens';
 
-export default function NavbarComponent()  {
+interface NavbarComponentProps {
+    tipoUsuario: string;
+}
+
+const NavbarComponent: React.FC<NavbarComponentProps> = ({tipoUsuario}) => {
+    const logado = true
+    const getNavigationItems = () => {
+        switch (tipoUsuario) {
+            case 'admin':
+                return getAdminNavigationItems();
+            case 'coordenador':
+                return getCoordenadorNavigationItems();
+            default:
+                return [];
+        }
+    };
+
     return (
         <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: 'var(--primary-color)' }} variant='dark'>
-            <Container>
+            <Container fluid>
                 {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */} {/* Podemos usar de botão home depois */}
                 <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="me-auto" style={{ fontSize: 'var(--nav-font-size)'}}>
+                    <Nav style={{ fontSize: 'var(--nav-font-size)'}}>
                         <Nav.Link href="#dashboard">Dashboard</Nav.Link>
+                        {getNavigationItems().map((item, index) => (
+                            <Nav.Link key={index} href={item.path}>{item.label}</Nav.Link>
+                        ))}
                     </Nav>
-                    <Nav className="ml-auto"> 
-                        <Nav.Link href="#entrar">Entrar</Nav.Link>
+                    <Nav className='ms-auto'> 
+                        {logado ? <Nav.Link href="#sair">Sair</Nav.Link> 
+                        : <Nav.Link href="#entrar">Entrar</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -22,3 +43,5 @@ export default function NavbarComponent()  {
         </Navbar>
     )
 }
+
+export default NavbarComponent;

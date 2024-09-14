@@ -4,6 +4,16 @@
     --form-color: #E1E0E0;
     --button-color: #003AB8;
     --nav-link-color: #FFFFFF;
+    --nav-link-hover-color: #5b8be5;
 
     --nav-font-size: 1em;
+    --title-centralizado: center;
+    --title-font-size: 1.8em;
+    --title-margin-top: 1%;
+
+    --seta-voltar-color: #003AB8;
+    --seta-voltar-color-branca: #FFFFFF;
+    --seta-voltar-size: 2em;
+    --seta-voltar-margin-left: 1.5%;
+    --seta-voltar-margin-top: 1%;
 }
