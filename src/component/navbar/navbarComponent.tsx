@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import { getAdminNavigationItems, getCoordenadorNavigationItems } from './navItens';
+import { getAdminNavigationItems} from './navItens';
 
 interface NavbarComponentProps {
     tipoUsuario: string;
@@ -15,8 +15,6 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({tipoUsuario}) => {
         switch (tipoUsuario) {
             case 'admin':
                 return getAdminNavigationItems();
-            case 'coordenador':
-                return getCoordenadorNavigationItems();
             default:
                 return [];
         }

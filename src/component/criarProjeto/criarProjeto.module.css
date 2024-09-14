@@ -9,7 +9,7 @@
 }
 
 .adicionarArquivo label {
-    width: fit-content;
+    width: 100%;
 }
 
 .adicionarArquivo label, label img {

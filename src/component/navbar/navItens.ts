@@ -6,9 +6,3 @@ export const getAdminNavigationItems = (): NavigationItemInterface[] => {
         {label: "Gerenciar contas", path: "/gerenciarContas"},
     ]
 };
-
-export const getCoordenadorNavigationItems = (): NavigationItemInterface[] => {
-    return [
-        {label: "Adicionar projeto", path: "/adicionarProjeto"},
-    ]
-}

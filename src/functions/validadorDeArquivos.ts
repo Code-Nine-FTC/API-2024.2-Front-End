@@ -2,6 +2,7 @@ interface ValidacaoResultado {
     resultado: boolean;
     mensagem?: string;
     arquivos?: File[];
+    tipo?: string;
 }
 
 const ValidadorDeArquivos = (arquivos: File[]): ValidacaoResultado[] => {
@@ -18,7 +19,7 @@ const ValidadorDeArquivos = (arquivos: File[]): ValidacaoResultado[] => {
             return {resultado: false, mensagem: `Arquivo muito grande: ${arquivo.name}. \n
                 Escolha arquivos de até 5mb!`};
         }
-        return {resultado: true, arquivos: [arquivo]};
+        return {resultado: true, arquivos: [arquivo], tipo: arquivo.type};
     });
 
     return arquivosValidos;
