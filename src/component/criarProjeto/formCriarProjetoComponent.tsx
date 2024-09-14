@@ -5,6 +5,7 @@ import attach from '../../assets/criarProjeto/attach.svg';
 import arquivoIcon from '../../assets/criarProjeto/arquivo.svg';
 import ValidadorDeArquivos from "../../functions/validadorDeArquivos";
 import SweetAlert2 from 'sweetalert2';
+import Calendar from "../date/calendarioComponent";
 
 interface MensagemValidacao {
     titulo: string
@@ -79,6 +80,7 @@ const CriarProjetoComponent = () => {
                         className="mb-3"
                         style={{width: '48vw',
                             color: '#9C9C9C',
+                            zIndex: 1,
                         }}
                     >
                         <Form.Control type="text" placeholder="Titulo do projetor" />
@@ -89,6 +91,7 @@ const CriarProjetoComponent = () => {
                         className="mb-3"
                         style={{width: '48vw',
                             color: '#9C9C9C',
+                            zIndex: 1,
                         }}
                     >
                         <Form.Control type="text" placeholder="Referência de projeto" />
@@ -99,6 +102,7 @@ const CriarProjetoComponent = () => {
                         className="mb-3"
                         style={{width: '48vw',
                             color: '#9C9C9C',
+                            zIndex: 1,
                         }}
                     >
                         <Form.Control type="text" placeholder="Empresa" />
@@ -109,6 +113,7 @@ const CriarProjetoComponent = () => {
                         className="mb-3"
                         style={{width: '48vw',
                             color: '#9C9C9C',
+                            zIndex: 1,
                         }}
                     >
                         <Form.Control type="text" placeholder="Objeto" />
@@ -119,6 +124,7 @@ const CriarProjetoComponent = () => {
                         className="mb-3"
                         style={{width: '48vw',
                             color: '#9C9C9C',
+                            zIndex: 1,
                         }}
                     >
                         <Form.Control as="textarea" rows={6} placeholder="Descrição" />
@@ -129,6 +135,7 @@ const CriarProjetoComponent = () => {
                         className="mb-3"
                         style={{width: '48vw',
                             color: '#9C9C9C',
+                            zIndex: 1,
                         }}
                     >
                         <Form.Control type="text" placeholder="Coordenador" />
@@ -139,36 +146,12 @@ const CriarProjetoComponent = () => {
                         className="mb-3"
                         style={{width: '48vw',
                             color: '#9C9C9C',
+                            zIndex: 1,
                         }}
                     >
                         <Form.Control type="text" placeholder="Valor do projeto" />
                     </FloatingLabel>
-                    <FloatingLabel 
-                        label="Data de início" 
-                        controlId="floatingTextarea"
-                        className="mb-3"
-                        style={{width: '48vw',
-                            color: '#9C9C9C',
-                        }}
-                    >
-                         <Form.Control 
-                            type="date" 
-                            placeholder="Data de início" 
-                        />
-                    </FloatingLabel>
-                    <FloatingLabel 
-                        label="Data de término" 
-                        controlId="floatingTextarea"
-                        className="mb-3"
-                        style={{width: '48vw',
-                            color: '#9C9C9C',
-                        }}
-                    >
-                         <Form.Control 
-                            type="date" 
-                            placeholder="Data de término" 
-                        />
-                    </FloatingLabel>
+                    <Calendar />
                     <div className={styles.adicionarArquivo}>
                         <label htmlFor="enviararquivo">
                             <img src={attach} alt="Adicionar arquivo" />

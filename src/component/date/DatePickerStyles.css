@@ -2,7 +2,11 @@
 
 /* Estilo geral do DatePicker */
 .react-datepicker-wrapper {
-    width: 10vw !important;
+    width: 45.3vw !important;
+}
+
+.custom-datepicker {
+    height: 8vh !important;
 }
 
 .react-datepicker__input-container input {
@@ -11,6 +15,9 @@
     border: 1px solid #E1E0E0 !important;
     border-radius: 4px !important;
     font-size: 16px !important;
+}
+.react-datepicker__input-container input::placeholder {
+    color: #9C9C9C !important; /* Muda a cor do placeholder */
 }
 
 /* Estilo do calendário */

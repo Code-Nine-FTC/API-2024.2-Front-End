@@ -14,12 +14,11 @@ const Calendario = () => {
         <>
         <div>
             <Form.Group controlId="formDate">
-                <Form.Label>Escolha uma data inicial e final</Form.Label>
                     <InputGroup className='mb-3'>
                         <DatePicker
                             selected={startDate}
                             onChange={(date: Date | null) => setStartDate(date)}
-                            className="form-control"
+                            className="form-control custom-datepicker"
                             dateFormat="dd/MM/yyyy"
                             placeholderText="Data Inicial"
                             showYearDropdown
@@ -27,17 +26,17 @@ const Calendario = () => {
                             selectsStart
                             startDate={startDate || undefined}
                             endDate={endDate || undefined}
+                            maxDate={endDate || undefined}
                         />
                         <InputGroup.Text>
                             <FaCalendarAlt />
                         </InputGroup.Text>
                     </InputGroup>
-            <br />
                     <InputGroup className='mb-3'>
                         <DatePicker
                             selected={endDate}
                             onChange={(date: Date | null) => setEndDate(date)}
-                            className="form-control"
+                            className="form-control custom-datepicker"
                             dateFormat="dd/MM/yyyy"
                             placeholderText="Data Final"
                             selectsEnd

@@ -14,7 +14,7 @@ const Rotas: FC = () => {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home/>} />
-                <Route path="/adicionarProjeto"element={<CriarProjeto/>} />
+                <Route path="/adicionarprojeto"element={<CriarProjeto/>} />
                 <Route path="/cadastrousuario"element={<Cadastro/>} />
                 <Route path="/login"element={<Login/>} />
             </Routes>

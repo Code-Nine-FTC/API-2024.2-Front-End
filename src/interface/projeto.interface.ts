@@ -8,3 +8,5 @@ interface CadastrarProjeto {
     idCliente: number;
     idGerente: number;
 }
+
+export{}

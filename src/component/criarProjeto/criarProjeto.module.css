@@ -9,7 +9,7 @@
 }
 
 .adicionarArquivo label {
-    width: 100%;
+    width: fit-content;
 }
 
 .adicionarArquivo label, label img {
@@ -20,11 +20,11 @@
     margin-left: 1%;
 }
 
+.adicionarArquivo label:hover span,
+.adicionarArquivo label:hover img,
+.adicionarArquivo label img:hover,
 .adicionarArquivo label span:hover {
     color: var(--nav-link-hover-color);
-}
-
-.adicionarArquivo label img:hover{
     filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg); 
 }
 

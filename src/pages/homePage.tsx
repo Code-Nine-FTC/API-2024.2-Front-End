@@ -1,23 +1,33 @@
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Calendario from '../component/date/calendarioComponent';
 import styles from '../component/home/Home.module.css';
+import { Button } from 'react-bootstrap';
 
 const Home = () => {
+    const [ isFormVisible, setIsFormVisible ] = useState(false);
+
+    const toggleFormVisibility = () => {
+        setIsFormVisible(!isFormVisible);
+    };
+
     return (
         <body>
             <main className={styles.main}>
+                <h1 className={styles.titulo}> Portal de Transparencia </h1>
                 <section>
+                    { isFormVisible ? (
+                    <div className={`${styles.formContainer} ${isFormVisible ? styles.formOpen : styles.formClosed}`}> 
                     <form className={styles.formLimit}>
                         <div className={styles.flexbox}>
                             <FloatingLabel
                                 controlId="floatingInput"
                                 label="Referência do Projeto" 
                                 className="mb-3"
-                                style={{width: '44vw',
-                                    color: '#000000',
+                                style={{width: '48vw',
+                                    color: '#9C9C9C',
                                     zIndex: 1,
-                                    opacity: 0.5,
                                 }}
                             >
                                 <Form.Control type="text" placeholder="Referência do Projeto" />
@@ -26,10 +36,9 @@ const Home = () => {
                                 label="Coordenador" 
                                 controlId="floatingInput"
                                 className='mb-3'
-                                style={{width: '44vw',
-                                    color: '#000000',
+                                style={{width: '48vw',
+                                    color: '#9C9C9C',
                                     zIndex: 1,
-                                    opacity: 0.5,
                                 }}
                             >
                                 <Form.Control type="text" placeholder="Coordenador" />
@@ -38,10 +47,9 @@ const Home = () => {
                                 controlId="floatingInput"
                                 label="Classificação"
                                 className="mb-3"
-                                style={{width: '44vw',
-                                    color: '#000000',
+                                style={{width: '48vw',
+                                    color: '#9C9C9C',
                                     zIndex: 1,
-                                    opacity: 0.5,
                                 }}
                             >
                                 <Form.Control type="text" placeholder="Classificação" />
@@ -50,19 +58,40 @@ const Home = () => {
                                 controlId="floatingInput"
                                 label="Situação do Projeto"
                                 className="mb-3"
-                                style={{width: '44vw',
-                                    color: '#000000',
+                                style={{width: '48vw',
+                                    color: '#9C9C9C',
                                     zIndex: 1,
-                                    opacity: 0.5,
                                 }}
                             >
                                 <Form.Control type="text" placeholder="Situação do Projeto" />
                             </FloatingLabel>
-                            <Calendario />    
+                            <Calendario /> 
                         </div>
                         
+                        <div className={styles.lateralform}>
+                            <p onClick={toggleFormVisibility} style={{ cursor: 'pointer'}}>
+                                Fechar filtros X 
+                            </p>
+                            {/* Implementar Feat para fechar aba de filtros */}
+                            <div className={styles.botaoEnviar}>
+                                <Button type="submit">
+                                    Enviar
+                                </Button>
+                            </div>
+                        </div>
                     </form>
+                    </div>
+                    ):(
+                        <div className={styles.botaoFiltro}>
+                            <Button onClick={toggleFormVisibility}>
+                                Abrir Filtros
+                            </Button>
+                        </div>)
+                    }
+                    
+
                 </section>
+
             </main>
         </body>
     )

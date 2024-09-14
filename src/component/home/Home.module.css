@@ -1,12 +1,9 @@
 @import url('../variable.css');
 
-.navbox{
-    width: 100vw;
-    height: 10vh;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--primary-color);
+body{
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
 }
 
 
@@ -14,25 +11,52 @@
     width: 100vw;
     height: 90vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
 }
 
-.flexbox {
-    width: 100%;
-    height: 100%;
+.titulo{
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 2%;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.flexbox {
+    display: flex;
     flex-direction: column;
     padding: 3rem;
 }
 
 .formLimit {
-    width: 100%;
-    height: 100%;
-    border: 0.5px solid rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: row;
+    width: 97vw;
+    height: 68vh;
+    background-color: rgba(247, 247, 247, 0.58);
+    border: 0.5px solid rgba(0, 0, 0, 0.32);
     border-radius: 1.5rem;
     padding: auto;
+    box-shadow: 0px 0px 10px 0px #9C9C9C;
+}
+
+.lateralform {
+    display: flex;
+    flex-direction: column;
+    margin-left: 6%;
+    margin-top: 6%;
+    width: 30vw;
+    padding: 2rem;
+}
+
+.botaoEnviar button {
+    width: 100%;
+}
+
+.botaoFiltro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
 }
