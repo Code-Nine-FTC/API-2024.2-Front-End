@@ -1,7 +1,9 @@
 import{toast } from 'react-toastify';
 import React, { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import verificaCPFValido from '../functions/verificaCpf';
+import verificaEmailValido from '../functions/verificaEmail';
+import encryptPassword from '../functions/criptografaSenha';
 
 function Login() {
     const navigate = useNavigate()
