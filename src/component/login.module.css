@@ -1,0 +1,30 @@
+@import url('./variable.css');
+
+.text{
+    color: var(--nav-link-color);
+    text-align: center;
+}
+
+
+.loginForm {
+    background-color: var(--form-color); /* Cor de fundo do formulário */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30rem;
+    margin: 0 auto; /* Centraliza o formulário horizontalmente */
+    padding: 2rem; /* Adiciona espaçamento interno */
+    border-radius: 10px; /* Define as bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma leve sombra para destacar */
+}
+
+/* Centraliza verticalmente na página */
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    background-color: var(--primary-color);
+    justify-content: center;
+    align-items: center;
+}

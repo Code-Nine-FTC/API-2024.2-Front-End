@@ -3,6 +3,7 @@ import React, { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import verificaCPFValido from '../functions/verificaCpf';
 import verificaEmailValido from '../functions/verificaEmail';
+import styles from '../component/login.module.css'
 import encryptPassword from '../functions/criptografaSenha';
 
 function Login() {
@@ -42,9 +43,9 @@ function Login() {
     }
 
     return (
-        <div className="">
-            <h1>Login</h1>
-            <form className="" onSubmit={handleSubmit}>
+        <div className={styles.mainBody}>
+            <h1 className={styles.text}>Login</h1>
+            <form className={styles.loginForm} onSubmit={handleSubmit}>
                 <label htmlFor="">Email</label> <br />
                 <input type="text"
                 placeholder="Insira seu email" 
