@@ -3,7 +3,7 @@ import React, { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import verificaCPFValido from '../functions/verificaCpf';
 import verificaEmailValido from '../functions/verificaEmail';
-import styles from '../component/login.module.css'
+import styles from '../component/login/login.module.css'
 import encryptPassword from '../functions/criptografaSenha';
 
 function Login() {
@@ -43,6 +43,7 @@ function Login() {
     }
 
     return (
+      <body className={styles.body}>
         <div className={styles.mainBody}>
             <h1 className={styles.text}>Login</h1>
             <form className={styles.loginForm} onSubmit={handleSubmit}>
@@ -66,6 +67,7 @@ function Login() {
                 </div>
             </form>
         </div>
+      </body>
     )
 }
 
