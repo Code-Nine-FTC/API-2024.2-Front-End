@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { FaCalendarAlt } from 'react-icons/fa';
 import '../date/DatePickerStyles.css';
 
+interface CalendarioProps {
+    startDate: Date | null;
+    endDate: Date | null;
+    setStartDate: (date: Date | null) => void;
+    setEndDate: (date: Date | null) => void;
+}
+const Calendario: React.FC<CalendarioProps> = ({ startDate, endDate, setStartDate, setEndDate }) => {
 
-const Calendario = () => {
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
-    
+    // Função para lidar com mudanças de data, convertendo 'null' para 'undefined', porque a merda da biblioteca retorna 'null' ao invés de 'undefined'
+    //const handleStartDateChange = (date: Date | null) => {
+    //    setStartDate(date);
+    //};
+
+    //const handleEndDateChange = (date: Date | null) => {
+    //    setEndDate(date);
+    //};
+
+
     return (
         <>
         <div>
@@ -32,6 +45,7 @@ const Calendario = () => {
                             <FaCalendarAlt />
                         </InputGroup.Text>
                     </InputGroup>
+
                     <InputGroup className='mb-3'>
                         <DatePicker
                             selected={endDate}

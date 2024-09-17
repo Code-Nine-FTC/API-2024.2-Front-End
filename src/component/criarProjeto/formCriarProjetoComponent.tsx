@@ -13,6 +13,12 @@ interface MensagemValidacao {
     titulo: string
     texto: string
 }
+interface CalendarioProps {
+    startDate: Date | null;
+    endDate: Date | null;
+    setStartDate: Dispatch<SetStateAction<Date | null>>;
+    setEndDate: Dispatch<SetStateAction<Date | null>>;
+}
 
 const CriarProjetoComponent = () => {
     // const [arquivosEscolhidos, setArquivosEscolhidos] = useState<File[]>([]);
@@ -25,8 +31,8 @@ const CriarProjetoComponent = () => {
     const [descricao, setDescricao] = useState('');
     const [coordenador, setCoordenador] = useState('');
     const [valor, setValor] = useState('');
-    const [dataInicio, setDataInicio] = useState('');
-    const [dataFim, setDataFim] = useState('');
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
     const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
     const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
     const [isValorInvalido, setIsValorInvalido] = useState(false);
@@ -63,14 +69,15 @@ const CriarProjetoComponent = () => {
         projeto.append('descricao', descricao);
         projeto.append('coordenador', coordenador);
         projeto.append('valor', valorFloat.toString());
-        projeto.append('dataInicio', new Date(dataInicio).toISOString());
-        projeto.append('dataFim', new Date(dataFim).toISOString());
+        projeto.append('dataInicio', startDate?.toISOString() || '');
+        projeto.append('dataFim', endDate?.toISOString() || '');
         if (resumoPdf) projeto.append('resumoPdf', resumoPdf);
         if (resumoExcel) projeto.append('resumoExcel', resumoExcel);
         
         try {
             const resposta = await CadastrarProjetoFunction(projeto);
             if (resposta.status === 200) {
+                console.log("Projeto cadastrado com sucesso");
                 SweetAlert2.fire({
                     icon: 'success',
                     title: 'Projeto cadastrado com sucesso!',
@@ -315,12 +322,18 @@ const CriarProjetoComponent = () => {
                             placeholder="Valor do projeto"
                             value={valor}
                             required
+                            min="0"
                             onChange={(e) => setValor(e.target.value)}/>
                             <Form.Control.Feedback type="invalid">
                                 Por favor, insira o valor do projeto.
                             </Form.Control.Feedback>
                     </FloatingLabel>
-                    <Calendario/>
+                    <Calendario 
+                        startDate={startDate}
+                        endDate={endDate}
+                        setStartDate={setStartDate}
+                        setEndDate={setEndDate}
+                    />
                     <div className={styles.adicionarArquivo}>
                         <label htmlFor="enviararquivo">
                             <img src={attach} alt="Adicionar arquivo" />

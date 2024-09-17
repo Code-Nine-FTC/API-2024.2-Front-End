@@ -6,7 +6,10 @@ import styles from '../component/home/Home.module.css';
 import { Button } from 'react-bootstrap';
 
 const Home = () => {
+    const [ handleSubmit ] = useState();
     const [ isFormVisible, setIsFormVisible ] = useState(false);
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
 
     const toggleFormVisibility = () => {
         setIsFormVisible(!isFormVisible);
@@ -19,7 +22,7 @@ const Home = () => {
                 <section>
                     { isFormVisible ? (
                     <div className={`${styles.formContainer} ${isFormVisible ? styles.formOpen : styles.formClosed}`}> 
-                    <form className={styles.formLimit}>
+                    <form className={styles.formLimit} onSubmit={ handleSubmit } method="POST">
                         <div className={styles.flexbox}>
                             <FloatingLabel
                                 controlId="floatingInput"
@@ -65,17 +68,21 @@ const Home = () => {
                             >
                                 <Form.Control type="text" placeholder="Situação do Projeto" />
                             </FloatingLabel>
-                            <Calendario /> 
+                            <Calendario 
+                                startDate={startDate}
+                                endDate={endDate}
+                                setStartDate={setStartDate}
+                                setEndDate={setEndDate}/> 
                         </div>
                         
                         <div className={styles.lateralform}>
-                            <p onClick={toggleFormVisibility} style={{ cursor: 'pointer'}}>
-                                Fechar filtros X 
-                            </p>
+                            <Button onClick={toggleFormVisibility} style={{ cursor: 'pointer'}}>
+                                X 
+                            </Button>
                             {/* Implementar Feat para fechar aba de filtros */}
                             <div className={styles.botaoEnviar}>
                                 <Button type="submit">
-                                    Enviar
+                                    Procurar
                                 </Button>
                             </div>
                         </div>
