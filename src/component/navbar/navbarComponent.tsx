@@ -27,6 +27,7 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({tipoUsuario}) => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav style={{ fontSize: 'var(--nav-font-size)'}}>
                         <Nav.Link href="/">Home</Nav.Link>
+                        <Nav.Link href="dashboard">Dashboard</Nav.Link>
                         {getNavigationItems().map((item, index) => (
                             <Nav.Link key={index} href={item.path}>{item.label}</Nav.Link>
                         ))}
