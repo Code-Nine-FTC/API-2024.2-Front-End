@@ -7,7 +7,7 @@
 
 
 .loginForm {
-    background-color: var(--form-color); /* Cor de fundo do formulário */
+    background-color: var(--nav-link-color); /* Cor de fundo do formulário */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,4 +27,48 @@ body, html {
     background-color: var(--primary-color);
     justify-content: center;
     align-items: center;
+}
+
+input{
+    width: 20rem;
+    height: 3rem;
+    background-color: white;
+    border: 1px solid var(--form-color);
+    outline: none;
+    border-radius: 10px;
+}
+
+.submitbutton {
+    display: flex; /* Adiciona o display flex para o botão */
+    justify-content: center; /* Centraliza o conteúdo dentro do botão */
+    align-items: center; /* Alinha verticalmente se necessário */
+    width: 100%; /* Faz com que o botão use a largura total da caixa */
+    height: 3rem; /* Para garantir a altura consistente */
+    background-color: var(--button-color, #007bff); /* Cor de fundo do botão, caso tenha uma variável definida */
+    color: white; /* Cor do texto no botão */
+    border: none; /* Remove bordas */
+    border-radius: 10px; /* Bordas arredondadas */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    margin-top: 1rem;
+}
+
+/* Para um hover suave */
+.submitbutton:hover {
+    background-color: var(--button-hover-color, #0056b3); /* Cor ao passar o mouse */
+}
+
+.input_container {
+    display: flex;
+    flex-direction: column; /* Alinha em coluna */
+}
+
+label {
+    margin-bottom: 0.1rem; /* Reduzido para 0.25rem para aproximar o label do input */
+}
+
+.userico {
+    width: 5rem; /* Define a largura da imagem */
+    margin: 0 auto; /* Centraliza a imagem horizontalmente */
+    display: block; /* Garante que a imagem seja um bloco para centralização */
+    margin-bottom: 1rem;
 }

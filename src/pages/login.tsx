@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import verificaCPFValido from '../functions/verificaCpf';
 import verificaEmailValido from '../functions/verificaEmail';
 import styles from '../component/login.module.css'
+import {useRef, useEffect} from 'react';
 import encryptPassword from '../functions/criptografaSenha';
+import UserIcon from '../assets/login/userico.svg'
 
 function Login() {
     const navigate = useNavigate()
@@ -44,22 +46,28 @@ function Login() {
 
     return (
         <div className={styles.mainBody}>
+            <img src={UserIcon} className={styles.userico}/>
             <h1 className={styles.text}>Login</h1>
             <form className={styles.loginForm} onSubmit={handleSubmit}>
+              <div className={styles.input_container}>
                 <label htmlFor="">Email</label> <br />
                 <input type="text"
                 placeholder="Insira seu email" 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                />{" "} <br />
-                <label htmlFor="">Senha</label> <br />
-                <input type="password"
-                placeholder="Insira sua senha" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 />{" "}
+              </div>
+                 <br />
+                <div className={styles.input_container}>
+                  <label htmlFor="">Senha</label> <br />
+                  <input type="password"
+                  placeholder="Insira sua senha" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  />{" "}
+                </div>
                 <div>
-                    <button type="submit" className="">Entrar</button>
+                    <button type="submit" className={styles.submitbutton}>Entrar</button>
                     <br/>
                     <p className=""><Link to="/esquecisenha">Esqueceu a senha?</Link>
                     </p>
