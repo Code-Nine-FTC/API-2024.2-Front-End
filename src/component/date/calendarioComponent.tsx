@@ -13,16 +13,6 @@ interface CalendarioProps {
 }
 const Calendario: React.FC<CalendarioProps> = ({ startDate, endDate, setStartDate, setEndDate }) => {
 
-    // Função para lidar com mudanças de data, convertendo 'null' para 'undefined', porque a merda da biblioteca retorna 'null' ao invés de 'undefined'
-    //const handleStartDateChange = (date: Date | null) => {
-    //    setStartDate(date);
-    //};
-
-    //const handleEndDateChange = (date: Date | null) => {
-    //    setEndDate(date);
-    //};
-
-
     return (
         <>
         <div>

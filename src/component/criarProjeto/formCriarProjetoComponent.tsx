@@ -8,7 +8,7 @@ import SweetAlert2 from 'sweetalert2';
 import { CadastrarProjeto } from "../../interface/projeto.interface";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
 import Calendario from "../date/calendarioComponent";
-
+import { useNavigate } from 'react-router-dom';
 interface MensagemValidacao {
     titulo: string
     texto: string
@@ -22,6 +22,8 @@ interface CalendarioProps {
 
 const CriarProjetoComponent = () => {
     // const [arquivosEscolhidos, setArquivosEscolhidos] = useState<File[]>([]);
+    const navigate = useNavigate()
+
     const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({titulo: '', texto: ''});
     const [camposValidados, setValidado] = useState(false);
     const [tituloProjeto, setTituloProjeto] = useState('');	
@@ -190,7 +192,7 @@ const CriarProjetoComponent = () => {
     return (
         <>
             <div className="tituloSetaVoltar">
-                <span className="setaVoltar"> &#x2190;</span>
+                <span className="setaVoltar" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}> &#x2190;</span>
                 <h1 className="titulo"> Adicionar projeto </h1>
             </div>
             <section className={styles.formMain}>
