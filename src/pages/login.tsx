@@ -3,7 +3,7 @@ import React, { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import verificaCPFValido from '../functions/verificaCpf';
 import verificaEmailValido from '../functions/verificaEmail';
-import styles from '../component/login.module.css'
+import styles from '../component/login/login.module.css'
 import {useRef, useEffect} from 'react';
 import encryptPassword from '../functions/criptografaSenha';
 import UserIcon from '../assets/login/userico.svg'
