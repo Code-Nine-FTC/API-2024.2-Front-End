@@ -103,6 +103,10 @@ const Home = () => {
                                 endDate={endDate}
                                 setStartDate={setStartDate}
                                 setEndDate={setEndDate}
+                                startDateValid={true}
+                                endDateValid={true}
+                                validarDatas={() => {}}
+                                cadastro={false}
                             /> 
                             <FloatingLabel
                                 controlId="floatingSelectGrid"

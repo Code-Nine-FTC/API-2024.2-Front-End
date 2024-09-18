@@ -38,6 +38,8 @@ const CriarProjetoComponent = () => {
     const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
     const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
     const [isValorInvalido, setIsValorInvalido] = useState(false);
+    const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
+    const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -95,6 +97,11 @@ const CriarProjetoComponent = () => {
                 });
             }
         }
+
+    const validarDatas = () => {
+        setStartDateValid(startDate !== null);
+        setEndDateValid(endDate !== null && (!startDate || endDate >= startDate));
+    };
 
     const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>, setState?: Dispatch<SetStateAction<File[]>>) => {
         const arquivo = event.target.files ? event.target.files[0] : null;
@@ -331,6 +338,10 @@ const CriarProjetoComponent = () => {
                         endDate={endDate}
                         setStartDate={setStartDate}
                         setEndDate={setEndDate}
+                        startDateValid={startDateValid}
+                        endDateValid={endDateValid}
+                        validarDatas={validarDatas}
+                        cadastro={true}
                     />
                     <div className={styles.adicionarArquivo}>
                         <label htmlFor="enviararquivo">
