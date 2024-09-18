@@ -98,44 +98,62 @@ const Home = () => {
                                     onChange={(e) => setCoordenador(e.target.value)}
                                  />
                             </FloatingLabel>
-                            <FloatingLabel
-                                controlId="floatingInput"
-                                label="Classificação"
-                                className="mb-3"
-                                style={{width: '48vw',
-                                    color: '#9C9C9C',
-                                    zIndex: 1,
-                                }}
-                            >
-                                <Form.Control 
-                                    type="text" 
-                                    placeholder="Classificação"
-                                    value={classificacao}
-                                    onChange={(e) => setClassificacao(e.target.value) }    
-                                />
-                            </FloatingLabel>
-                            <FloatingLabel
-                                controlId="floatingInput"
-                                label="Situação do Projeto"
-                                className="mb-3"
-                                style={{width: '48vw',
-                                    color: '#9C9C9C',
-                                    zIndex: 1,
-                                }}
-                            >
-                                <Form.Control 
-                                    type="text" 
-                                    placeholder="Situação do Projeto"
-                                    value={projetosituacao}
-                                    onChange={(e) => setProjetoSituacao(e.target.value)}
-                                />
-                            </FloatingLabel>
                             <Calendario 
                                 startDate={startDate}
                                 endDate={endDate}
                                 setStartDate={setStartDate}
                                 setEndDate={setEndDate}
                             /> 
+                            <FloatingLabel
+                                controlId="floatingSelectGrid"
+                                label="Classificação"
+                                className='mb-3'
+                                style={{width: '48vw',
+                                    color: '#9C9C9C',
+                                    zIndex: 0,
+                                }}
+                                >
+                                <Form.Select                                     
+                                    aria-label="Floating label select example"
+                                    value={classificacao}
+                                    onChange={(e) => setClassificacao(e.target.value)}
+                                    style={{fontSize: 14,
+                                    color: '#9C9C9C',
+                                    zIndex: 1,
+                                }}>
+                                    <option disabled selected>Selecionar uma Classificação</option>
+                                    <option value=''>Qualquer</option>
+                                    <option value="Outros">AS, OF, PC e/ou outros</option>
+                                    <option value="Contrato">Contrato</option>
+                                    <option value="Patrocínio">Patrocínio</option>
+                                    <option value="Termo de Cooperação">Termo de Cooperação</option>
+                                    <option value="Termo de Outorga">Termo de Outorga</option>
+                                </Form.Select>
+                            </FloatingLabel>
+                            <FloatingLabel
+                                controlId="floatingSelectGrid"
+                                label="Situação do Projeto"
+                                className='mb-3'
+                                style={{width: '48vw',
+                                    color: '#9C9C9C',
+                                    zIndex: 0,
+                                }}
+                                >
+                                <Form.Select 
+                                    aria-label="Floating label select example" 
+                                    value={projetosituacao}
+                                    onChange={(e) => setProjetoSituacao(e.target.value)}
+                                    style={{fontSize: 14,
+                                    color: '#9C9C9C',
+                                    zIndex: 1,
+                                }}>
+                                    <option disabled selected>Selecionar uma Situação</option>
+                                    <option value=''>Todos</option>
+                                    <option value="Em Aberto">Em Aberto</option>
+                                    <option value="Em Andamento">Em Andamento</option>
+                                    <option value="Concluído">Concluído</option>
+                                </Form.Select>
+                            </FloatingLabel>
                         </div>
                         
                         <div className={styles.lateralform}>
