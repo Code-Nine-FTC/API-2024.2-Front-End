@@ -1,4 +1,4 @@
-import { Button, FloatingLabel, Form} from "react-bootstrap";
+import { Button, FloatingLabel, Form, FormControl, InputGroup} from "react-bootstrap";
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react'
 import styles from './criarProjeto.module.css';
 import attach from '../../assets/criarProjeto/attach.svg';
@@ -9,6 +9,8 @@ import { CadastrarProjeto } from "../../interface/projeto.interface";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from 'react-router-dom';
+import separarMensagens from "../../functions/separarMensagens";
+import { set } from "date-fns";
 interface MensagemValidacao {
     titulo: string
     texto: string
@@ -37,6 +39,7 @@ const CriarProjetoComponent = () => {
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
     const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
+    const [propostas, setPropostas] = useState<File | undefined>(undefined);
     const [isValorInvalido, setIsValorInvalido] = useState(false);
     const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
     const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
@@ -103,7 +106,14 @@ const CriarProjetoComponent = () => {
         setEndDateValid(endDate !== null && (!startDate || endDate >= startDate));
     };
 
-    const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>, setState?: Dispatch<SetStateAction<File[]>>) => {
+    const atualizarMensagem = (mensagens: string) => {
+        const [tituloErro, ...textoErro] = mensagens.split('. ');
+            const text = textoErro.join('. ');
+            setMensagemValidacao({titulo: tituloErro, texto: text});
+            return;
+    }
+
+    const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>, setState?: Dispatch<SetStateAction<File | undefined>>) => {
         const arquivo = event.target.files ? event.target.files[0] : null;
 
         if (!arquivo) {
@@ -111,66 +121,71 @@ const CriarProjetoComponent = () => {
             return;
         }
 
-        if (resumoExcel && resumoPdf) {
-            setMensagemValidacao({titulo: 'Apenas 2 arquivos podem ser adicionados nessa categoria.', texto: 'Por favor, remova um arquivo para adicionar outro.'});
-            return;
-        }
+        switch (setState) {
 
-        const arquivosValidados = ValidadorDeArquivos([arquivo]);
-
-        const mensagens = arquivosValidados.filter(resultadoFiltro => !resultadoFiltro.resultado)
-            .map(resultadoFiltro => resultadoFiltro.mensagem)
-            .join('\n');
-
-        if(mensagens) {
-            const [tituloErro, ...textoErro] = mensagens.split('. ');
-            const text = textoErro.join('. ');
-            setMensagemValidacao({titulo: tituloErro, texto: text});
-            return;
-        } else {
-            if (setState) {
-                 // setMensagemValidacao({titulo: '', texto: ''});
-                // if (arquivo) {
-                //     setState(prevArquivos => [...prevArquivos, arquivo]);
-                //     console.log(arquivosEscolhidos);
-                //     SweetAlert2.fire({
-                //         icon: 'success',
-                //         title: 'Arquivo adicionado com sucesso',
-                //         })
-                //     }
-            }
-            if (arquivo.type === 'application/pdf') {
-                if (resumoPdf != undefined) {
-                    setMensagemValidacao({titulo: 'Apenas um arquivo PDF pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
+            case setPropostas:
+                if (propostas) {
+                    setMensagemValidacao({titulo: 'Apenas um arquivo pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
                     return;
                 }
-                else {
-                    setResumoPdf(arquivo);
+                const arquivosValidadosProposta = ValidadorDeArquivos([arquivo]);
+                const mensagem = separarMensagens(arquivosValidadosProposta);
+                if (mensagem) {
+                    atualizarMensagem(mensagem);
+                    return;
+                } else {
+                    setState(arquivo);
                     SweetAlert2.fire({
                         icon: 'success',
                         title: 'Arquivo adicionado com sucesso',
                         })
-                    }
-                }
-            if (arquivo.type === 'application/vnd.ms-excel' || arquivo.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                if (resumoExcel != undefined) {
-                    setMensagemValidacao({titulo: 'Apenas um arquivo Excel pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
                     return;
                 }
-                else {
-                    setResumoExcel(arquivo);
-                    SweetAlert2.fire({
-                        icon: 'success',
-                        title: 'Arquivo adicionado com sucesso',
-                        })
-                    }
+                
+            default:
+                if (resumoPdf && resumoExcel) {
+                    setMensagemValidacao({titulo: 'Apenas 2 arquivos podem ser adicionados nessa categoria.', texto: 'Por favor, remova um arquivo para adicionar outro.'});
+                    return;
                 }
-            }
+                const arquivosValidados = ValidadorDeArquivos([arquivo]);
+                const mensagens = separarMensagens(arquivosValidados);
+                if (mensagens) {
+                    atualizarMensagem(mensagens);
+                    return;
+                } else {
+                    if (arquivo.type === 'application/pdf') {
+                        if (resumoPdf != undefined) {
+                            setMensagemValidacao({titulo: 'Apenas um arquivo PDF pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
+                            return;
+                        }
+                        else {
+                            setResumoPdf(arquivo);
+                            SweetAlert2.fire({
+                                icon: 'success',
+                                title: 'Arquivo adicionado com sucesso',
+                                })
+                            }
+                        }
+                    if (arquivo.type === 'application/vnd.ms-excel' || arquivo.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        if (resumoExcel != undefined) {
+                            setMensagemValidacao({titulo: 'Apenas um arquivo Excel pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
+                            return;
+                        }
+                        else {
+                            setResumoExcel(arquivo);
+                            SweetAlert2.fire({
+                                icon: 'success',
+                                title: 'Arquivo adicionado com sucesso',
+                                })
+                            }
+                        }
+                }
+            } 
         }
 
-    const excluirArquivo = (arquivoExcluir: File, setState?: Dispatch<SetStateAction<File[]>>) => {
+    const excluirArquivo = (arquivoExcluir: File, setState?: Dispatch<SetStateAction<File | undefined>>) => {
         if (setState) {
-            setState(prevArquivos => prevArquivos.filter(arquivo => arquivo != arquivoExcluir));
+            setState(undefined);
         }
         else {
             if (arquivoExcluir.type === 'application/pdf') {
@@ -377,7 +392,7 @@ const CriarProjetoComponent = () => {
                                 </span>
                             </div>
                             )}
-                        {/* // {arquivosEscolhidos.length > 0 && (
+                        {/*{arquivosEscolhidos.length > 0 && (
                         //     arquivosEscolhidos.map(arquivo => (
                         //         <div className={styles.arquivosEscolhidos}> 
                         //             <img src={arquivoIcon} alt="Arquivo" />
@@ -389,7 +404,31 @@ const CriarProjetoComponent = () => {
                         //             </span>
                         //         </div>
                         //     ))
-                        // )} */}
+                        // */}
+                    </div>
+                    <div className={styles.adicionarArquivos}>
+                        <label htmlFor="enviarProposta">
+                            <span>Proposta</span>
+                            <img src={attach} alt="Adicionar arquivo" />
+                        </label>
+                        <input 
+                            type="file"
+                            id="enviarProposta"
+                            accept=".pdf"
+                            onChange={(e) => handleArquivo(e, setPropostas)}
+                            style={{display: 'none'}}
+                        />
+                        {propostas  && (
+                            <div className={styles.arquivosEscolhidos}> 
+                                <img src={arquivoIcon} alt="Arquivo" />
+                                <span className={styles.arquivoSpan}>
+                                    {propostas.name}
+                                </span>
+                                <span className={styles.arquivoSpanExcluir}
+                                    onClick={(e) => excluirArquivo(propostas, setPropostas)}>&#10006;
+                                </span>
+                            </div>
+                        )}
                     </div>
                     <div className={styles.botaoEnviar}>
                         <Button type="submit">

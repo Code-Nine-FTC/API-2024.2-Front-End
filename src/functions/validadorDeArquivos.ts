@@ -1,9 +1,4 @@
-interface ValidacaoResultado {
-    resultado: boolean;
-    mensagem?: string;
-    arquivos?: File[];
-    tipo?: string;
-}
+import { ValidacaoResultado } from "../interface/validacaoResultado.interface";
 
 const ValidadorDeArquivos = (arquivos: File[]): ValidacaoResultado[] => {
     const tiposValidos = ['application/pdf', 'application/vnd.ms-excel', 
