@@ -38,7 +38,7 @@ const CriarProjetoComponent = () => {
     const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
     const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
     const [isValorInvalido, setIsValorInvalido] = useState(false);
-
+    
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -69,33 +69,29 @@ const CriarProjetoComponent = () => {
         projeto.append('empresa', empresa);
         projeto.append('objeto', objeto);
         projeto.append('descricao', descricao);
-        projeto.append('coordenador', coordenador);
+        projeto.append('nomeCoordenador', coordenador);
         projeto.append('valor', valorFloat.toString());
         projeto.append('dataInicio', startDate?.toISOString() || '');
-        projeto.append('dataFim', endDate?.toISOString() || '');
+        projeto.append('dataTermino', endDate?.toISOString() || '');
         if (resumoPdf) projeto.append('resumoPdf', resumoPdf);
         if (resumoExcel) projeto.append('resumoExcel', resumoExcel);
         
         try {
             const resposta = await CadastrarProjetoFunction(projeto);
-            if (resposta.status === 200) {
+            if (resposta.status === 201) {
                 console.log("Projeto cadastrado com sucesso");
                 SweetAlert2.fire({
                     icon: 'success',
-                    title: 'Projeto cadastrado com sucesso!',
+                    title: resposta.data,
                 });
-            } else {
-                console.error('Erro ao cadastrar projeto', resposta);
-                SweetAlert2.fire({
-                    icon: 'error',
-                    title: 'Erro ao cadastrar projeto!',
-                    })
-                }   
-            } catch (error) {
+            } 
+            } catch (error:any) {
+                let errorMessage = error.message || 'Erro ao cadastrar o projeto. Por favor, tente novamente mais tarde.';
                 console.error('Erro ao cadastrar projeto', error);
                 SweetAlert2.fire({
                     icon: 'error',
-                    title: 'Erro ao cadastrar projeto!',
+                    title: 'Erro!',
+                    text: errorMessage,
                 });
             }
         }
@@ -209,7 +205,7 @@ const CriarProjetoComponent = () => {
                         <Form.Control 
                             type="text" 
                             placeholder="Titulo do projetor"
-                            required 
+                            required
                             value={tituloProjeto}
                             onChange={(e) => setTituloProjeto(e.target.value)}
                          />
