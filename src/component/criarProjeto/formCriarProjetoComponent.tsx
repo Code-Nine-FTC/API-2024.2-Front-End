@@ -40,6 +40,7 @@ const CriarProjetoComponent = () => {
     const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
     const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
     const [propostas, setPropostas] = useState<File | undefined>(undefined);
+    const [contrato, setContrato] = useState<File | undefined>(undefined);
     const [isValorInvalido, setIsValorInvalido] = useState(false);
     const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
     const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
@@ -142,6 +143,25 @@ const CriarProjetoComponent = () => {
                     return;
                 }
                 
+            case setContrato:
+                if (contrato) {
+                    setMensagemValidacao({titulo: 'Apenas um arquivo pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
+                    return;
+                }
+                const arquivosValidadosContrato = ValidadorDeArquivos([arquivo]);
+                const mensagemContrato = separarMensagens(arquivosValidadosContrato);
+                if (mensagemContrato) {
+                    atualizarMensagem(mensagemContrato);
+                    return;
+                } else {
+                    setState(arquivo);
+                    SweetAlert2.fire({
+                        icon: 'success',
+                        title: 'Arquivo adicionado com sucesso',
+                        })
+                    return;
+                }
+
             default:
                 if (resumoPdf && resumoExcel) {
                     setMensagemValidacao({titulo: 'Apenas 2 arquivos podem ser adicionados nessa categoria.', texto: 'Por favor, remova um arquivo para adicionar outro.'});
@@ -181,6 +201,9 @@ const CriarProjetoComponent = () => {
                         }
                 }
             } 
+
+            event.target.value = '';
+            
         }
 
     const excluirArquivo = (arquivoExcluir: File, setState?: Dispatch<SetStateAction<File | undefined>>) => {
@@ -419,13 +442,37 @@ const CriarProjetoComponent = () => {
                             style={{display: 'none'}}
                         />
                         {propostas  && (
-                            <div className={styles.arquivosEscolhidos}> 
+                            <div className={styles.anexosEscolhidos}> 
                                 <img src={arquivoIcon} alt="Arquivo" />
                                 <span className={styles.arquivoSpan}>
                                     {propostas.name}
                                 </span>
                                 <span className={styles.arquivoSpanExcluir}
                                     onClick={(e) => excluirArquivo(propostas, setPropostas)}>&#10006;
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                    <div className={styles.adicionarArquivos}>
+                        <label htmlFor="enviarContrato">
+                            <span>Contrato</span>
+                            <img src={attach} alt="Adicionar arquivo" />
+                        </label>
+                        <input 
+                            type="file"
+                            id="enviarContrato"
+                            accept=".pdf"
+                            onChange={(e) => handleArquivo(e, setContrato)}
+                            style={{display: 'none'}}
+                        />
+                        {contrato  && (
+                            <div className={styles.anexosEscolhidos}> 
+                                <img src={arquivoIcon} alt="Arquivo" />
+                                <span className={styles.arquivoSpan}>
+                                    {contrato.name}
+                                </span>
+                                <span className={styles.arquivoSpanExcluir}
+                                    onClick={(e) => excluirArquivo(contrato, setContrato)}>&#10006;
                                 </span>
                             </div>
                         )}
