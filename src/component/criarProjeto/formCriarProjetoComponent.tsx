@@ -8,14 +8,22 @@ import SweetAlert2 from 'sweetalert2';
 import { CadastrarProjeto } from "../../interface/projeto.interface";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
 import Calendario from "../date/calendarioComponent";
-
+import { useNavigate } from 'react-router-dom';
 interface MensagemValidacao {
     titulo: string
     texto: string
 }
+interface CalendarioProps {
+    startDate: Date | null;
+    endDate: Date | null;
+    setStartDate: Dispatch<SetStateAction<Date | null>>;
+    setEndDate: Dispatch<SetStateAction<Date | null>>;
+}
 
 const CriarProjetoComponent = () => {
     // const [arquivosEscolhidos, setArquivosEscolhidos] = useState<File[]>([]);
+    const navigate = useNavigate()
+
     const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({titulo: '', texto: ''});
     const [camposValidados, setValidado] = useState(false);
     const [tituloProjeto, setTituloProjeto] = useState('');	
@@ -25,12 +33,14 @@ const CriarProjetoComponent = () => {
     const [descricao, setDescricao] = useState('');
     const [coordenador, setCoordenador] = useState('');
     const [valor, setValor] = useState('');
-    const [dataInicio, setDataInicio] = useState('');
-    const [dataFim, setDataFim] = useState('');
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
     const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
     const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
     const [isValorInvalido, setIsValorInvalido] = useState(false);
-
+    const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
+    const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
+    
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -61,35 +71,37 @@ const CriarProjetoComponent = () => {
         projeto.append('empresa', empresa);
         projeto.append('objeto', objeto);
         projeto.append('descricao', descricao);
-        projeto.append('coordenador', coordenador);
+        projeto.append('nomeCoordenador', coordenador);
         projeto.append('valor', valorFloat.toString());
-        projeto.append('dataInicio', new Date(dataInicio).toISOString());
-        projeto.append('dataFim', new Date(dataFim).toISOString());
+        projeto.append('dataInicio', startDate?.toISOString() || '');
+        projeto.append('dataTermino', endDate?.toISOString() || '');
         if (resumoPdf) projeto.append('resumoPdf', resumoPdf);
         if (resumoExcel) projeto.append('resumoExcel', resumoExcel);
         
         try {
             const resposta = await CadastrarProjetoFunction(projeto);
-            if (resposta.status === 200) {
+            if (resposta.status === 201) {
+                console.log("Projeto cadastrado com sucesso");
                 SweetAlert2.fire({
                     icon: 'success',
-                    title: 'Projeto cadastrado com sucesso!',
+                    title: resposta.data,
                 });
-            } else {
-                console.error('Erro ao cadastrar projeto', resposta);
-                SweetAlert2.fire({
-                    icon: 'error',
-                    title: 'Erro ao cadastrar projeto!',
-                    })
-                }   
-            } catch (error) {
+            } 
+            } catch (error:any) {
+                let errorMessage = error.message || 'Erro ao cadastrar o projeto. Por favor, tente novamente mais tarde.';
                 console.error('Erro ao cadastrar projeto', error);
                 SweetAlert2.fire({
                     icon: 'error',
-                    title: 'Erro ao cadastrar projeto!',
+                    title: 'Erro!',
+                    text: errorMessage,
                 });
             }
         }
+
+    const validarDatas = () => {
+        setStartDateValid(startDate !== null);
+        setEndDateValid(endDate !== null && (!startDate || endDate >= startDate));
+    };
 
     const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>, setState?: Dispatch<SetStateAction<File[]>>) => {
         const arquivo = event.target.files ? event.target.files[0] : null;
@@ -183,7 +195,7 @@ const CriarProjetoComponent = () => {
     return (
         <>
             <div className="tituloSetaVoltar">
-                <span className="setaVoltar"> &#x2190;</span>
+                <span className="setaVoltar" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}> &#x2190;</span>
                 <h1 className="titulo"> Adicionar projeto </h1>
             </div>
             <section className={styles.formMain}>
@@ -200,7 +212,7 @@ const CriarProjetoComponent = () => {
                         <Form.Control 
                             type="text" 
                             placeholder="Titulo do projetor"
-                            required 
+                            required
                             value={tituloProjeto}
                             onChange={(e) => setTituloProjeto(e.target.value)}
                          />
@@ -315,12 +327,22 @@ const CriarProjetoComponent = () => {
                             placeholder="Valor do projeto"
                             value={valor}
                             required
+                            min="0"
                             onChange={(e) => setValor(e.target.value)}/>
                             <Form.Control.Feedback type="invalid">
                                 Por favor, insira o valor do projeto.
                             </Form.Control.Feedback>
                     </FloatingLabel>
-                    <Calendario/>
+                    <Calendario 
+                        startDate={startDate}
+                        endDate={endDate}
+                        setStartDate={setStartDate}
+                        setEndDate={setEndDate}
+                        startDateValid={startDateValid}
+                        endDateValid={endDateValid}
+                        validarDatas={validarDatas}
+                        cadastro={true}
+                    />
                     <div className={styles.adicionarArquivo}>
                         <label htmlFor="enviararquivo">
                             <img src={attach} alt="Adicionar arquivo" />

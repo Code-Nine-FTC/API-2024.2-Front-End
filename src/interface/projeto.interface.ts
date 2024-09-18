@@ -11,5 +11,11 @@ export interface CadastrarProjeto {
     resumoPdf?: File;
     resumoExcel?: File;
 }
-
-export{}
+export interface BuscarProjeto {
+        referenciaProjeto: string;
+        coordenador: string;
+        classificacao: string;
+        projetosituacao: string;
+        startDate: Date | null;
+        endDate: Date | null;
+}

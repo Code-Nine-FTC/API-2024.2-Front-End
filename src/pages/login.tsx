@@ -45,6 +45,7 @@ function Login() {
     }
 
     return (
+      <body className={styles.body}>
         <div className={styles.mainBody}>
             <img src={UserIcon} className={styles.userico}/>
             <h1 className={styles.text}>Login</h1>
@@ -74,6 +75,7 @@ function Login() {
                 </div>
             </form>
         </div>
+      </body>
     )
 }
 
