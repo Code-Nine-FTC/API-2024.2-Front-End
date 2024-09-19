@@ -27,7 +27,7 @@ const MostrarProjeto: React.FC<MostrarProjetoProps> = ({ id }) => {
   useEffect(() => {
     const fetchProjeto = async () => {
       try {
-        const response = await axios.get<Projeto>(`URL-DO-BACK`);
+        const response = await axios.get<Projeto>(`jdbc:mysql://localhost:3306/projetotrasparencia`);
         setProjeto(response.data);
       } catch (error) {
         setError('Erro ao carregar os dados do projeto');
