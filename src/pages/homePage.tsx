@@ -10,7 +10,6 @@ import ProcurarProjetoFunction from '../services/buscar/buscarProjetosService';
 
 
 const Home = () => {
-    const [ handleSubmit ] = useState();
     const [ isFormVisible, setIsFormVisible ] = useState(false);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
@@ -30,31 +29,32 @@ const Home = () => {
         
         const projeto = {
             referenciaProjeto,
-            coordenador,
+            nomeCoordenador: coordenador,
+            dataInicio: startDate ? startDate.toISOString() : '',
+            dataTermino: endDate ? endDate.toISOString() : '',
             classificacao,
-            projetosituacao,
-            startDate,
-            endDate
+            projetoSituacao: projetosituacao
         };
 
         try {
             const resposta = await ProcurarProjetoFunction(projeto);
-            if (resposta.status === 200) {
-                setProjetos(resposta.data)
-            } else {
-                console.error('Erro ao encontrar projeto', resposta);
+            console.log("Resposta recebida:", resposta);
+    
+            if (resposta.message) {
                 SweetAlert2.fire({
                     icon: 'error',
-                    title: 'Erro ao encontrar projeto!',
-                    })
-                }   
-            } catch (error) {
-                console.error('Erro ao encontrar projeto', error);
-                SweetAlert2.fire({
-                    icon: 'error',
-                    title: 'Erro ao encontrar projeto!',
+                    title: resposta.message,
                 });
+            } else {
+                setProjetos(resposta);
             }
+        } catch (error) {
+            console.error('Erro ao encontrar projeto', error);
+            SweetAlert2.fire({
+                icon: 'error',
+                title: 'Erro ao encontrar projeto!',
+            });
+        }
     }
 
     return (
@@ -182,11 +182,12 @@ const Home = () => {
                     
 
                 </section>
+                {/* Aqui ele faz a listagem dos projetos, tem que estilizar aqui */}
                 <section>
                     <h1>Projetos</h1>
                     <ul>
                         {projetos.map((projeto) => (
-                            <li key={projeto.id}>{projeto.nome}</li>
+                            <li key={projeto.id}>{projeto.titulo}</li>
                         ))}
                     </ul>
                 </section>

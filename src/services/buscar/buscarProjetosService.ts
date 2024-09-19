@@ -3,30 +3,28 @@ import { BuscarProjeto } from "../../interface/projeto.interface";
 
 export default async function ProcurarProjetoFunction(projeto: BuscarProjeto): Promise<any> {
     try {
-        let resposta;
-        const params = new URLSearchParams();
-        // Olha cada parametro do objeto da interface do projeto e adiciona os valores ao paremetros de busca
+        const params: { [key: string]: string } = {};
+
+        // Aqui ele pega os filtros se tiverem e coloca no params
         Object.entries(projeto).forEach(([key, value]) => {
-            if (value !== null && value !== undefined && value !=='') {
-                params.append(key, value instanceof Date ? value.toISOString() : value.toString());
+            if (value !== null && value !== undefined && value !== '') {
+                // Formata a data se for do tipo Date, caso contrário, converte para string
+                params[key] = value instanceof Date ? value.toISOString() : value.toString();
             }
         });
 
-        if (params.toString()) {
-            // vai buscar o projeto de acordo com os parametros
-            resposta = await axios.get('http://localhost:8080/projeto/listar', { params });
-        } else {
-            // se nao tiver nenhum parametro ele busca todos os projetos
-            resposta = await axios.get('http://localhost:8080/projeto/listar');
-        }
-        // se nos parametros fornecidos pelo usuario ele nao achar nada, ele printa um erro
-        if (resposta.data && resposta.data.length === 0) {
-            throw new Error('Nenhum projeto encontrado com os filtros aplicados.');
-        }
+        const url = 'http://localhost:8080/projeto/buscar';
 
+        // Se usar os filtros ele usa o params se nao ele busca tudo
+        const resposta = await axios.get(url, { params });
+
+        // aqui ele verifica se a resposta é vazia ai se for ele retorna que nada foi encontrado
+        if (resposta.data && resposta.data.length === 0) {
+            return { message: 'Nenhum projeto encontrado com os filtros aplicados.' };
+        }
         return resposta.data;
     } catch (error) {
-        console.error('Erro ao achar o projeto', error);
-        throw error;
+        console.error('Erro ao buscar o projeto', error);
+        throw new Error('Erro ao buscar os projetos. Tente novamente mais tarde.');
     }
 }

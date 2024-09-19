@@ -12,10 +12,12 @@ export interface CadastrarProjeto {
     resumoExcel?: File;
 }
 export interface BuscarProjeto {
-        referenciaProjeto: string;
-        coordenador: string;
-        classificacao: string;
-        projetosituacao: string;
-        startDate: Date | null;
-        endDate: Date | null;
+    referenciaProjeto: string;
+    nomeCoordenador: string;
+    dataInicio: string;
+    dataTermino: string;
+    classificacao: string;
+    projetoSituacao: string;
+    startDate?: Date; 
+    endDate?: Date;
 }
