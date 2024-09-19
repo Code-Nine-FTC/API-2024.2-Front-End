@@ -7,6 +7,7 @@ import ValidadorDeArquivos from "../../functions/validadorDeArquivos";
 import SweetAlert2 from 'sweetalert2';
 import { CadastrarProjeto } from "../../interface/projeto.interface";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
+import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from 'react-router-dom';
 import separarMensagens from "../../functions/separarMensagens";
@@ -69,18 +70,32 @@ const CriarProjetoComponent = () => {
         //     }
         // });
 
-        const projeto = new FormData();
-        projeto.append('titulo', tituloProjeto);
-        projeto.append('referenciaProjeto', referenciaProjeto);
-        projeto.append('empresa', empresa);
-        projeto.append('objeto', objeto);
-        projeto.append('descricao', descricao);
-        projeto.append('nomeCoordenador', coordenador);
-        projeto.append('valor', valorFloat.toString());
-        projeto.append('dataInicio', startDate?.toISOString() || '');
-        projeto.append('dataTermino', endDate?.toISOString() || '');
-        if (resumoPdf) projeto.append('resumoPdf', resumoPdf);
-        if (resumoExcel) projeto.append('resumoExcel', resumoExcel);
+        const projeto = MontarFormDataCadastro({
+            titulo: tituloProjeto,
+            referenciaProjeto: referenciaProjeto,
+            empresa: empresa,
+            objeto: objeto,
+            descricao: descricao,
+            coordenador: coordenador,
+            valor: valorFloat,
+            dataInicio: startDate?.toISOString() || '',
+            dataTermino: endDate?.toISOString() || '',
+        }, 'cadastro', resumoExcel, resumoPdf, propostas, contrato);
+
+        console.log(projeto);
+
+        // const projeto = new FormData();
+        // projeto.append('titulo', tituloProjeto);
+        // projeto.append('referenciaProjeto', referenciaProjeto);
+        // projeto.append('empresa', empresa);
+        // projeto.append('objeto', objeto);
+        // projeto.append('descricao', descricao);
+        // projeto.append('nomeCoordenador', coordenador);
+        // projeto.append('valor', valorFloat.toString());
+        // projeto.append('dataInicio', startDate?.toISOString() || '');
+        // projeto.append('dataTermino', endDate?.toISOString() || '');
+        // if (resumoPdf) projeto.append('resumoPdf', resumoPdf);
+        // if (resumoExcel) projeto.append('resumoExcel', resumoExcel);
         
         try {
             const resposta = await CadastrarProjetoFunction(projeto);
