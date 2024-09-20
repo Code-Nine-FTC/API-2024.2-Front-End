@@ -33,8 +33,8 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({tipoUsuario}) => {
                         ))}
                     </Nav>
                     <Nav className='ms-auto'> 
-                        {logado ? <Nav.Link href="#sair">Sair</Nav.Link> 
-                        : <Nav.Link href="#entrar">Entrar</Nav.Link>}
+                        {logado ? <Nav.Link href="/login">Sair</Nav.Link> 
+                        : <Nav.Link href="/login">Entrar</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
