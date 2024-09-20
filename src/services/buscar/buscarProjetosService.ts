@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BuscarProjeto } from "../../interface/projeto.interface";
+import api from '../api';
 
 export default async function ProcurarProjetoFunction(projeto: BuscarProjeto): Promise<any> {
     try {
@@ -13,7 +14,7 @@ export default async function ProcurarProjetoFunction(projeto: BuscarProjeto): P
             }
         });
 
-        const url = 'http://localhost:8080/projeto/buscar';
+        const url = api.getUri({ url: 'projeto/listar' });
 
         // Se usar os filtros ele usa o params se nao ele busca tudo
         const resposta = await axios.get(url, { params });

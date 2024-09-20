@@ -52,4 +52,5 @@ export interface BuscarProjeto {
     projetoSituacao: string;
     startDate?: Date; 
     endDate?: Date;
+    valor?: number;
 }

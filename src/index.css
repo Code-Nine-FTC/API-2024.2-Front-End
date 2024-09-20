@@ -1,4 +1,5 @@
 @import url('./component/variable.css');
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
 * {
   margin: 0;
