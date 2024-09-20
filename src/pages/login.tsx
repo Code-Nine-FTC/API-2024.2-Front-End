@@ -7,36 +7,36 @@ import styles from '../component/login/login.module.css'
 import {useRef, useEffect} from 'react';
 import encryptPassword from '../functions/criptografaSenha';
 import UserIcon from '../assets/login/userico.svg'
+import LoginAdminService from '../services/administrador/loginService';
+import { LoginAdm } from '../interface/adminstrador.interface';
 
 function Login() {
     const navigate = useNavigate()
-    const[username, setUsername] = useState("")
-    const[password, setPassword] = useState("")
-
+    const[email, setEmail] = useState("")
+    const[senha, setSenha] = useState("")
+    const[erro, setErro] = useState("")
 
     const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
+        let dados = {
+            email: email,
+            senha: senha
+        }
+      
         try {
-            const response = await fetch("URL_DO_BACK", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password })
-          });
+          const resposta = await LoginAdminService(dados);
 
-          const data = await response.json()
-
-          if (response.ok) {
-            // Implementar o token de verificação aqui....
+          if (resposta.status === 200) {
             toast.success("Login realizado com sucesso")
+            setErro("")
           }
           else {
-            toast.error('Credenciais inválidas');
+            setErro(resposta.message)
           }
-          setUsername("")
-          setPassword("")
+
+          setEmail("")
+          setSenha("")
 
         } catch(error) {
             console.error("Erro ao fazer login:", error);
@@ -54,8 +54,9 @@ function Login() {
                 <label htmlFor="">Email</label> <br />
                 <input type="text"
                 placeholder="Insira seu email" 
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
                 />{" "}
               </div>
                  <br />
@@ -63,15 +64,19 @@ function Login() {
                   <label htmlFor="">Senha</label> <br />
                   <input type="password"
                   placeholder="Insira sua senha" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                   />{" "}
                 </div>
                 <div>
                     <button type="submit" className={styles.submitbutton}>Entrar</button>
                     <br/>
-                    <p className=""><Link to="/esquecisenha">Esqueceu a senha?</Link>
-                    </p>
+                    {/* <p className=""><Link to="/esquecisenha">Esqueceu a senha?</Link>
+                    </p> */}
+                    {erro && (
+                      <p className={styles.erro}>{erro}</p>
+                    )}
                 </div>
             </form>
         </div>

@@ -1,6 +1,6 @@
-const encryptPassword = (plainPassword: string) => {
-    const hash = CryptoJS.SHA256(plainPassword).toString(CryptoJS.enc.Hex);
+const EncriptarSenha = (senha: string) => {
+    const hash = CryptoJS.SHA256(senha).toString(CryptoJS.enc.Hex);
     return hash
   };
 
-export default encryptPassword
+export default EncriptarSenha

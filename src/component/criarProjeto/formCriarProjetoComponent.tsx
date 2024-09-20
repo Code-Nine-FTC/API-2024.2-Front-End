@@ -11,7 +11,7 @@ import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjeto
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from 'react-router-dom';
 import separarMensagens from "../../functions/separarMensagens";
-import { set } from "date-fns";
+
 interface MensagemValidacao {
     titulo: string
     texto: string
