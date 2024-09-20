@@ -4,7 +4,7 @@ export interface CadastrarProjetoJson {
     empresa: string;
     objeto: string;
     descricao?: string;
-    coordenador: string;
+    nomeCoordenador: string;
     valor: number;
     dataInicio: string;
     dataTermino: string;

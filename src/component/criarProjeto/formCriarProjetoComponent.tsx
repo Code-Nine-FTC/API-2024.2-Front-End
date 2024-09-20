@@ -76,7 +76,7 @@ const CriarProjetoComponent = () => {
             empresa: empresa,
             objeto: objeto,
             descricao: descricao,
-            coordenador: coordenador,
+            nomeCoordenador: coordenador,
             valor: valorFloat,
             dataInicio: startDate?.toISOString() || '',
             dataTermino: endDate?.toISOString() || '',
