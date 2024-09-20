@@ -18,13 +18,14 @@ interface Projeto {
 
 interface EditaExcluiMostraProps {
   id: number;
+  isAdmin: boolean;
 }
 
-const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
+const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
   const [projeto, setProjeto] = useState<Projeto | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [modo, setModo] = useState<'visualizar' | 'editar' | 'deletar'>('visualizar');
+  const [modo, setModo] = useState<'visualizar' | 'editar'>('visualizar');
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -81,91 +82,95 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
     return <p>Projeto não encontrado</p>;
   }
 
-  // Renderiza o modo de visualização
-  if (modo === 'visualizar') {
-    return (
-      <div>
-        <h2>{projeto.titulo}</h2>
-        <p><strong>ID:</strong> {projeto.id}</p>
-        <p><strong>Referência:</strong> {projeto.referencia}</p>
-        <p><strong>Empresa:</strong> {projeto.empresa}</p>
-        <p><strong>Objeto:</strong> {projeto.objeto}</p>
-        <p><strong>Descrição:</strong> {projeto.descricao}</p>
-        <p><strong>Coordenador:</strong> {projeto.coordenador}</p>
-        <p><strong>Data de Início:</strong> {new Date(projeto.dt_inicio).toLocaleDateString()}</p>
-        <p><strong>Data de Fim:</strong> {new Date(projeto.dt_fim).toLocaleDateString()}</p>
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <h2>{modo === 'visualizar' ? projeto.titulo : 'Editar Projeto'}</h2>
+
+        <label htmlFor="titulo">Título</label>
+        <input
+          type="text"
+          name="titulo"
+          value={projeto.titulo}
+          onChange={handleChange}
+          readOnly={modo === 'visualizar'}
+        />
+
+        <label htmlFor="referencia">Referência</label>
+        <input
+          type="text"
+          name="referencia"
+          value={projeto.referencia}
+          onChange={handleChange}
+          readOnly={modo === 'visualizar'}
+        />
+
+        {modo === 'editar' && (
+          <>
+            <label htmlFor="empresa">Empresa</label>
+            <input
+              type="text"
+              name="empresa"
+              value={projeto.empresa}
+              onChange={handleChange}
+            />
+
+            <label htmlFor="objeto">Objeto</label>
+            <input
+              type="text"
+              name="objeto"
+              value={projeto.objeto}
+              onChange={handleChange}
+            />
+
+            <label htmlFor="descricao">Descrição</label>
+            <textarea
+              name="descricao"
+              value={projeto.descricao}
+              onChange={handleChange}
+            />
+          </>
+        )}
+
+        <label htmlFor="coordenador">Coordenador</label>
+        <input
+          type="text"
+          name="coordenador"
+          value={projeto.coordenador}
+          onChange={handleChange}
+          readOnly={modo === 'visualizar'}
+        />
 
         <div>
           <h3>Arquivos</h3>
-          <p><a href={projeto.resumoPdfUrl} target="_blank" rel="noopener noreferrer">Baixar Resumo (PDF)</a></p>
-          <p><a href={projeto.resumoExcelUrl} target="_blank" rel="noopener noreferrer">Baixar Resumo (Excel)</a></p>
+          <p>
+            <a href={projeto.resumoPdfUrl} target="_blank" rel="noopener noreferrer">Baixar Resumo (PDF)</a>
+          </p>
+          <p>
+            <a href={projeto.resumoExcelUrl} target="_blank" rel="noopener noreferrer">Baixar Resumo (Excel)</a>
+          </p>
         </div>
 
-        <button onClick={() => setModo('editar')}>Alterar</button>
-        <button onClick={() => setModo('deletar')}>Excluir</button>
-      </div>
-    );
-  }
+        {isAdmin && (
+          <div>
+            {modo === 'visualizar' ? (
+              <>
+                <button type="button" onClick={() => setModo('editar')}>Editar</button>
+                <button type="button" onClick={handleDelete}>Excluir</button>
+              </>
+            ) : (
+              <>
+                <button type="submit">Salvar Alterações</button>
+                <button type="button" onClick={() => setModo('visualizar')}>Cancelar</button>
+              </>
+            )}
+          </div>
+        )}
 
-  // Renderiza o modo de edição
-  if (modo === 'editar') {
-    return (
-      <div>
-        <h2>Editar Projeto</h2>
-        {sucesso && <p style={{ color: 'green' }}>{sucesso}</p>}
-        <form onSubmit={handleSubmit}>
-          <label>
-            Título:
-            <input type="text" name="titulo" value={projeto.titulo} onChange={handleChange} />
-          </label>
-          <label>
-            Referência:
-            <input type="text" name="referencia" value={projeto.referencia} onChange={handleChange} />
-          </label>
-          <label>
-            Empresa:
-            <input type="text" name="empresa" value={projeto.empresa} onChange={handleChange} />
-          </label>
-          <label>
-            Objeto:
-            <input type="text" name="objeto" value={projeto.objeto} onChange={handleChange} />
-          </label>
-          <label>
-            Descrição:
-            <textarea name="descricao" value={projeto.descricao} onChange={handleChange} />
-          </label>
-          <label>
-            Coordenador:
-            <input type="text" name="coordenador" value={projeto.coordenador} onChange={handleChange} />
-          </label>
-          <label>
-            Data de Início:
-            <input type="date" name="dt_inicio" value={projeto.dt_inicio} onChange={handleChange} />
-          </label>
-          <label>
-            Data de Fim:
-            <input type="date" name="dt_fim" value={projeto.dt_fim} onChange={handleChange} />
-          </label>
-          <button type="submit">Salvar Alterações</button>
-          <button onClick={() => setModo('visualizar')}>Cancelar</button>
-        </form>
-      </div>
-    );
-  }
-
-  // Renderiza o modo de exclusão com mensagem de confirmação
-  if (modo === 'deletar') {
-    return (
-      <div>
-        <h2>Excluir Projeto</h2>
-        <p>Tem certeza que deseja excluir o projeto com ID: {id}?</p>
-        <button onClick={handleDelete}>Excluir Projeto</button>
-        <button onClick={() => setModo('visualizar')}>Cancelar</button>
-      </div>
-    );
-  }
-
-  return null;
+        {sucesso && <p>{sucesso}</p>}
+      </form>
+    </div>
+  );
 };
 
 export default EditaExcluiMostra;
