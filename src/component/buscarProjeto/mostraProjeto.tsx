@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 interface Projeto {
   id: number;
@@ -21,18 +22,20 @@ interface EditaExcluiMostraProps {
   isAdmin: boolean;
 }
 
-const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
+
+const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
   const [projeto, setProjeto] = useState<Projeto | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [modo, setModo] = useState<'visualizar' | 'editar'>('visualizar');
+  /* const [modo, setModo] = useState<'visualizar' | 'editar'>('visualizar'); */
   const [sucesso, setSucesso] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjeto = async () => {
       try {
-        const response = await axios.get<Projeto>(`jdbc:mysql://localhost:3306/projetotrasparencia/${id}`);
+        const url = api.getUri({url : `/projeto/visualizar/${id}`})
+        const response = await axios.get<Projeto>(url);
         setProjeto(response.data);
       } catch (error) {
         setError('Erro ao carregar os dados do projeto');
@@ -48,7 +51,7 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
     setProjeto((prevProjeto) => prevProjeto ? { ...prevProjeto, [name]: value } : null);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  /* const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (projeto) {
@@ -59,16 +62,23 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
     } catch (error) {
       setError('Erro ao atualizar o projeto');
     }
-  };
+  }; */
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`jdbc:mysql://localhost:3306/projetotrasparencia/${id}`);
-      navigate('/'); // Redireciona para a homepage após exclusão
+      const url = api.getUri({url: `projetos/${id}`})
+      await axios.delete(`${url}`);
+      navigate('/'); 
     } catch (error) {
       setError('Erro ao excluir o projeto');
     }
   };
+
+  const handleEditar = () => {
+    navigate(`/projetos/atualizar/${id}`)
+  }
+
+
 
   if (loading) {
     return <p>Carregando...</p>;
@@ -84,16 +94,14 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <h2>{modo === 'visualizar' ? projeto.titulo : 'Editar Projeto'}</h2>
-
+      <form >
         <label htmlFor="titulo">Título</label>
         <input
           type="text"
           name="titulo"
           value={projeto.titulo}
           onChange={handleChange}
-          readOnly={modo === 'visualizar'}
+          readOnly
         />
 
         <label htmlFor="referencia">Referência</label>
@@ -102,17 +110,16 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
           name="referencia"
           value={projeto.referencia}
           onChange={handleChange}
-          readOnly={modo === 'visualizar'}
+          readOnly
         />
 
-        {modo === 'editar' && (
-          <>
             <label htmlFor="empresa">Empresa</label>
             <input
               type="text"
               name="empresa"
               value={projeto.empresa}
               onChange={handleChange}
+              readOnly
             />
 
             <label htmlFor="objeto">Objeto</label>
@@ -121,6 +128,7 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
               name="objeto"
               value={projeto.objeto}
               onChange={handleChange}
+              readOnly
             />
 
             <label htmlFor="descricao">Descrição</label>
@@ -128,9 +136,8 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
               name="descricao"
               value={projeto.descricao}
               onChange={handleChange}
+              readOnly
             />
-          </>
-        )}
 
         <label htmlFor="coordenador">Coordenador</label>
         <input
@@ -138,7 +145,7 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
           name="coordenador"
           value={projeto.coordenador}
           onChange={handleChange}
-          readOnly={modo === 'visualizar'}
+          readOnly
         />
 
         <div>
@@ -153,17 +160,9 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
 
         {isAdmin && (
           <div>
-            {modo === 'visualizar' ? (
-              <>
-                <button type="button" onClick={() => setModo('editar')}>Editar</button>
+            
+                <button type="button" onClick={handleEditar}>Editar</button>
                 <button type="button" onClick={handleDelete}>Excluir</button>
-              </>
-            ) : (
-              <>
-                <button type="submit">Salvar Alterações</button>
-                <button type="button" onClick={() => setModo('visualizar')}>Cancelar</button>
-              </>
-            )}
           </div>
         )}
 
@@ -173,4 +172,4 @@ const EditaExcluiMostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) =>
   );
 };
 
-export default EditaExcluiMostra;
+export default Mostra;
