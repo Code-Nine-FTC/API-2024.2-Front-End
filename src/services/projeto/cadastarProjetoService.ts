@@ -4,11 +4,7 @@ import { AxiosError } from 'axios';
 
 export default async function CadastrarProjetoFunction (projeto: CadastrarProjeto): Promise<any> {
     try {
-        const resposta = await api.post('/projeto/cadastrar', projeto, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        });
+        const resposta = await api.post('/projeto/cadastrar', projeto);
 
         console.log(resposta);
 
