@@ -24,14 +24,13 @@ interface CalendarioProps {
 }
 
 const CriarProjetoComponent = () => {
-    // const [arquivosEscolhidos, setArquivosEscolhidos] = useState<File[]>([]);
     const navigate = useNavigate()
 
     const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({titulo: '', texto: ''});
     const [camposValidados, setValidado] = useState(false);
     const [tituloProjeto, setTituloProjeto] = useState('');	
     const [referenciaProjeto, setReferenciaProjeto] = useState('');
-    const [empresa, setEmpresa] = useState('');
+    const [contratante, setContratante] = useState('');
     const [objeto, setObjeto] = useState('');
     const [descricao, setDescricao] = useState('');
     const [coordenador, setCoordenador] = useState('');
@@ -60,20 +59,10 @@ const CriarProjetoComponent = () => {
         const valorFloat = parseFloat(valor);
         setValidado(true);
 
-        // arquivosEscolhidos.forEach(arquivo => {
-        //     if (arquivo.type === 'application/pdf') {
-        //         setResumoPdf(arquivo);
-        //         console.log(resumoPdf)
-        //     } else {
-        //         setResumoExcel(arquivo);
-        //         console.log(resumoExcel)
-        //     }
-        // });
-
         const projeto = MontarFormDataCadastro({
             titulo: tituloProjeto,
             referenciaProjeto: referenciaProjeto,
-            empresa: empresa,
+            contratante: contratante,
             objeto: objeto,
             descricao: descricao,
             nomeCoordenador: coordenador,
@@ -83,19 +72,6 @@ const CriarProjetoComponent = () => {
         }, 'cadastro', resumoExcel, resumoPdf, propostas, contrato);
 
         console.log(projeto);
-
-        // const projeto = new FormData();
-        // projeto.append('titulo', tituloProjeto);
-        // projeto.append('referenciaProjeto', referenciaProjeto);
-        // projeto.append('empresa', empresa);
-        // projeto.append('objeto', objeto);
-        // projeto.append('descricao', descricao);
-        // projeto.append('nomeCoordenador', coordenador);
-        // projeto.append('valor', valorFloat.toString());
-        // projeto.append('dataInicio', startDate?.toISOString() || '');
-        // projeto.append('dataTermino', endDate?.toISOString() || '');
-        // if (resumoPdf) projeto.append('resumoPdf', resumoPdf);
-        // if (resumoExcel) projeto.append('resumoExcel', resumoExcel);
         
         try {
             const resposta = await CadastrarProjetoFunction(projeto);
@@ -127,112 +103,6 @@ const CriarProjetoComponent = () => {
             const text = textoErro.join('. ');
             setMensagemValidacao({titulo: tituloErro, texto: text});
             return;
-    }
-
-    const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>, setState?: Dispatch<SetStateAction<File | undefined>>) => {
-        const arquivo = event.target.files ? event.target.files[0] : null;
-
-        if (!arquivo) {
-            setMensagemValidacao({titulo: 'Nenhum arquivo selecionado.', texto: 'Por favor, selecione um arquivo.'});
-            return;
-        }
-
-        switch (setState) {
-
-            case setPropostas:
-                if (propostas) {
-                    setMensagemValidacao({titulo: 'Apenas um arquivo pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
-                    return;
-                }
-                const arquivosValidadosProposta = ValidadorDeArquivos([arquivo]);
-                const mensagem = separarMensagens(arquivosValidadosProposta);
-                if (mensagem) {
-                    atualizarMensagem(mensagem);
-                    return;
-                } else {
-                    setState(arquivo);
-                    SweetAlert2.fire({
-                        icon: 'success',
-                        title: 'Arquivo adicionado com sucesso',
-                        })
-                    return;
-                }
-                
-            case setContrato:
-                if (contrato) {
-                    setMensagemValidacao({titulo: 'Apenas um arquivo pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
-                    return;
-                }
-                const arquivosValidadosContrato = ValidadorDeArquivos([arquivo]);
-                const mensagemContrato = separarMensagens(arquivosValidadosContrato);
-                if (mensagemContrato) {
-                    atualizarMensagem(mensagemContrato);
-                    return;
-                } else {
-                    setState(arquivo);
-                    SweetAlert2.fire({
-                        icon: 'success',
-                        title: 'Arquivo adicionado com sucesso',
-                        })
-                    return;
-                }
-
-            default:
-                if (resumoPdf && resumoExcel) {
-                    setMensagemValidacao({titulo: 'Apenas 2 arquivos podem ser adicionados nessa categoria.', texto: 'Por favor, remova um arquivo para adicionar outro.'});
-                    return;
-                }
-                const arquivosValidados = ValidadorDeArquivos([arquivo]);
-                const mensagens = separarMensagens(arquivosValidados);
-                if (mensagens) {
-                    atualizarMensagem(mensagens);
-                    return;
-                } else {
-                    if (arquivo.type === 'application/pdf') {
-                        if (resumoPdf != undefined) {
-                            setMensagemValidacao({titulo: 'Apenas um arquivo PDF pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
-                            return;
-                        }
-                        else {
-                            setResumoPdf(arquivo);
-                            SweetAlert2.fire({
-                                icon: 'success',
-                                title: 'Arquivo adicionado com sucesso',
-                                })
-                            }
-                        }
-                    if (arquivo.type === 'application/vnd.ms-excel' || arquivo.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        if (resumoExcel != undefined) {
-                            setMensagemValidacao({titulo: 'Apenas um arquivo Excel pode ser adicionado.', texto: 'Por favor, remova o arquivo atual para adicionar outro.'});
-                            return;
-                        }
-                        else {
-                            setResumoExcel(arquivo);
-                            SweetAlert2.fire({
-                                icon: 'success',
-                                title: 'Arquivo adicionado com sucesso',
-                                })
-                            }
-                        }
-                }
-            } 
-
-            event.target.value = '';
-            
-        }
-
-    const excluirArquivo = (arquivoExcluir: File, setState?: Dispatch<SetStateAction<File | undefined>>) => {
-        if (setState) {
-            setState(undefined);
-        }
-        else {
-            if (arquivoExcluir.type === 'application/pdf') {
-                setResumoPdf(undefined);
-            }
-            if (arquivoExcluir.type === 'application/vnd.ms-excel' || arquivoExcluir.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                setResumoExcel(undefined);
-            }
-        }
     }
 
     useEffect(() => {
@@ -304,48 +174,13 @@ const CriarProjetoComponent = () => {
                     >
                         <Form.Control 
                             type="text" 
-                            placeholder="Empresa"
+                            placeholder="Contratante"
                             required 
-                            value={empresa}
-                            onChange={(e) => setEmpresa(e.target.value)} />
+                            value={contratante}
+                            onChange={(e) => setContratante(e.target.value)} />
                             <Form.Control.Feedback type="invalid">
-                                Por favor, insira a empresa.
+                                Por favor, insira o contratante.
                             </Form.Control.Feedback>
-                    </FloatingLabel>
-                    <FloatingLabel 
-                        label="Objeto" 
-                        controlId="validationCustom04"
-                        className="mb-3"
-                        style={{width: '48vw',
-                            color: '#9C9C9C',
-                            zIndex: 1,
-                        }}
-                    >
-                        <Form.Control 
-                            type="text" 
-                            placeholder="Objeto"
-                            required
-                            value={objeto}
-                            onChange={(e) => setObjeto(e.target.value)} />
-                            <Form.Control.Feedback type="invalid">
-                                Por favor, insira o objeto.
-                            </Form.Control.Feedback>
-                    </FloatingLabel>
-                    <FloatingLabel 
-                        label="Descrição" 
-                        controlId="validationCustom05"
-                        className="mb-3"
-                        style={{width: '48vw',
-                            color: '#9C9C9C',
-                            zIndex: 1,
-                        }}
-                    >
-                        <Form.Control 
-                            as="textarea"
-                            rows={6} 
-                            placeholder="Descrição"
-                            value={descricao}
-                            onChange={(e) => setDescricao(e.target.value)} />
                     </FloatingLabel>
                     <FloatingLabel 
                         label="Coordenador" 
@@ -379,7 +214,6 @@ const CriarProjetoComponent = () => {
                             type="number" 
                             placeholder="Valor do projeto"
                             value={valor}
-                            required
                             min="0"
                             onChange={(e) => setValor(e.target.value)}/>
                             <Form.Control.Feedback type="invalid">
@@ -396,102 +230,6 @@ const CriarProjetoComponent = () => {
                         validarDatas={validarDatas}
                         cadastro={true}
                     />
-                    <div className={styles.adicionarArquivo}>
-                        <label htmlFor="enviararquivo">
-                            <img src={attach} alt="Adicionar arquivo" />
-                            <span>Adicionar arquivo</span>
-                        </label>
-                        <input 
-                            type="file"
-                            id="enviararquivo"
-                            accept=".pdf,.xls,.xlsx"
-                            onChange={(e) => handleArquivo(e)}
-                            style={{display: 'none'}}
-                        />
-                        {resumoPdf && (
-                            <div className={styles.arquivosEscolhidos}> 
-                                <img src={arquivoIcon} alt="Arquivo" />
-                                <span className={styles.arquivoSpan}>
-                                    {resumoPdf.name}
-                                </span>
-                                <span className={styles.arquivoSpanExcluir}
-                                    onClick={(e) => excluirArquivo(resumoPdf)}>&#10006;
-                                </span>
-                            </div>
-                            )}
-                        {resumoExcel && (
-                            <div className={styles.arquivosEscolhidos}> 
-                                <img src={arquivoIcon} alt="Arquivo" />
-                                <span className={styles.arquivoSpan}>
-                                    {resumoExcel.name}
-                                </span>
-                                <span className={styles.arquivoSpanExcluir}
-                                    onClick={(e) => excluirArquivo(resumoExcel)}>&#10006;
-                                </span>
-                            </div>
-                            )}
-                        {/*{arquivosEscolhidos.length > 0 && (
-                        //     arquivosEscolhidos.map(arquivo => (
-                        //         <div className={styles.arquivosEscolhidos}> 
-                        //             <img src={arquivoIcon} alt="Arquivo" />
-                        //             <span className={styles.arquivoSpan}>
-                        //                 {arquivo.name}
-                        //             </span>
-                        //             <span className={styles.arquivoSpanExcluir}
-                        //                 onClick={(e) => excluirArquivo(arquivo, setArquivosEscolhidos)}>&#10006;
-                        //             </span>
-                        //         </div>
-                        //     ))
-                        // */}
-                    </div>
-                    <div className={styles.adicionarArquivos}>
-                        <label htmlFor="enviarProposta">
-                            <span>Proposta</span>
-                            <img src={attach} alt="Adicionar arquivo" />
-                        </label>
-                        <input 
-                            type="file"
-                            id="enviarProposta"
-                            accept=".pdf"
-                            onChange={(e) => handleArquivo(e, setPropostas)}
-                            style={{display: 'none'}}
-                        />
-                        {propostas  && (
-                            <div className={styles.anexosEscolhidos}> 
-                                <img src={arquivoIcon} alt="Arquivo" />
-                                <span className={styles.arquivoSpan}>
-                                    {propostas.name}
-                                </span>
-                                <span className={styles.arquivoSpanExcluir}
-                                    onClick={(e) => excluirArquivo(propostas, setPropostas)}>&#10006;
-                                </span>
-                            </div>
-                        )}
-                    </div>
-                    <div className={styles.adicionarArquivos}>
-                        <label htmlFor="enviarContrato">
-                            <span>Contrato</span>
-                            <img src={attach} alt="Adicionar arquivo" />
-                        </label>
-                        <input 
-                            type="file"
-                            id="enviarContrato"
-                            accept=".pdf"
-                            onChange={(e) => handleArquivo(e, setContrato)}
-                            style={{display: 'none'}}
-                        />
-                        {contrato  && (
-                            <div className={styles.anexosEscolhidos}> 
-                                <img src={arquivoIcon} alt="Arquivo" />
-                                <span className={styles.arquivoSpan}>
-                                    {contrato.name}
-                                </span>
-                                <span className={styles.arquivoSpanExcluir}
-                                    onClick={(e) => excluirArquivo(contrato, setContrato)}>&#10006;
-                                </span>
-                            </div>
-                        )}
-                    </div>
                     <div className={styles.botaoEnviar}>
                         <Button type="submit">
                             Enviar

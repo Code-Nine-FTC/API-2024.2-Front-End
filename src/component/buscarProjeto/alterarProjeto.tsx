@@ -40,8 +40,7 @@ const EditarProjeto: React.FC<EditarProjetoProps> = ({ id }) => {
   useEffect(() => {
     const fetchProjeto = async () => {
       try {
-        const url = api.getUri({ url: `projeto/visualizar/${id}` });
-        const response = await axios.get<Projeto>(url);
+        const response = await axios.get(`/projeto/visualizar/${id}`);
         setProjeto(response.data);
       } catch (error) {
         setError("Erro ao carregar os dados do projeto");
