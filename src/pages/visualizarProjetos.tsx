@@ -11,7 +11,7 @@ const AlteraDeletaVisualiza: React.FC = () => {
   return (
     <div>
       {id ? (
-        <Mostra id={parseInt(id)} isAdmin={isAdmin} />
+        <Mostra id={Number(id)} isAdmin={isAdmin} />
       ) : (
         <p>ID do projeto não fornecido</p>
       )}

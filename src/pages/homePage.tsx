@@ -26,9 +26,10 @@ const Home = () => {
     setIsFormVisible((prevState) => !prevState);
   };
 
-  const handleProjectClick = (id: string) => {
-    navigate(`/projetos/visualizar/${id}`); 
-  };
+  const navegarProjeto = (projeto: { id: number }) => {
+    console.log("Navegando para o projeto com ID:", projeto.id); // Adicione esta linha
+    navigate(`/projeto/visualizar/${projeto.id}`);
+};
 
   const fetchData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -169,11 +170,11 @@ const Home = () => {
             </div>
             <p className={styles.titulo}>Resultados Encontrados</p>
             {projetos.map((projeto) => (
-              <div key={projeto.id} className={styles.projeto}>
+              <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
                  <div
-                  key={projeto.id}
+                  key={projeto.projetoId}
                   className={styles.projeto}
-                  onClick={() => handleProjectClick(projeto.id)} 
+                  onClick={() => navegarProjeto(projeto)} 
                   style={{ cursor: "pointer" }} 
                 ></div>
                 <i className="bi bi-file-earmark" style={{ fontSize: 34 }}></i>
@@ -212,21 +213,18 @@ const Home = () => {
             </Button>
             <br />
             <p className={styles.titulo}>Resultados Encontrados</p>
-            {projetos.map((projeto) => (
-              <div key={projeto.id} className={styles.projeto}>
-                <div
-                  key={projeto.id}
-                  className={styles.projeto}
-                  onClick={() => handleProjectClick(projeto.id)} 
-                  style={{ cursor: "pointer" }} 
-                ></div>
-                <i className="bi bi-file-earmark" style={{ fontSize: 34 }}></i>
-                <p>{projeto.titulo}</p>
-                <p>{projeto.dataInicio}</p>
-                <p>{projeto.dataTermino}</p>
-                <p>{projeto.valor}</p>
-              </div>
-            ))}
+            {projetos.map((projeto) => {
+                console.log(projeto); // Adicione esta linha
+                return (
+                    <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
+                        <i className="bi bi-file-earmark" style={{ fontSize: 34 }}></i>
+                        <p>{projeto.titulo}</p>
+                        <p>{projeto.dataInicio}</p>
+                        <p>{projeto.dataTermino}</p>
+                        <p>{projeto.valor}</p>
+                    </div>
+                );
+            })}
           </Form>
         )}
       </main>
