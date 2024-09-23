@@ -62,7 +62,6 @@ const Calendario: React.FC<CalendarioProps> = ({
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Data Final"
                     selectsEnd
-                    required={cadastro}
                     showYearDropdown
                     scrollableMonthYearDropdown
                     startDate={startDate || undefined}

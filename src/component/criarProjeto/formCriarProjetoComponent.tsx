@@ -31,16 +31,10 @@ const CriarProjetoComponent = () => {
     const [tituloProjeto, setTituloProjeto] = useState('');	
     const [referenciaProjeto, setReferenciaProjeto] = useState('');
     const [contratante, setContratante] = useState('');
-    const [objeto, setObjeto] = useState('');
-    const [descricao, setDescricao] = useState('');
     const [coordenador, setCoordenador] = useState('');
     const [valor, setValor] = useState('');
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
-    const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
-    const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
-    const [propostas, setPropostas] = useState<File | undefined>(undefined);
-    const [contrato, setContrato] = useState<File | undefined>(undefined);
     const [isValorInvalido, setIsValorInvalido] = useState(false);
     const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
     const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
@@ -59,17 +53,18 @@ const CriarProjetoComponent = () => {
         const valorFloat = parseFloat(valor);
         setValidado(true);
 
-        const projeto = MontarFormDataCadastro({
+        const dataInicioString = startDate?.toISOString();
+        const dataTerminoString = endDate?.toISOString();
+
+        const projeto = {
             titulo: tituloProjeto,
-            referenciaProjeto: referenciaProjeto,
-            contratante: contratante,
-            objeto: objeto,
-            descricao: descricao,
-            nomeCoordenador: coordenador,
+            referencia: referenciaProjeto,
+            coordenador: coordenador,
+            dataInicio: dataInicioString || '',
             valor: valorFloat,
-            dataInicio: startDate?.toISOString() || '',
-            dataTermino: endDate?.toISOString() || '',
-        }, 'cadastro', resumoExcel, resumoPdf, propostas, contrato);
+            dataTermino: dataTerminoString,
+            contratante: contratante,
+        }
 
         console.log(projeto);
         
@@ -164,7 +159,7 @@ const CriarProjetoComponent = () => {
                         </Form.Control.Feedback>
                     </FloatingLabel>
                     <FloatingLabel 
-                        label="Empresa" 
+                        label="Contratante" 
                         controlId="validationCustom03"
                         className="mb-3"
                         style={{width: '48vw',

@@ -2,7 +2,7 @@ import api from '../api';
 import { CadastrarProjeto } from "../../interface/projeto.interface";
 import { AxiosError } from 'axios';
 
-export default async function CadastrarProjetoFunction (projeto: FormData): Promise<any> {
+export default async function CadastrarProjetoFunction (projeto: CadastrarProjeto): Promise<any> {
     try {
         const resposta = await api.post('/projeto/cadastrar', projeto, {
             headers: {
