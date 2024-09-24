@@ -4,20 +4,24 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import { getAdminNavigationItems} from './navItens';
+import { logout, isAuthenticated } from '../../services/auth';
+import { useNavigate } from "react-router"
 
-interface NavbarComponentProps {
-    tipoUsuario: string;
-}
-
-const NavbarComponent: React.FC<NavbarComponentProps> = ({tipoUsuario}) => {
-    const logado = true
+const NavbarComponent = () => {
+    const navigate = useNavigate();
+    const [logado, setLogado] = useState(isAuthenticated());
     const getNavigationItems = () => {
-        switch (tipoUsuario) {
-            case 'admin':
-                return getAdminNavigationItems();
-            default:
-                return [];
+        if (logado) {
+            return getAdminNavigationItems();
         }
+        else {
+            return [];
+        }
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
     };
 
     return (
@@ -33,7 +37,7 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({tipoUsuario}) => {
                         ))}
                     </Nav>
                     <Nav className='ms-auto'> 
-                        {logado ? <Nav.Link href="/login">Sair</Nav.Link> 
+                        {logado ? <Nav.Link onClick={handleLogout}>Sair</Nav.Link> 
                         : <Nav.Link href="/login">Entrar</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>

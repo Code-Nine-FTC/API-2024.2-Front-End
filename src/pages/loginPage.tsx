@@ -4,7 +4,11 @@ import styles from "../component/login/login.module.css"
 import { FloatingLabel, Form, Button } from "react-bootstrap"
 import LoginAdminService from "../services/administrador/loginService"
 import{ toast } from 'react-toastify';
+import { useContext } from 'react';
 import criptografarSenha from "../functions/criptografaSenha"
+import { AuthContext } from "../services/context"
+import { login } from "../services/auth"
+import avatar from "../assets/login/avataricon.svg"
 
 const LoginPage = () => {
     const navigate = useNavigate()
@@ -12,14 +16,26 @@ const LoginPage = () => {
     const[senha, setSenha] = useState("")
     const[erro, setErro] = useState("")
     const[camposValidados, setValidado] = useState(false)
+    const { setAutenticado, setToken } = useContext(AuthContext);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const form = event.currentTarget;
+
+        if (form.checkValidity() === false) {
+            setValidado(true);
+            return
+          }
+
+        setValidado(true);
+
         let dados = {
-            email: email,
-            senha: criptografarSenha(senha)
+            login: email,
+            password: senha
         }
+
+        console.log(dados)
 
         try {
             const resposta = await LoginAdminService(dados);
@@ -27,6 +43,8 @@ const LoginPage = () => {
             if (resposta.status === 200) {
               toast.success("Login realizado com sucesso")
               setErro("")
+              login(resposta.data.token, setAutenticado, setToken)
+              navigate('/')
             }
             else {
               setErro(resposta.message)
@@ -47,24 +65,28 @@ const LoginPage = () => {
                 <span className="setaVoltarBranca" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}> &#x2190;</span>
             </div>
             <section className={styles.mainbody}>
-                <Form noValidate validated={camposValidados} onSubmit={handleSubmit}>
+                <div className={styles.tituloImagem}>
+                    <img src={avatar} alt="Icone representando avatar de usuário"></img>
+                    <h1 className={styles.titulo}>Login</h1>
+                </div>
+                <Form noValidate validated={camposValidados} className="bg-light p-5 rounded col-md-12" onSubmit={handleSubmit}>
                     <FloatingLabel
                         controlId="validateCustom01"
                         label="Email"
                         className="mb-3"
-                        style={{width: '48vw',
+                        style={{width: '27vw',
                             color: '#9C9C9C',
                             zIndex: 1,
                         }}
                     >
                         <Form.Control
-                            type="text"
+                            type="email"
                             placeholder="Email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
                             Por favor, insira o seu email.
                         </Form.Control.Feedback>
                     </FloatingLabel>
@@ -72,31 +94,31 @@ const LoginPage = () => {
                         controlId="validateCustom02"
                         label="Senha"
                         className="mb-3"
-                        style={{width: '48vw',
+                        style={{width: '27vw',
                             color: '#9C9C9C',
                             zIndex: 1,
                         }}
                     >
                         <Form.Control
-                            type="text"
+                            type="password"
                             placeholder="Senha"
                             required
                             value={senha}
                             onChange={(e) => setSenha(e.target.value)}
                         />
-                        <Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">
                             Por favor, insira sua senha
                         </Form.Control.Feedback>
                     </FloatingLabel>
-                    {erro && (
+                    <div className="d-flex justify-content-center">
+                        <Button type="submit">
+                            Enviar
+                        </Button>
+                        {erro && (
                         <p className={styles.erro}>
                             {erro}
                         </p>
                     )}
-                    <div className={styles.botaoEnviar}>
-                        <Button type="submit">
-                            Enviar
-                        </Button>
                     </div>
                 </Form>
             </section>

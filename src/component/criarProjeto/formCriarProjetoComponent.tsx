@@ -1,16 +1,11 @@
 import { Button, FloatingLabel, Form, FormControl, InputGroup} from "react-bootstrap";
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react'
 import styles from './criarProjeto.module.css';
-import attach from '../../assets/criarProjeto/attach.svg';
-import arquivoIcon from '../../assets/criarProjeto/arquivo.svg';
-import ValidadorDeArquivos from "../../functions/validadorDeArquivos";
 import SweetAlert2 from 'sweetalert2';
 import { CadastrarProjeto } from "../../interface/projeto.interface";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
-import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from 'react-router-dom';
-import separarMensagens from "../../functions/separarMensagens";
 
 interface MensagemValidacao {
     titulo: string

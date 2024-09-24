@@ -17,6 +17,10 @@ main {
   padding: 40px 20px;
 }
 
+.divtotal {
+  height: 100vh;
+}
+
 .tituloSetaVoltar {
   display: flex;
   align-items: center;

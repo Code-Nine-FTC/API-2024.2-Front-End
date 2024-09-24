@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 
 export default async function LoginAdminService (dados: LoginAdm) {
     try {
-        const resposta = await api.post("/administrador/login", dados); 
+        const resposta = await api.post("/auth/login", dados); 
 
         console.log(resposta)
 

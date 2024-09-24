@@ -1,4 +1,4 @@
 export interface LoginAdm {
-    email: string;
-    senha: string;
+    login: string;
+    password: string;
 }
