@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-import MontarFormDataCadastro from '../../services/projeto/montarFormDataProjetoService';
-import { Button, Form, Alert, Spinner } from 'react-bootstrap';
-import styles from './mostraProjeto.module.css'; // Importe o CSS Module
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
+import { Button, Form, Alert, Spinner } from "react-bootstrap";
+import styles from "./mostraProjeto.module.css"; // Importe o CSS Module
 
 interface Projeto {
   id: number;
   titulo: string;
   referencia: string;
-  empresa: string;
+  contratante: string;
   objeto: string;
   descricao: string;
-  coordenador: string;
-  dt_inicio: string;
-  dt_fim: string;
+  nomeCoordenador: string;
+  dataInicio: string;
+  dataTermino: string;
+  valor: number;
   resumoPdfUrl: string;
   resumoExcelUrl: string;
 }
@@ -39,7 +40,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
         const response = await axios.get<Projeto>(url);
         setProjeto(response.data);
       } catch (error) {
-        setError('Erro ao carregar os dados do projeto');
+        setError("Erro ao carregar os dados do projeto");
       } finally {
         setLoading(false);
       }
@@ -47,12 +48,17 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
     fetchProjeto();
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setProjeto((prevProjeto) => (prevProjeto ? { ...prevProjeto, [name]: value } : null));
+    setProjeto((prevProjeto) =>
+      prevProjeto ? { ...prevProjeto, [name]: value } : null
+    );
   };
 
-  const handleDiscardChanges = () => {
+  const handleBack = (id: number) => {
+    setIsEditing(false);
     navigate(`/projeto/visualizar/${id}`);
   };
 
@@ -68,7 +74,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
       try {
         const resposta = await api.put(`/projeto/atualizar/${id}`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         });
 
@@ -76,21 +82,21 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
           navigate(`/projeto/visualizar/${id}`);
           setIsEditing(false);
         } else {
-          setError('Erro ao atualizar o projeto');
+          setError("Erro ao atualizar o projeto");
         }
       } catch (error) {
-        setError('Erro ao atualizar o projeto');
+        setError("Erro ao atualizar o projeto");
       }
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: number) => {
     try {
-      const url = api.getUri({ url: `projetos/${id}` });
-      await axios.delete(`${url}`);
-      navigate('/');
+      await axios.delete(`http://localhost:8080/projeto/deletar/${id}`);
+      console.log("Projeto deletado com sucesso!");
+      navigate("/");
     } catch (error) {
-      setError('Erro ao excluir o projeto');
+      console.error("Erro ao deletar o projeto:", error);
     }
   };
 
@@ -137,11 +143,11 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="empresa">Empresa</Form.Label>
+          <Form.Label htmlFor="contratante">Contratante</Form.Label>
           <Form.Control
             type="text"
-            name="empresa"
-            value={projeto.empresa}
+            name="contratante"
+            value={projeto.contratante}
             onChange={handleChange}
             readOnly={!isEditing}
           />
@@ -170,11 +176,44 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="coordenador">Coordenador</Form.Label>
+          <Form.Label htmlFor="valor">Valor</Form.Label>
           <Form.Control
             type="text"
-            name="coordenador"
-            value={projeto.coordenador}
+            name="valor"
+            value={projeto.valor}
+            onChange={handleChange}
+            readOnly={!isEditing}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="nomeCoordenador">Coordenador</Form.Label>
+          <Form.Control
+            type="text"
+            name="nomeCoordenador" 
+            value={projeto.nomeCoordenador}
+            onChange={handleChange}
+            readOnly={!isEditing}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="dataInicio">Data de Início</Form.Label>
+          <Form.Control
+            type="date"
+            name="dataInicio" 
+            value={projeto.dataInicio}
+            onChange={handleChange}
+            readOnly={!isEditing}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="dataTermino">Data de Fim</Form.Label>
+          <Form.Control
+            type="date"
+            name="dataTermino" 
+            value={projeto.dataTermino}
             onChange={handleChange}
             readOnly={!isEditing}
           />
@@ -183,12 +222,20 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
         <div className={styles.arquivosEscolhidos}>
           <h3>Arquivos</h3>
           <p>
-            <a href={projeto.resumoPdfUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={projeto.resumoPdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Baixar Resumo (PDF)
             </a>
           </p>
           <p>
-            <a href={projeto.resumoExcelUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={projeto.resumoExcelUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Baixar Resumo (Excel)
             </a>
           </p>
@@ -198,13 +245,30 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
           <div className={styles.botaoEnviar}>
             {isEditing ? (
               <>
-                <Button type="submit" variant="primary">Salvar</Button>
-                <Button type="button" variant="secondary" onClick={handleDiscardChanges}>Cancelar</Button>
+                <Button type="submit" variant="primary">
+                  Salvar
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => handleBack(id)}
+                >
+                  Cancelar
+                </Button>
               </>
             ) : (
               <>
-                <Button type="button" variant="warning" onClick={handleEditar}>Editar</Button>
-                <Button type="button" variant="danger" onClick={handleDelete}>Excluir</Button>
+                <Button type="button" variant="warning" onClick={handleEditar}>
+                  Editar
+                </Button>
+                <Button
+                  type="button"
+                  variant="danger"
+                  onClick={() => handleDelete(id)}
+                >
+                  {" "}
+                  Deletar Projeto
+                </Button>
               </>
             )}
           </div>
