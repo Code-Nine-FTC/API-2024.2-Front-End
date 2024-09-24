@@ -4,10 +4,10 @@ import CriarProjetoComponent from '../component/criarProjeto/formCriarProjetoCom
 
 const CriarProjeto = () => {
     return (
-        <body>
+        <div>
             <CriarProjetoComponent />
-        </body>
-    )
+        </div>
+    );
 }
 
 export default CriarProjeto;

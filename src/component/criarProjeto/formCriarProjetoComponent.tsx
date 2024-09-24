@@ -72,6 +72,7 @@ const CriarProjetoComponent = () => {
             const resposta = await CadastrarProjetoFunction(projeto);
             if (resposta.status === 201) {
                 console.log("Projeto cadastrado com sucesso");
+                navigate(`/`)
                 SweetAlert2.fire({
                     icon: 'success',
                     title: resposta.data,
