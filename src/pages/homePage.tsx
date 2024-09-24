@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Calendario from "../component/date/calendarioComponent";
 import styles from "../component/home/Home.module.css";
 import { Button } from "react-bootstrap";
-import axios from "axios";
 import SweetAlert2 from "sweetalert2";
 import ProcurarProjetoFunction from "../services/buscar/buscarProjetosService";
 import logo from "../assets/logo-fapg.svg";
-import CloseButton from "react-bootstrap/CloseButton";
+import { FaRegFileLines } from "react-icons/fa6";
+
 
 const Home = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -21,6 +21,9 @@ const Home = () => {
   const [projetosituacao, setProjetoSituacao] = useState("");
   const [projetos, setProjetos] = useState<any[]>([]);
   const navigate = useNavigate();
+
+  const resultadosRef = useRef<HTMLDivElement>(null);
+
 
   const toggleFormVisibility = () => {
     setIsFormVisible((prevState) => !prevState);
@@ -65,32 +68,37 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    if (projetos.length > 0 && resultadosRef.current) {
+      resultadosRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [projetos]);
+
   return (
     <body>
       <main className={styles.main}>
-        <h1 className={styles.titulo}> Portal de Transparencia </h1>
-        {isFormVisible ? (
-          <Form onSubmit={fetchData}>
-            <div className={styles.formLimit}>
-              <div className={styles.flexbox}>
-                <FloatingLabel
-                  controlId="floatingInput"
-                  label="Referência do Projeto"
-                  className="mb-3"
-                  style={{ width: "48vw", color: "#9C9C9C", zIndex: 1 }}
-                >
-                  <Form.Control
-                    type="text"
-                    placeholder="Referência do Projeto"
-                    value={referenciaProjeto}
-                    onChange={(e) => setReferenciaProjeto(e.target.value)}
-                  />
-                </FloatingLabel>
-                <FloatingLabel
+          <Form onSubmit={fetchData} className={styles.form}>
+            <img src={logo} alt="Logo FAPG" className={styles.logo} />
+            <br />
+            <FloatingLabel
+              controlId="floatingInput"
+              label="Referência do Projeto"
+              className="mb-3"
+              style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
+            >
+              <Form.Control
+                type="text"
+                placeholder="Referência do Projeto"
+                value={referenciaProjeto}
+                onChange={(e) => setReferenciaProjeto(e.target.value)}
+              />
+            </FloatingLabel>
+            <div className={`${styles.filtros} ${isFormVisible ? styles.filtrosVisiveis : ''}`}>
+            <FloatingLabel
                   label="Coordenador"
                   controlId="floatingInput"
                   className="mb-3"
-                  style={{ width: "48vw", color: "#9C9C9C", zIndex: 1 }}
+                  style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
                 >
                   <Form.Control
                     type="text"
@@ -113,7 +121,7 @@ const Home = () => {
                   controlId="floatingSelectGrid"
                   label="Classificação"
                   className="mb-3"
-                  style={{ width: "48vw", color: "#9C9C9C", zIndex: 0 }}
+                  style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
                 >
                   <Form.Select
                     aria-label="Floating label select example"
@@ -138,7 +146,7 @@ const Home = () => {
                   controlId="floatingSelectGrid"
                   label="Situação do Projeto"
                   className="mb-3"
-                  style={{ width: "48vw", color: "#9C9C9C", zIndex: 0 }}
+                  style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
                 >
                   <Form.Select
                     aria-label="Floating label select example"
@@ -156,77 +164,33 @@ const Home = () => {
                   </Form.Select>
                 </FloatingLabel>
               </div>
-              <div className={styles.fecharbox} onClick={toggleFormVisibility}>
-                <p className={styles.fecharp}> Fechar Filtro </p>
-                <CloseButton className={styles.fechar} />
-              </div>
-
-              <div className={styles.lateralform}>
-                <img src={logo} className={styles.logo} alt="Logo" />
-                <Button type="submit" className={styles.botaoEnviar}>
-                  Procurar
-                </Button>
-              </div>
-            </div>
-            <p className={styles.titulo}>Resultados Encontrados</p>
-            {projetos.map((projeto) => (
-              <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
-                 <div
-                  key={projeto.projetoId}
-                  className={styles.projeto}
-                  onClick={() => navegarProjeto(projeto)} 
-                  style={{ cursor: "pointer" }} 
-                ></div>
-                <i className="bi bi-file-earmark" style={{ fontSize: 34 }}></i>
-                <p>{projeto.titulo}</p>
-                <p>{projeto.dataInicio}</p>
-                <p>{projeto.dataTermino}</p>
-                <p>{projeto.valor}</p>
-              </div>
-            ))}
-          </Form>
-        ) : (
-          <Form onSubmit={fetchData} className={styles.formmin}>
-            <FloatingLabel
-              controlId="floatingInput"
-              label="Referência do Projeto"
-              className="mb-3"
-              style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-            >
-              <Form.Control
-                type="text"
-                placeholder="Referência do Projeto"
-                value={referenciaProjeto}
-                onChange={(e) => setReferenciaProjeto(e.target.value)}
-              />
-            </FloatingLabel>
             <br />
             <Button type="submit" className={styles.botaoSubmit}>
               Procurar
             </Button>
             <br />
-            <Button
-              onClick={toggleFormVisibility}
-              className={styles.botaoFiltro}
-            >
-              Abrir Filtros
+            <Button onClick={toggleFormVisibility} className={styles.botaoFiltro}>
+              {isFormVisible ? "Fechar Filtros" : "Abrir Filtros"}
             </Button>
             <br />
-            <p className={styles.titulo}>Resultados Encontrados</p>
-            {projetos.map((projeto) => {
-                console.log(projeto); // Adicione esta linha
-                return (
-                    <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
-                        <i className="bi bi-file-earmark" style={{ fontSize: 34 }}></i>
-                        <p>{projeto.titulo}</p>
-                        <p>{projeto.dataInicio}</p>
-                        <p>{projeto.dataTermino}</p>
-                        <p>{projeto.valor}</p>
-                    </div>
-                );
-            })}
+            {projetos.length > 0 && (
+                <div id="resultados" ref={resultadosRef} className={styles.projetobox}>
+                  <p className={styles.titulo}>Resultados Encontrados</p>
+                {projetos.map((projeto) => {
+                    console.log(projeto);
+                    return (
+                        <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
+                            <FaRegFileLines style={{ fontSize: 34}} />
+                            <p>{projeto.titulo}</p>
+                            <p>{projeto.dataInicio}</p>
+                            <p>{projeto.dataTermino}</p>
+                            <p>{projeto.valor}</p>
+                        </div>
+                    );
+                })}
+                </div>
+            )}
           </Form>
-        )}
       </main>
     </body>
   );
