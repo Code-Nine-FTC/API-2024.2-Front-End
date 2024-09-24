@@ -123,7 +123,7 @@ const CriarProjetoComponent = () => {
                         controlId="validationCustom01"
                         label="Titulo"
                         className="mb-3"
-                        style={{width: '48vw',
+                        style={{width: '50vw',
                             color: '#9C9C9C',
                             zIndex: 1,
                         }}
@@ -143,7 +143,7 @@ const CriarProjetoComponent = () => {
                         label="Referência de projeto" 
                         controlId="validationCustom02"
                         className="mb-3"
-                        style={{width: '48vw',
+                        style={{width: '50vw',
                             color: '#9C9C9C',
                             zIndex: 1,
                         }}
@@ -163,7 +163,7 @@ const CriarProjetoComponent = () => {
                         label="Contratante" 
                         controlId="validationCustom03"
                         className="mb-3"
-                        style={{width: '48vw',
+                        style={{width: '50vw',
                             color: '#9C9C9C',
                             zIndex: 1,
                         }}
@@ -171,7 +171,6 @@ const CriarProjetoComponent = () => {
                         <Form.Control 
                             type="text" 
                             placeholder="Contratante"
-                            required 
                             value={contratante}
                             onChange={(e) => setContratante(e.target.value)} />
                             <Form.Control.Feedback type="invalid">
@@ -182,7 +181,7 @@ const CriarProjetoComponent = () => {
                         label="Coordenador" 
                         controlId="validationCustom06"
                         className="mb-3"
-                        style={{width: '48vw',
+                        style={{width: '50vw',
                             color: '#9C9C9C',
                             zIndex: 1,
                         }}
@@ -201,7 +200,7 @@ const CriarProjetoComponent = () => {
                         label="Valor do projeto" 
                         controlId="validationCustom07"
                         className="mb-3"
-                        style={{width: '48vw',
+                        style={{width: '50vw',
                             color: '#9C9C9C',
                             zIndex: 1,
                         }}

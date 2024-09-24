@@ -6,13 +6,20 @@ body{
     background-color: var(--background-color);
 }
 
+p{
+    font-size: 1rem;
+    margin: 0;
+}
 
 .main {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .logo{
+    display: flex;
     height: 20vh;
     width: 30vw;
 }
@@ -21,89 +28,35 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
     margin-bottom: 2%;
     font-size: 2rem;
     font-weight: bold;
-}
-
-.flexbox {
-    display: flex;
-    flex-direction: column;
-    padding: 3rem;
-}
-
-.formLimit {
-    display: flex;
-    flex-direction: row;
-    min-width: fit-content;
-    width: 100%;
-    height: 70%;
-    max-height: fit-content;
-    min-height: fit-content;
-    background-color: white;
-    border: var(--border-color);
-    border-radius: 1.5rem;
-    padding: auto;
-    box-shadow: var(--box-shadow);
-}
-
-
-.lateralform {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 6%;
-    width: 40vw;
-    height: fit-content;
-    justify-content: center;
-}
-
-.botaoEnviar {
-    width: 10vw;
-    margin-left: 8%;
-    margin-top: 12%;
-}
-
-
-.fecharbox{
-    display: flex;
-    flex-direction: row;
-    height: fit-content;
-    cursor: pointer;
-}
-
-.fechar {
-    position: absolute;
-    margin-left: 38%;
-    margin-top: 1%;
-}
-
-.fecharp {
-    position: absolute;
-    margin-left: 32%;
-    margin-top: 1%;
-    color: #7a7a7a;
-}
-
-.titulo{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 3%;
+    border-bottom: var(--border-color);
 }
 
-.formmin{
+.filtros {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.5s ease-out;
+  }
+  
+.filtrosVisiveis {
+    min-height: fit-content;
+    max-height: 1500px; 
+    transition: max-height 0.5s ease-in;
+    overflow: visible;
+  }
+
+.form{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: var(--border-color);
-    border-radius: 1rem;
-    padding: 3%;
-    background-color: white;
-    box-shadow: var(--box-shadow);
     min-height: fit-content;
-    max-height: fit-content;
 }
 
 .botaoSubmit{
@@ -114,18 +67,32 @@ body{
     width: 10vw;
 }
 
+.projetobox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: fit-content;
+    max-height: fit-content;
+    padding: 3%;
+    width: 97vw;
+    background-color: whitesmoke;
+    border-radius: 1.5rem;
+}
+
 .projeto{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 15%;
     text-align: center;
     align-items: center;
     width: 100%;
     min-height: fit-content;
     height: 10vh;
+    padding: 3%;
     border-bottom: var(--border-color);
     border-width: 100%;
-    padding: 1%;
     border-radius: 1rem;
 }
 
