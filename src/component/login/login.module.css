@@ -28,3 +28,10 @@
     margin-bottom: 1rem;
     color: var(--nav-link-color);
 }
+
+.erro {
+    color: red;
+    text-align: center;
+    margin-top: 4%;
+    width: 27vw;
+}

@@ -3,12 +3,12 @@ import { useNavigate } from "react-router"
 import styles from "../component/login/login.module.css"
 import { FloatingLabel, Form, Button } from "react-bootstrap"
 import LoginAdminService from "../services/administrador/loginService"
-import{ toast } from 'react-toastify';
 import { useContext } from 'react';
 import criptografarSenha from "../functions/criptografaSenha"
 import { AuthContext } from "../services/context"
 import { login } from "../services/auth"
 import avatar from "../assets/login/avataricon.svg"
+import SweetAlert from 'sweetalert2'
 
 const LoginPage = () => {
     const navigate = useNavigate()
@@ -41,9 +41,14 @@ const LoginPage = () => {
             const resposta = await LoginAdminService(dados);
   
             if (resposta.status === 200) {
-              toast.success("Login realizado com sucesso")
               setErro("")
               login(resposta.data.token, setAutenticado, setToken)
+                SweetAlert.fire({
+                    icon: 'success',
+                    title: 'Login realizado com sucesso!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
               navigate('/')
             }
             else {
@@ -53,11 +58,11 @@ const LoginPage = () => {
             setEmail("")
             setSenha("")
   
-          } catch(error) {
-              console.error("Erro ao fazer login:", error);
-              toast.error('Erro ao fazer login');
-          }
-    }
+          } catch (error:any) {
+            let errorMessage = error.message || 'Erro ao realizar o login, tente novamente mais tarde.';
+            setErro(errorMessage)
+            }
+        }
 
     return (
         <main className={styles.body}>
@@ -114,12 +119,12 @@ const LoginPage = () => {
                         <Button type="submit">
                             Enviar
                         </Button>
-                        {erro && (
+                    </div>
+                    {erro && (
                         <p className={styles.erro}>
                             {erro}
                         </p>
                     )}
-                    </div>
                 </Form>
             </section>
         </main>

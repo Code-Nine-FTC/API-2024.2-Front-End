@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 export default async function LoginAdminService (dados: LoginAdm) {
     try {
         const resposta = await api.post("/auth/login", dados); 
-        
+
         console.log(resposta)
 
         if (resposta.status === 200) {
@@ -17,6 +17,6 @@ export default async function LoginAdminService (dados: LoginAdm) {
 
     } catch (error) {
         let errorMessage = (error as AxiosError).response?.data as any;
-        throw new Error("Erro ao fazer login");
+        throw new Error(errorMessage);
     }
 }
