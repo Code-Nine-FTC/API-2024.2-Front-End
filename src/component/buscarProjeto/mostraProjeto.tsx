@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
 import { Button, Form, Alert, Spinner, FloatingLabel } from "react-bootstrap";
-import styles from "./mostraProjeto.module.css"; // Importe o CSS Module
+import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
 import Calendario from "../date/calendarioComponent";
 import arquivoIcon from "../../assets/criarProjeto/arquivo.svg";
@@ -26,9 +26,9 @@ interface EditaExcluiMostraProps {
 }
 
 const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
-      const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({titulo: '', texto: ''});
+  const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({titulo: '', texto: ''});
   const [autenticado, setAutenticado] = useState<boolean>(isAuthenticated());
-  const [projeto, setProjeto] = useState<EditarProjeto | undefined>([undefined]);
+  const [projeto, setProjeto] = useState<EditarProjeto | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -62,6 +62,9 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
       } catch (error) {
         console.error("Erro ao carregar os dados do projeto", error);
       }
+      finally {
+        setLoading(false);
+      }
     };
 
     fetchProjeto();
@@ -84,6 +87,16 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
       setContratoUrl(projeto.resumocontratoUrl || "");
     }
   }, [projeto]);
+
+  useEffect(() => {
+    if (mensagemValidacao.titulo && mensagemValidacao.texto) {
+        SweetAlert2.fire({
+            icon: 'error',
+            title: mensagemValidacao.titulo,
+            text: mensagemValidacao.texto,
+        });
+    }
+  },[mensagemValidacao]);
 
   // const handleChange = (
   //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -293,16 +306,6 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
             }
         }
     }
-
-    useEffect(() => {
-        if (mensagemValidacao.titulo && mensagemValidacao.texto) {
-            SweetAlert2.fire({
-                icon: 'error',
-                title: mensagemValidacao.titulo,
-                text: mensagemValidacao.texto,
-            });
-        }
-    },[mensagemValidacao]);
 
   return (
     <div className={styles.formMain}>
