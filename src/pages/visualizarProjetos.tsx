@@ -6,12 +6,11 @@ import Mostra from '../component/buscarProjeto/mostraProjeto';
 
 const AlteraDeletaVisualiza: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const isAdmin = true
 
   return (
     <div>
       {id ? (
-        <Mostra id={Number(id)} isAdmin={isAdmin} />
+        <Mostra id={Number(id)}/>
       ) : (
         <p>ID do projeto não fornecido</p>
       )}

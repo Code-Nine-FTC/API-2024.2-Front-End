@@ -21,20 +21,20 @@ export interface CadastrarProjeto {
 }
 
 export interface EditarProjeto {
-    id: string;
-    titulo?: string;
-    referenciaProjeto?: string;
-    empresa?: string;
+    id: number;
+    titulo: string;
+    referencia: string;
+    contratante?: string;
     objeto?: string;
     descricao?: string;
-    coordenador?: string;
-    valor?: number;
-    dataInicio?: string;
+    coordenador: string;
+    dataInicio: string;
     dataTermino?: string;
-    resumoExcel?: File;
-    resumoPdf?: File;
-    proposta?: File;
-    contrato?: File;
+    valor?: number;
+    resumoPdfUrl?: string; 
+    resumoExcelUrl?: string; 
+    resumopropostaUrl?: string; 
+    resumocontratoUrl?: string; 
 }
 
 export interface BuscarProjeto {
