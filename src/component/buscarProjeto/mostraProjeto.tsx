@@ -5,7 +5,7 @@ import api from "../../services/api";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
 import { Button, Form, Alert, Spinner } from "react-bootstrap";
 import styles from "./mostraProjeto.module.css"; // Importe o CSS Module
-
+import { getToken } from "../../services/auth";
 interface Projeto {
   id: number;
   titulo: string;
@@ -17,8 +17,10 @@ interface Projeto {
   dataInicio: string;
   dataTermino: string;
   valor: number;
-  resumoPdfUrl: string;
-  resumoExcelUrl: string;
+  resumoPdfUrl: string; // Altere para string para download
+  resumoExcelUrl: string; // Altere para string para download
+  resumopropostaUrl: string; // Altere para string para download
+  resumocontratoUrl: string; // Altere para string para download
 }
 
 interface EditaExcluiMostraProps {
@@ -27,10 +29,18 @@ interface EditaExcluiMostraProps {
 }
 
 const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
-  const [projeto, setProjeto] = useState<Projeto | null>(null);
+  const [projeto, setProjeto] = useState<Projeto | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
+  const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
+  const [resumocontrato, setResumocontrato] = useState<File | undefined>(
+    undefined
+  );
+  const [resumoproposta, setResumoproposta] = useState<File | undefined>(
+    undefined
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +49,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
         const url = api.getUri({ url: `/projeto/visualizar/${id}` });
         const response = await axios.get<Projeto>(url);
         setProjeto(response.data);
+        console.log(response.data);
       } catch (error) {
         setError("Erro ao carregar os dados do projeto");
       } finally {
@@ -53,7 +64,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
   ) => {
     const { name, value } = e.target;
     setProjeto((prevProjeto) =>
-      prevProjeto ? { ...prevProjeto, [name]: value } : null
+      prevProjeto ? { ...prevProjeto, [name]: value } : undefined
     );
   };
 
@@ -70,16 +81,23 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
         id: projeto.id.toString(),
       };
 
-      const formData = MontarFormDataCadastro(projetoEditado, "edicao");
+      const formData = MontarFormDataCadastro(
+        projetoEditado,
+        "edicao",
+        resumoExcel,
+        resumoPdf,
+        resumoproposta,
+        resumocontrato
+      );
       try {
+        console.log(getToken());
         const resposta = await api.put(`/projeto/atualizar/${id}`, formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 
         if (resposta.status === 200) {
-          navigate(`/projeto/visualizar/${id}`);
           setIsEditing(false);
         } else {
           setError("Erro ao atualizar o projeto");
@@ -92,7 +110,11 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8080/projeto/deletar/${id}`);
+      await axios.delete(`http://localhost:8080/projeto/deletar/${id}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       console.log("Projeto deletado com sucesso!");
       navigate("/");
     } catch (error) {
@@ -104,6 +126,14 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
     e.preventDefault();
     setIsEditing(true);
   };
+
+  /* const handleDownload = (data: string, fileType: string) => {
+    const link = document.createElement('a');
+    link.href = `data:application/${fileType};base64,${data}`;
+    link.download = `arquivo.${fileType === 'pdf' ? 'pdf' : 'xlsx'}`;
+    document.body.appendChild(link);
+    link.click();
+  }; */
 
   if (loading) {
     return <Spinner animation="border" />;
@@ -120,6 +150,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
   return (
     <div className={styles.formMain}>
       <Form onSubmit={handleSubmit} className={styles.adicionarArquivos}>
+        {/* Campos do projeto */}
         <Form.Group className="mb-3">
           <Form.Label htmlFor="titulo">Título</Form.Label>
           <Form.Control
@@ -190,7 +221,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
           <Form.Label htmlFor="nomeCoordenador">Coordenador</Form.Label>
           <Form.Control
             type="text"
-            name="nomeCoordenador" 
+            name="nomeCoordenador"
             value={projeto.nomeCoordenador}
             onChange={handleChange}
             readOnly={!isEditing}
@@ -201,7 +232,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
           <Form.Label htmlFor="dataInicio">Data de Início</Form.Label>
           <Form.Control
             type="date"
-            name="dataInicio" 
+            name="dataInicio"
             value={projeto.dataInicio}
             onChange={handleChange}
             readOnly={!isEditing}
@@ -212,68 +243,161 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id, isAdmin }) => {
           <Form.Label htmlFor="dataTermino">Data de Fim</Form.Label>
           <Form.Control
             type="date"
-            name="dataTermino" 
+            name="dataTermino"
             value={projeto.dataTermino}
             onChange={handleChange}
             readOnly={!isEditing}
           />
         </Form.Group>
 
-        <div className={styles.arquivosEscolhidos}>
-          <h3>Arquivos</h3>
-          <p>
-            <a
-              href={projeto.resumoPdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Baixar Resumo (PDF)
-            </a>
-          </p>
-          <p>
-            <a
-              href={projeto.resumoExcelUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Baixar Resumo (Excel)
-            </a>
-          </p>
-        </div>
-
-        {isAdmin && (
-          <div className={styles.botaoEnviar}>
-            {isEditing ? (
-              <>
-                <Button type="submit" variant="primary">
-                  Salvar
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => handleBack(id)}
-                >
-                  Cancelar
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button type="button" variant="warning" onClick={handleEditar}>
-                  Editar
-                </Button>
-                <Button
-                  type="button"
-                  variant="danger"
-                  onClick={() => handleDelete(id)}
-                >
-                  {" "}
-                  Deletar Projeto
-                </Button>
-              </>
-            )}
+        {/* Se está editando, exibe campos de upload de arquivos */}
+        {isEditing && (
+          <div className={styles.arquivosEscolhidos}>
+            <h3>Arquivos</h3>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="resumoExcel">Resumo Excel</Form.Label>
+              <Form.Control
+                type="file"
+                name="resumoExcel"
+                onChange={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  setResumoExcel(target.files ? target.files[0] : undefined);
+                }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="resumoPdf">Resumo PDF</Form.Label>
+              <Form.Control
+                type="file"
+                name="resumoPdf"
+                onChange={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  setResumoPdf(target.files ? target.files[0] : undefined);
+                }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="resumocontrato">Contrato</Form.Label>
+              <Form.Control
+                type="file"
+                name="resumocontrato"
+                onChange={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  setResumocontrato(target.files ? target.files[0] : undefined);
+                }}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="resumoproposta">Proposta</Form.Label>
+              <Form.Control
+                type="file"
+                name="resumoproposta"
+                onChange={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  setResumoproposta(target.files ? target.files[0] : undefined);
+                }}
+              />
+            </Form.Group>
           </div>
         )}
+
+        {/* Links de download */}
+
+        {/* !isEditing && (
+          <div className={styles.downloadLinks}>
+            <h4>Arquivos disponíveis para download:</h4>
+            <ul>
+              {projeto.resumoPdfUrl ? (
+                <li>
+                  <Button
+                    variant="link"
+                    onClick={() => handleDownload(projeto.resumoPdfUrl, "pdf")}
+                  >
+                    Resumo PDF
+                  </Button>
+                </li>
+              ) : (
+                <li>Nenhum resumo PDF disponível.</li>
+              )}
+
+              {projeto.resumoExcelUrl ? (
+                <li>
+                  <Button
+                    variant="link"
+                    onClick={() =>
+                      handleDownload(
+                        projeto.resumoExcelUrl,
+                        "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                      )
+                    }
+                  >
+                    Resumo Excel
+                  </Button>
+                </li>
+              ) : (
+                <li>Nenhum resumo Excel disponível.</li>
+              ) */}
+
+              {/* projeto.resumocontratoUrl ? (
+                <li>
+                  <Button
+                    variant="link"
+                    onClick={() =>
+                      handleDownload(projeto.resumocontratoUrl, "pdf")
+                    }
+                  >
+                    Contrato
+                  </Button>
+                </li>
+              ) : (
+                <li>Nenhum contrato disponível.</li>
+              ) */}
+
+              {/* projeto.resumopropostaUrl ? (
+                <li>
+                  <Button
+                    variant="link"
+                    onClick={() =>
+                      handleDownload(projeto.resumopropostaUrl, "pdf")
+                    }
+                  >
+                    Proposta
+                  </Button>
+                </li>
+              ) : (
+                <li>Nenhuma proposta disponível.</li>
+              ) */}
+            {/* </ul>
+          </div> */}
+        
+
+        {isEditing && (
+          <Button type="submit" variant="primary">
+            Salvar Alterações
+          </Button>
+        )}
+
+        {isEditing && (
+          <Button variant="secondary" onClick={() => handleBack(id)}>
+            Descartar Alterações
+          </Button>
+        )}
       </Form>
+
+      {isAdmin && !isEditing && (
+        <div>
+          <Button variant="primary" onClick={handleEditar} className="mt-3">
+            Editar
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => handleDelete(id)}
+            className="mt-3"
+          >
+            Deletar
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
