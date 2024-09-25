@@ -1,10 +1,16 @@
 import api from '../api';
 import { CadastrarProjeto } from "../../interface/projeto.interface";
 import { AxiosError } from 'axios';
+import { getToken } from '../auth';
 
 export default async function CadastrarProjetoFunction (projeto: CadastrarProjeto): Promise<any> {
     try {
-        const resposta = await api.post('/projeto/cadastrar', projeto);
+        console.log(getToken());
+        const resposta = await api.post('/projeto/cadastrar', projeto, {
+            headers: {
+                Authorization: `Bearer ${getToken()} `
+            }
+        });
 
         console.log(resposta);
 
