@@ -11,10 +11,12 @@ import arquivoIcon from "../../assets/criarProjeto/arquivo.svg";
 import pdflogo from "../../assets/editarProjeto/pdflogo.svg";
 import excellogo from "../../assets/editarProjeto/excellogo.svg"
 import attach from "../../assets/criarProjeto/attach.svg";
-import { EditarProjeto } from "../../interface/projeto.interface";
+import { EditarProjeto, VisualizarProjeto } from "../../interface/projeto.interface";
 import separarMensagens from "../../functions/separarMensagens";
 import ValidadorDeArquivos from "../../functions/validadorDeArquivos";
+import BaixarArquivo from "../../services/projeto/baixarArquivo";
 import SweetAlert2 from "sweetalert2";
+import { VisualizarDocumento } from "../../interface/documento.interface";
 
 interface MensagemValidacao {
     titulo: string
@@ -28,7 +30,7 @@ interface EditaExcluiMostraProps {
 const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
   const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({titulo: '', texto: ''});
   const [autenticado, setAutenticado] = useState<boolean>(isAuthenticated());
-  const [projeto, setProjeto] = useState<EditarProjeto | undefined>(undefined);
+  const [projeto, setProjeto] = useState<VisualizarProjeto | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -47,10 +49,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
   const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
   const [proposta, setProposta] = useState<File | undefined>(undefined);
   const [contrato, setContrato] = useState<File | undefined>(undefined);
-  const [resumoPdfUrl, setResumoPdfUrl] = useState(projeto?.resumoPdfUrl || "") 
-  const [resumoExcelUrl, setResumoExcelUrl] = useState(projeto?.resumoExcelUrl || "")
-  const [propostaUrl, setPropostaUrl] = useState(projeto?.resumopropostaUrl)
-  const [contratoUrl, setContratoUrl] = useState(projeto?.resumocontratoUrl)
+  const [documentos, setDocumentos] = useState<VisualizarDocumento[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,10 +80,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
       setStartDate(projeto.dataInicio ? new Date(projeto.dataInicio) : null);
       setEndDate(projeto.dataTermino ? new Date(projeto.dataTermino) : null);
       setValor(projeto.valor || "");
-      setResumoPdfUrl(projeto.resumoPdfUrl || "");
-      setResumoExcelUrl(projeto.resumoExcelUrl || "");
-      setPropostaUrl(projeto.resumopropostaUrl || "");
-      setContratoUrl(projeto.resumocontratoUrl || "");
+      setDocumentos(projeto.documentos);
     }
   }, [projeto]);
 
@@ -173,14 +169,6 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
     e.preventDefault();
     setIsEditing(true);
   };
-
-  /* const handleDownload = (data: string, fileType: string) => {
-    const link = document.createElement('a');
-    link.href = `data:application/${fileType};base64,${data}`;
-    link.download = `arquivo.${fileType === 'pdf' ? 'pdf' : 'xlsx'}`;
-    document.body.appendChild(link);
-    link.click();
-  }; */
 
   if (loading) {
     return <Spinner animation="border" />;
@@ -293,6 +281,15 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
 
         }
 
+    const handleBaixar = async (id: number, nome: string) => {
+      try {
+        await BaixarArquivo(id, nome);
+      } catch (error) {
+        console.error('Erro ao baixar o arquivo', error);
+        setMensagemValidacao({titulo: 'Erro ao baixar arquivo', texto: 'Tente novamente mais tarde.'});
+      }
+    }
+
     const excluirArquivo = (arquivoExcluir: File, setState?: Dispatch<SetStateAction<File | undefined>>) => {
         if (setState) {
             setState(undefined);
@@ -305,7 +302,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
                 setResumoExcel(undefined);
             }
         }
-    }
+      }
 
   return (
     <div className={styles.formMain}>
@@ -515,13 +512,19 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
         </>
       ) : (
         <div className={styles.visualizarResumos}>
-          <Button
-            variant="danger"
-            className="mt-3"
-          >
-            <img className={styles.arquivologo} src={pdflogo} alt="PDF Logo" />
-            Ver resumo pdf
-          </Button>
+          {documentos.map(doc => (
+                  doc.tipo === "resumoPdf" && doc.caminho && (
+              <Button
+                key={doc.id}
+                variant="danger"
+                className="mt-3"
+                onClick={() => handleBaixar(doc.id, doc.nome)}
+              >
+                <img className={styles.arquivologo} src={pdflogo} alt="PDF Logo" />
+                Ver resumo pdf
+              </Button>
+            )
+          ))}
           <Button
             variant="success"
             className="mt-3"

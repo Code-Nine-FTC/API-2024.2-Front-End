@@ -1,3 +1,5 @@
+import { VisualizarDocumento } from "./documento.interface";
+
 export interface CadastrarProjetoJson {
     titulo: string;
     referenciaProjeto: string;
@@ -35,6 +37,20 @@ export interface EditarProjeto {
     resumoExcelUrl?: string; 
     resumopropostaUrl?: string; 
     resumocontratoUrl?: string; 
+}
+
+export interface VisualizarProjeto {
+    id: number;
+    titulo: string;
+    referencia: string;
+    contratante: string;
+    objeto: string;
+    descricao: string;
+    coordenador: string;
+    dataInicio: string;
+    dataTermino: string;
+    valor: number;
+    documentos: VisualizarDocumento[];
 }
 
 export interface BuscarProjeto {
