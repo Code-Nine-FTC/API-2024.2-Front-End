@@ -15,6 +15,7 @@ import { EditarProjeto, VisualizarProjeto } from "../../interface/projeto.interf
 import separarMensagens from "../../functions/separarMensagens";
 import ValidadorDeArquivos from "../../functions/validadorDeArquivos";
 import BaixarArquivo from "../../services/projeto/baixarArquivo";
+import ExcluirArquivo from "../../services/projeto/excluirArquivo";
 import SweetAlert2 from "sweetalert2";
 import { VisualizarDocumento } from "../../interface/documento.interface";
 
@@ -26,6 +27,8 @@ interface MensagemValidacao {
 interface EditaExcluiMostraProps {
   id: number;
 }
+
+type FileOrVisualizarDocumento = File | VisualizarDocumento | undefined;
 
 const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
   const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({titulo: '', texto: ''});
@@ -45,10 +48,10 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
   const [valor, setValor] = useState(projeto?.valor || "")
   const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
   const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
-  const [resumoPdf, setResumoPdf] = useState<File | undefined>(undefined);
-  const [resumoExcel, setResumoExcel] = useState<File | undefined>(undefined);
-  const [proposta, setProposta] = useState<File | undefined>(undefined);
-  const [contrato, setContrato] = useState<File | undefined>(undefined);
+  const [resumoPdf, setResumoPdf] = useState<FileOrVisualizarDocumento | null>(null);
+  const [resumoExcel, setResumoExcel] = useState<FileOrVisualizarDocumento | null>(null);
+  const [proposta, setProposta] = useState<FileOrVisualizarDocumento | null>(null);
+  const [contrato, setContrato] = useState<FileOrVisualizarDocumento | null>(null);
   const [documentos, setDocumentos] = useState<VisualizarDocumento[]>([]);
   const navigate = useNavigate();
 
@@ -81,6 +84,17 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
       setEndDate(projeto.dataTermino ? new Date(projeto.dataTermino) : null);
       setValor(projeto.valor || "");
       setDocumentos(projeto.documentos);
+      projeto.documentos.forEach(doc => {
+        if (doc.tipo === "resumoPdf" && doc.caminho) {
+            setResumoPdf(doc);
+        } else if (doc.tipo === "resumoExcel" && doc.caminho) {
+            setResumoExcel(doc);
+        } else if (doc.tipo === "proposta" && doc.caminho) {
+            setProposta(doc);
+        } else if (doc.tipo === "contrato" && doc.caminho) {
+            setContrato(doc);
+        }
+    });
     }
   }, [projeto]);
 
@@ -189,11 +203,10 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
             return;
     }
 
-    const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>, setState?: Dispatch<SetStateAction<File | undefined>>) => {
+    const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>, setState?: Dispatch<SetStateAction<FileOrVisualizarDocumento | null>>) => {
         const arquivo = event.target.files ? event.target.files[0] : null;
 
         if (!arquivo) {
-            setMensagemValidacao({titulo: 'Nenhum arquivo selecionado.', texto: 'Por favor, selecione um arquivo.'});
             return;
         }
 
@@ -290,19 +303,60 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
       }
     }
 
-    const excluirArquivo = (arquivoExcluir: File, setState?: Dispatch<SetStateAction<File | undefined>>) => {
-        if (setState) {
-            setState(undefined);
-        }
-        else {
-            if (arquivoExcluir.type === 'application/pdf') {
-                setResumoPdf(undefined);
+    const excluirArquivo = async (arquivoExcluir: File | VisualizarDocumento, setState?: Dispatch<SetStateAction<FileOrVisualizarDocumento | null>>) => {
+          if (isVisualizarDocumento(arquivoExcluir)) {
+            SweetAlert2.fire({
+              title: 'Tem certeza que deseja excluir o arquivo?',
+              text: 'Essa ação não pode ser desfeita.',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#d33',
+              cancelButtonColor: '#3085d6',
+              confirmButtonText: 'Sim, excluir',
+              cancelButtonText: 'Cancelar',
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+            try {
+                const resultadoExclusao = await ExcluirArquivo(arquivoExcluir.id);
+                if (arquivoExcluir.tipo === "resumoPdf") {
+                    setResumoPdf(undefined);
+                }
+                if (arquivoExcluir.tipo === "resumoExcel") {
+                    setResumoExcel(undefined);
+                }
+                if (setState) {
+                      setState(undefined);
+                }
+                if (resultadoExclusao.status === 200) {
+                    SweetAlert2.fire('Arquivo excluído com sucesso', '', 'success');
+                }
+                else {
+                    console.error('Erro ao excluir o arquivo', resultadoExclusao.data);
+                    setMensagemValidacao({titulo: 'Erro ao excluir o arquivo', texto: 'Tente novamente mais tarde.'});
+                }
+              }
+            catch (error) {
+                console.error('Erro ao excluir o arquivo', error);
+                setMensagemValidacao({titulo: 'Erro ao excluir o arquivo', texto: 'Tente novamente mais tarde.'});
             }
+          }})
+        } else {
+            if (setState) {
+              setState(undefined);
+            }
+            if (arquivoExcluir.type === 'application/pdf') {
+                  setResumoPdf(undefined);
+              }
             if (arquivoExcluir.type === 'application/vnd.ms-excel' || arquivoExcluir.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
                 setResumoExcel(undefined);
+              }
+            SweetAlert2.fire('Arquivo excluído com sucesso', '', 'success');
             }
         }
-      }
+
+    const isVisualizarDocumento = (file: File | VisualizarDocumento): file is VisualizarDocumento => {
+        return (file as VisualizarDocumento).id !== undefined;
+    };
 
   return (
     <div className={styles.formMain}>
@@ -429,7 +483,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
                 }}
             >
           <Form.Control
-            as="textarea"
+            type="number"
             name="valor"
             value={valor}
             onChange={(e) => setValor(e.target.value)}
@@ -447,7 +501,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
                 }}
             >
           <Form.Control
-            as="textarea"
+            type="text"
             name="Coordenador"
             value={coordenador}
             onChange={(e) => setCoordenador(e.target.value)}
@@ -467,7 +521,6 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
           />
 
       {isEditing ? (
-        <>
           <div className={styles.adicionarArquivo}>
             <label htmlFor="enviararquivo">
               <img src={attach} alt="Adicionar arquivo" />
@@ -480,12 +533,11 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
               onChange={(e) => handleArquivo(e)}
               style={{ display: 'none' }}
             />
-          </div>
           {resumoPdf && (
             <div className={styles.arquivosEscolhidos}>
               <img src={arquivoIcon} alt="Arquivo" />
               <span className={styles.arquivoSpan}>
-                {resumoPdf.name}
+                {isVisualizarDocumento(resumoPdf) ? resumoPdf.nome : resumoPdf.name}
               </span>
               <span
                 className={styles.arquivoSpanExcluir}
@@ -499,7 +551,7 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
             <div className={styles.arquivosEscolhidos}>
               <img src={arquivoIcon} alt="Arquivo" />
               <span className={styles.arquivoSpan}>
-                {resumoExcel.name}
+                {isVisualizarDocumento(resumoExcel) ? resumoExcel.nome : resumoExcel.name}
               </span>
               <span
                 className={styles.arquivoSpanExcluir}
@@ -509,193 +561,145 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
               </span>
             </div>
           )}
-        </>
-      ) : (
-        <div className={styles.visualizarResumos}>
-          {documentos.map(doc => (
-                  doc.tipo === "resumoPdf" && doc.caminho && (
-              <Button
-                key={doc.id}
-                variant="danger"
-                className="mt-3"
-                onClick={() => handleBaixar(doc.id, doc.nome)}
-              >
-                <img className={styles.arquivologo} src={pdflogo} alt="PDF Logo" />
-                Ver resumo pdf
-              </Button>
-            )
-          ))}
-          <Button
-            variant="success"
-            className="mt-3"
-          >
-            <img className={styles.arquivologo} src={excellogo} alt="Excel Logo" />
-            Ver resumo excel
-          </Button>
+          <div className={styles.adicionarArquivos}>
+              <label htmlFor="enviarProposta">
+                  <span>Proposta</span>
+                  <img src={attach} alt="Adicionar arquivo" />
+              </label>
+            <input 
+                type="file"
+                id="enviarProposta"
+                accept=".pdf"
+                onChange={(e) => handleArquivo(e, setProposta)}
+                style={{display: 'none'}}
+            />
+            {proposta && (
+                <div className={styles.anexosEscolhidos}> 
+                    <img src={arquivoIcon} alt="Arquivo" />
+                    <span className={styles.arquivoSpan}>
+                        {isVisualizarDocumento(proposta) ? proposta.nome : proposta.name}
+                    </span>
+                    <span className={styles.arquivoSpanExcluir}
+                        onClick={(e) => excluirArquivo(proposta, setProposta)}>&#10006;
+                    </span>
+                </div>
+            )}
         </div>
+        <div className={styles.adicionarArquivos}>
+            <label htmlFor="enviarContrato">
+                <span>Contrato</span>
+                <img src={attach} alt="Adicionar arquivo" />
+            </label>
+            <input 
+                type="file"
+                id="enviarContrato"
+                accept=".pdf"
+                onChange={(e) => handleArquivo(e, setContrato)}
+                style={{display: 'none'}}
+            />
+            {contrato  && (
+                <div className={styles.anexosEscolhidos}> 
+                    <img src={arquivoIcon} alt="Arquivo" />
+                    <span className={styles.arquivoSpan}>
+                        {isVisualizarDocumento(contrato) ? contrato.nome : contrato.name}
+                    </span>
+                    <span className={styles.arquivoSpanExcluir}
+                        onClick={(e) => excluirArquivo(contrato, setContrato)}>&#10006;
+                    </span>
+                </div>
+            )}
+        </div>
+          </div>
+      ) : (
+        <>
+          <div className={styles.visualizarResumos}>
+            {documentos.map(doc => {
+                if (doc.tipo === "resumoPdf" && doc.caminho) {
+                    return (
+                        <Button
+                            key={doc.id}
+                            variant="danger"
+                            className="mt-3"
+                            onClick={() => handleBaixar(doc.id, doc.nome)}
+                        >
+                            <img className={styles.arquivologo} src={pdflogo} alt="PDF Logo" />
+                            Ver resumo pdf
+                        </Button>
+                    );
+                } else if (doc.tipo === "resumoExcel" && doc.caminho) {
+                    return (
+                        <Button
+                            key={doc.id}
+                            variant="success"
+                            className="mt-3"
+                            onClick={() => handleBaixar(doc.id, doc.nome)}
+                        >
+                            <img className={styles.arquivologo} src={excellogo} alt="Excel Logo" />
+                            Ver resumo excel
+                        </Button>
+                    );
+                } else {
+                    return null;
+                }
+            })}
+          </div>
+          <div className={styles.proposta}>
+              <h2 className={styles.arquivosTitulo}> Proposta </h2>
+              {documentos.map(doc => {
+                  if (doc.tipo === "proposta" && doc.caminho) {
+                      return (
+                          <Button
+                              key={doc.id}
+                              variant="primary"
+                              size="lg"
+                              className="mt-3"
+                              onClick={() => handleBaixar(doc.id, doc.nome)}
+                          >
+                              Ver proposta
+                          </Button>
+                      );
+                  } else {
+                      return (
+                        <p> Não há nenhuma proposta</p>
+                      );
+                  }
+              })}
+          </div>
+          <div className={styles.proposta}>
+              <h2 className={styles.arquivosTitulo}> Contrato </h2>
+              {documentos.map(doc => {
+                  if (doc.tipo === "contrato" && doc.caminho) {
+                      return (
+                          <Button
+                              key={doc.id}
+                              variant="primary"
+                              size="lg"
+                              className="mt-3"
+                              onClick={() => handleBaixar(doc.id, doc.nome)}
+                          >
+                              Ver contrato
+                          </Button>
+                      );
+                  } else {
+                      return (
+                        <p> Não há nenhuma proposta</p>
+                      );
+                  }
+              })}
+          </div>
+        </>
       )}
           
-          {/* {isEditing? (
-            
-              )
-          : (
-            <Button className="bg-alert">
-              Ver resumo pdf
+        {isEditing && (
+          <div className={styles.botoesSalvarVoltar}>
+            <Button type="submit" variant="primary">
+              Salvar Alterações
             </Button>
-          )} */}
-          {/* {resumoPdfUrl && (
-            <div className={styles.arquivosEscolhidos}> 
-                <img src={arquivoIcon} alt="Arquivo" />
-                <span className={styles.arquivoSpan}>
-                    {resumoPdf.name}
-                </span>
-                <span className={styles.arquivoSpanExcluir}
-                    onClick={(e) => excluirArquivo(resumoPdf)}>&#10006;
-                </span>
-            </div>
-            )}
-        {resumoExcelUrl && (
-            <div className={styles.arquivosEscolhidos}> 
-                <img src={arquivoIcon} alt="Arquivo" />
-                <span className={styles.arquivoSpan}>
-                    {resumoExcel.name}
-                </span>
-                <span className={styles.arquivoSpanExcluir}
-                    onClick={(e) => excluirArquivo(resumoExcel)}>&#10006;
-                </span>
-            </div>
-            )} */}
 
-        {/* {isEditing && (
-          <div className={styles.arquivosEscolhidos}>
-            <h3>Arquivos</h3>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="resumoExcel">Resumo Excel</Form.Label>
-              <Form.Control
-                type="file"
-                name="resumoExcel"
-                onChange={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  setResumoExcel(target.files ? target.files[0] : undefined);
-                }}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="resumoPdf">Resumo PDF</Form.Label>
-              <Form.Control
-                type="file"
-                name="r esumoPdf"
-                onChange={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  setResumoPdf(target.files ? target.files[0] : undefined);
-                }}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="resumocontrato">Contrato</Form.Label>
-              <Form.Control
-                type="file"
-                name="resumocontrato"
-                onChange={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  setResumocontrato(target.files ? target.files[0] : undefined);
-                }}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label htmlFor="resumoproposta">Proposta</Form.Label>
-              <Form.Control
-                type="file"
-                name="resumoproposta"
-                onChange={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  setResumoproposta(target.files ? target.files[0] : undefined);
-                }}
-              />
-            </Form.Group>
+            <Button variant="secondary" onClick={() => handleBack(id)}>
+              Descartar Alterações
+            </Button>
           </div>
-        )} */}
-
-        {/* Links de download */}
-
-        {/* !isEditing && (
-          <div className={styles.downloadLinks}>
-            <h4>Arquivos disponíveis para download:</h4>
-            <ul>
-              {projeto.resumoPdfUrl ? (
-                <li>
-                  <Button
-                    variant="link"
-                    onClick={() => handleDownload(projeto.resumoPdfUrl, "pdf")}
-                  >
-                    Resumo PDF
-                  </Button>
-                </li>
-              ) : (
-                <li>Nenhum resumo PDF disponível.</li>
-              )}
-
-              {projeto.resumoExcelUrl ? (
-                <li>
-                  <Button
-                    variant="link"
-                    onClick={() =>
-                      handleDownload(
-                        projeto.resumoExcelUrl,
-                        "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                      )
-                    }
-                  >
-                    Resumo Excel
-                  </Button>
-                </li>
-              ) : (
-                <li>Nenhum resumo Excel disponível.</li>
-              ) */}
-
-              {/* projeto.resumocontratoUrl ? (
-                <li>
-                  <Button
-                    variant="link"
-                    onClick={() =>
-                      handleDownload(projeto.resumocontratoUrl, "pdf")
-                    }
-                  >
-                    Contrato
-                  </Button>
-                </li>
-              ) : (
-                <li>Nenhum contrato disponível.</li>
-              ) */}
-
-              {/* projeto.resumopropostaUrl ? (
-                <li>
-                  <Button
-                    variant="link"
-                    onClick={() =>
-                      handleDownload(projeto.resumopropostaUrl, "pdf")
-                    }
-                  >
-                    Proposta
-                  </Button>
-                </li>
-              ) : (
-                <li>Nenhuma proposta disponível.</li>
-              ) */}
-            {/* </ul>
-          </div> */}
-        
-
-        {isEditing && (
-          <Button type="submit" variant="primary">
-            Salvar Alterações
-          </Button>
-        )}
-
-        {isEditing && (
-          <Button variant="secondary" onClick={() => handleBack(id)}>
-            Descartar Alterações
-          </Button>
         )}
       </Form>
     </div>

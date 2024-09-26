@@ -29,6 +29,10 @@
     gap: 5%;
 }
 
+.adicionarArquivo {
+    width: 50vw;
+}
+
 .adicionarArquivo label {
     width: 100%;
 }
@@ -95,6 +99,21 @@
     margin-right: 4%;
 }
 
+.proposta {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    width: 50vw;
+    background-color: #fff;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    padding: 20px;
+}
+
+.arquivosTitulo {
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -137,11 +156,34 @@ input[type="number"] {
     margin-left: 2%;
 }
 
+.botoesSalvarVoltar {
+    display: flex;
+    margin-top: 1%;
+    margin-bottom: 2%;
+}
 
+.botoesSalvarVoltar Button {
+    margin-right: 6%;
+    font-size: 1.1em;
+}
 
 @media screen and (max-width: 800px) {
     .botaoEnviar button {
         width: 40vw;
     }
-    
+}
+
+@media screen and (max-width: 800px) {
+    /* .visualizarResumos {
+        width: 80vw;
+    } */
+    .botoesSalvarVoltar {
+        flex-direction: column;
+        width: 60%;
+    }
+
+    .botoesSalvarVoltar Button {
+        width: 100%;
+        margin-bottom: 4%;
+    }
 }
