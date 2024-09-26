@@ -26,7 +26,7 @@ const CriarProjetoComponent = () => {
     const [tituloProjeto, setTituloProjeto] = useState('');	
     const [referenciaProjeto, setReferenciaProjeto] = useState('');
     const [contratante, setContratante] = useState('');
-    const [coordenador, setCoordenador] = useState('');
+    const [nomeCoordenador, setCoordenador] = useState('');
     const [valor, setValor] = useState('');
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
@@ -54,7 +54,7 @@ const CriarProjetoComponent = () => {
         const projeto = {
             titulo: tituloProjeto,
             referencia: referenciaProjeto,
-            coordenador: coordenador,
+            nomeCoordenador: nomeCoordenador,
             dataInicio: dataInicioString || '',
             valor: valorFloat,
             dataTermino: dataTerminoString,
@@ -184,7 +184,7 @@ const CriarProjetoComponent = () => {
                         <Form.Control 
                             type="text" 
                             placeholder="Coordenador"
-                            value={coordenador}
+                            value={nomeCoordenador}
                             required
                             onChange={(e) => setCoordenador(e.target.value)}/>
                             <Form.Control.Feedback type="invalid">

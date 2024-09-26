@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Mostra from '../component/buscarProjeto/mostraProjeto';
+import VisualizarProjetoComponent from '../component/buscarProjeto/visualizarProjetoComponent';
 
 
 const AlteraDeletaVisualiza: React.FC = () => {
@@ -10,7 +10,7 @@ const AlteraDeletaVisualiza: React.FC = () => {
   return (
     <div>
       {id ? (
-        <Mostra id={Number(id)}/>
+        <VisualizarProjetoComponent id={Number(id)}/>
       ) : (
         <p>ID do projeto não fornecido</p>
       )}
