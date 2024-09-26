@@ -83,7 +83,7 @@ p{
 .projeto{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 15%;
     text-align: center;
     align-items: center;

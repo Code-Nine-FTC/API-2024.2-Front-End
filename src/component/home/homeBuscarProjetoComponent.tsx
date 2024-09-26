@@ -9,7 +9,7 @@ import SweetAlert2 from "sweetalert2";
 import ProcurarProjetoFunction from "../../services/buscar/buscarProjetosService";
 import logo from "../../assets/logo-fapg.svg";
 import { FaRegFileLines } from "react-icons/fa6";
-
+import { parseISO, format } from 'date-fns';
 
 const Home = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -23,7 +23,6 @@ const Home = () => {
   const navigate = useNavigate();
 
   const resultadosRef = useRef<HTMLDivElement>(null);
-
 
   const toggleFormVisibility = () => {
     setIsFormVisible((prevState) => !prevState);
@@ -178,12 +177,16 @@ const Home = () => {
                   <p className={styles.titulo}>Resultados Encontrados</p>
                 {projetos.map((projeto) => {
                     console.log(projeto);
+
+                    const dataInicio = projeto.dataInicio ? format(parseISO(projeto.dataInicio), 'dd/MM/yyyy') : "";
+                    const dataTermino = projeto.dataTermino ? format(parseISO(projeto.dataTermino), 'dd/MM/yyyy') : "";
+
                     return (
                         <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
                             <FaRegFileLines style={{ fontSize: 34}} />
                             <p>{projeto.titulo}</p>
-                            <p>{projeto.dataInicio}</p>
-                            <p>{projeto.dataTermino}</p>
+                            <p>{dataInicio}</p>
+                            <p>{dataTermino}</p>
                             <p>{projeto.valor}</p>
                         </div>
                     );
