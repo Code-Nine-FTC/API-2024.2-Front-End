@@ -5,3 +5,5 @@ export interface VisualizarDocumento {
     tipo: string;
     tamanho: number;
 }
+
+export type FileOrVisualizarDocumento = File | VisualizarDocumento | undefined;

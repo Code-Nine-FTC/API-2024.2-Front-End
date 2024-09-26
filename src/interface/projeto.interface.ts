@@ -15,7 +15,7 @@ export interface CadastrarProjetoJson {
 export interface CadastrarProjeto {
     titulo: string;
     referencia: string;
-    coordenador: string;
+    nomeCoordenador: string;
     dataInicio: string;
     valor?: number;
     dataTermino?: string;
@@ -29,7 +29,7 @@ export interface EditarProjeto {
     contratante?: string;
     objeto?: string;
     descricao?: string;
-    coordenador: string;
+    nomeCoordenador: string;
     dataInicio: string;
     dataTermino?: string;
     valor?: number;
@@ -46,7 +46,7 @@ export interface VisualizarProjeto {
     contratante: string;
     objeto: string;
     descricao: string;
-    coordenador: string;
+    nomeCoordenador: string;
     dataInicio: string;
     dataTermino: string;
     valor: number;
