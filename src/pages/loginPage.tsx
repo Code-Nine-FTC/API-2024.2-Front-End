@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import criptografarSenha from "../functions/criptografaSenha"
 import { AuthContext } from "../services/context"
 import { login } from "../services/auth"
-import avatar from "../assets/login/avataricon.svg"
+import avatar from "../assets/login/Avatar Placeholder.svg"
 import SweetAlert from 'sweetalert2'
 
 const LoginPage = () => {
