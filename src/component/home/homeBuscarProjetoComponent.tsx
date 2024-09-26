@@ -9,7 +9,7 @@ import SweetAlert2 from "sweetalert2";
 import ProcurarProjetoFunction from "../../services/buscar/buscarProjetosService";
 import logo from "../../assets/logo-fapg.svg";
 import { FaRegFileLines } from "react-icons/fa6";
-import { parseISO, format } from 'date-fns';
+import { parseISO, format, parse } from 'date-fns';
 
 const Home = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -40,8 +40,8 @@ const Home = () => {
     const projeto = {
       referenciaProjeto,
       nomeCoordenador: coordenador,
-      dataInicio: startDate ? startDate.toISOString() : "",
-      dataTermino: endDate ? endDate.toISOString() : "",
+      dataInicio: startDate ? format(startDate, 'dd/MM/yyyy') : "",
+      dataTermino: endDate ? format(endDate, 'dd/MM/yyyy') : "",
       classificacao,
       projetoSituacao: projetosituacao,
     };
@@ -178,8 +178,8 @@ const Home = () => {
                 {projetos.map((projeto) => {
                     console.log(projeto);
 
-                    const dataInicio = projeto.dataInicio ? format(parseISO(projeto.dataInicio), 'dd/MM/yyyy') : "";
-                    const dataTermino = projeto.dataTermino ? format(parseISO(projeto.dataTermino), 'dd/MM/yyyy') : "";
+                    const dataInicio = projeto.dataInicio ? format(parse(projeto.dataInicio, 'dd/MM/yyyy', new Date()), 'dd/MM/yyyy') : "";
+                    const dataTermino = projeto.dataTermino ? format(parse(projeto.dataTermino, 'dd/MM/yyyy', new Date()), 'dd/MM/yyyy') : "";
 
                     return (
                         <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
