@@ -309,10 +309,25 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
 
   return (
     <div className={styles.formMain}>
-      <div className="tituloSetaVoltar">
+      <div className={styles.topoPagina}>
             <span className="setaVoltar" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}> &#x2190;</span>
             <h1 className="titulo"> {projeto.titulo} </h1>
-        </div>
+            {autenticado && !isEditing && (
+              <div className={styles.editarExcluir}>
+                <Button variant="primary" onClick={handleEditar} className="mt-3">
+                  Editar
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(id)}
+                  className="mt-3"
+                >
+                  Deletar
+                </Button>
+              </div>
+            )}
+      </div>
+
       <Form>
         {/* Campos do projeto */}
         <FloatingLabel
@@ -680,21 +695,6 @@ const Mostra: React.FC<EditaExcluiMostraProps> = ({ id }) => {
           </Button>
         )}
       </Form>
-
-      {autenticado && !isEditing && (
-        <div>
-          <Button variant="primary" onClick={handleEditar} className="mt-3">
-            Editar
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => handleDelete(id)}
-            className="mt-3"
-          >
-            Deletar
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

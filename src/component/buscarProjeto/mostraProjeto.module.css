@@ -6,6 +6,7 @@
     /* align-items: center; */
     justify-content: center;
     margin-top: var(--title-margin-top);
+    padding: 0% 2%;
 }
 
 .formMain Form {
@@ -13,6 +14,19 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+}
+
+.topoPagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editarExcluir {
+    width: fit-content;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5%;
 }
 
 .adicionarArquivo label {
@@ -122,6 +136,8 @@ input[type="number"] {
 .anexosEscolhidos {   
     margin-left: 2%;
 }
+
+
 
 @media screen and (max-width: 800px) {
     .botaoEnviar button {
