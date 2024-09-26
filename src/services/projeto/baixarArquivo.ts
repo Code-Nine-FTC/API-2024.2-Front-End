@@ -8,18 +8,11 @@ export default async function BaixarArquivo (id: number, nome: string): Promise<
             responseType: 'blob',
         });
         if (resposta.status === 200) {
-            // const contentDisposition = resposta.headers['content-disposition'];
             let nomeArquivo = 'documento.pdf';
 
             if (nome) {
                 nomeArquivo = nome;
             }
-            // if (contentDisposition) {
-            //     const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
-            //     if (fileNameMatch && fileNameMatch.length === 2) {
-            //         nomeArquivo = fileNameMatch[1];
-            //     }
-            // }
 
             const blob = new Blob([resposta.data], { type: resposta.headers['content-type'] });
             saveAs(blob, nomeArquivo);
