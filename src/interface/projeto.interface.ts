@@ -58,9 +58,7 @@ export interface BuscarProjeto {
     nomeCoordenador: string;
     dataInicio: string;
     dataTermino: string;
-    classificacao: string;
-    projetoSituacao: string;
-    startDate?: string; 
-    endDate?: string;
+    startDate?: Date; 
+    endDate?: Date;
     valor?: number;
 }

@@ -21,6 +21,7 @@ const Home = () => {
   const [projetosituacao, setProjetoSituacao] = useState("");
   const [projetos, setProjetos] = useState<any[]>([]);
   const navigate = useNavigate();
+  const [isFetching, setIsFetching] = useState(false);
 
   const resultadosRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +30,7 @@ const Home = () => {
   };
 
   const navegarProjeto = (projeto: { id: number }) => {
-    console.log("Navegando para o projeto com ID:", projeto.id); // Adicione esta linha
+    console.log("Navegando para o projeto com ID:", projeto.id);
     navigate(`/projeto/visualizar/${projeto.id}`);
 };
 
@@ -37,14 +38,29 @@ const Home = () => {
     event.preventDefault();
     event.stopPropagation();
 
+    
+
     const projeto = {
       referenciaProjeto,
       nomeCoordenador: coordenador,
-      dataInicio: startDate ? format(startDate, 'dd/MM/yyyy') : "",
-      dataTermino: endDate ? format(endDate, 'dd/MM/yyyy') : "",
-      classificacao,
-      projetoSituacao: projetosituacao,
-    };
+      dataInicio: startDate ? format(startDate, 'yyyy-MM-dd') : "",
+      dataTermino: endDate ? format(endDate, 'yyyy-MM-dd') : "",
+    };  
+      
+    // Dentro da função fetchData
+    setIsFetching(true); // Inicia o estado de "buscando"
+  try {
+    const resposta = await ProcurarProjetoFunction(projeto);
+    // Lida com a resposta...
+  } catch (error) {
+    console.error("Erro ao encontrar projeto", error);
+    SweetAlert2.fire({
+      icon: "error",
+      title: "Erro ao encontrar projeto!",
+    });
+  } finally {
+    setIsFetching(false); // Finaliza o estado de "buscando"
+  }
 
     try {
       const resposta = await ProcurarProjetoFunction(projeto);
@@ -55,6 +71,7 @@ const Home = () => {
           icon: "error",
           title: resposta.message,
         });
+        setProjetos([]);
       } else {
         setProjetos(resposta);
       }
@@ -168,7 +185,7 @@ const Home = () => {
               Procurar
             </Button>
             <br />
-            <Button onClick={toggleFormVisibility} className={styles.botaoFiltro}>
+            <Button onClick={toggleFormVisibility} className={styles.botaoFiltro} disabled={isFetching}>
               {isFormVisible ? "Fechar Filtros" : "Abrir Filtros"}
             </Button>
             <br />
@@ -178,8 +195,8 @@ const Home = () => {
                 {projetos.map((projeto) => {
                     console.log(projeto);
 
-                    const dataInicio = projeto.dataInicio ? format(parse(projeto.dataInicio, 'dd/MM/yyyy', new Date()), 'dd/MM/yyyy') : "";
-                    const dataTermino = projeto.dataTermino ? format(parse(projeto.dataTermino, 'dd/MM/yyyy', new Date()), 'dd/MM/yyyy') : "";
+                    const dataInicio = projeto.dataInicio ? format(parse(projeto.dataInicio, 'yyyy-MM-dd', new Date()), 'dd/MM/yyyy') : 'Data não disponível';
+                    const dataTermino = projeto.dataTermino ? format(parse(projeto.dataTermino, 'yyyy-MM-dd', new Date()), 'dd/MM/yyyy') : 'Data não disponível';                    
 
                     return (
                         <div key={projeto.projetoId} className={styles.projeto} onClick={() => navegarProjeto(projeto)}>
