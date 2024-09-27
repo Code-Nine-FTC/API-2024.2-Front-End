@@ -3,7 +3,7 @@
 // string usada como chave para armazenar e recuperar o token
 export const TOKEN_KEY = "@api-token";
 export const AUTENTICADO_KEY = "@api-Autenticado";
-export const NIVEL_ACESSO_KEY = "@api-NivelAcesso";
+
 
 // Verifica se tem um token armazenado no localStorage
 export function isAuthenticated() {
@@ -14,13 +14,12 @@ export function isAuthenticated() {
 }
 
 // Armazena o token e o nível de acesso no localStorage
-export function login(token: string, nivelAcesso: string, setAuthStatus: (status: boolean) => void, setToken: (token: string) => void, setNivelAcesso: (level: string) => void) {
+export function login(token: string,  setAuthStatus: (status: boolean) => void, setToken: (token: string) => void) {
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(AUTENTICADO_KEY, 'true');
-    localStorage.setItem(NIVEL_ACESSO_KEY, nivelAcesso);
     setAuthStatus(true);
     setToken(token);
-    setNivelAcesso(nivelAcesso);
+    
 }
 
 // Recupera o token armazenado no localStorage
@@ -28,13 +27,11 @@ export function getToken() {
     return localStorage.getItem(TOKEN_KEY);
 }
 
-export function getNivelAcesso() {
-    return localStorage.getItem(NIVEL_ACESSO_KEY);  // Recupera o nível de acesso
-}
+
 
 // Remove o token e o nível de acesso do localStorage
 export function logout() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.setItem(AUTENTICADO_KEY, 'false');
-    localStorage.removeItem(NIVEL_ACESSO_KEY);
+   
 }

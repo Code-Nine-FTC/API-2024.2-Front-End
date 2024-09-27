@@ -42,7 +42,10 @@ const LoginPage = () => {
   
             if (resposta.status === 200) {
               setErro("")
-              login(resposta.data.token, setAutenticado, setToken)
+              
+                
+              login(resposta.data.token, setAutenticado, setToken);
+
                 SweetAlert.fire({
                     icon: 'success',
                     title: 'Login realizado com sucesso!',
