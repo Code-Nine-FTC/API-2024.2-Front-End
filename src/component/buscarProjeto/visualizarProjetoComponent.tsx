@@ -155,11 +155,17 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({ id }) =>
       return;
     }
 
+    console.log("projetoInicial:", projetoInicial);
+    console.log("resumoPdf:", resumoPdf);
+    console.log("resumoExcel:", resumoExcel);
+    console.log("proposta:", proposta);
+    console.log("contrato:", contrato);
+
       const formData = MontarFormDataCadastro(
         projetoInicial,
         "edicao",
-        isTipoArquivo(resumoPdf),
         isTipoArquivo(resumoExcel),
+        isTipoArquivo(resumoPdf),
         isTipoArquivo(proposta),
         isTipoArquivo(contrato),
 
