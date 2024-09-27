@@ -24,6 +24,7 @@ import ExcluirProjeto from "../../services/projeto/excluirProjetoService";
 import EditarProjetoService from "../../services/projeto/editarProjetoService";
 import VisualizarProjetoService from "../../services/projeto/visualizarProjetoService";
 import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
+import formatarData from "../../functions/formatarData";
 
 interface MensagemValidacao {
     titulo: string
@@ -115,18 +116,9 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({ id }) =>
     }
   },[mensagemValidacao]);
 
-  // const handleChange = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   const { name, value } = e.target;
-  //   setProjeto((prevProjeto) =>
-  //     prevProjeto ? { ...prevProjeto, [name]: value } : undefined
-  //   );
-  // };
-
   const handleBack = (id: number) => {
     setIsEditing(false);
-    // navigate(`/projeto/visualizar/${id}`);
+    navigate(`/projeto/visualizar/${id}`);
   };
 
   const validarDatas = () => {
@@ -134,16 +126,11 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({ id }) =>
     setEndDateValid(endDate !== null && (!startDate || endDate >= startDate));
 };
 
-  const dataInicioString = startDate?.toISOString();
-  const dataTerminoString = endDate?.toISOString();
+  const dataInicioString = formatarData(startDate);
+  const dataTerminoString = formatarData(endDate);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (projeto) {
-    //   const projetoEditado = {
-    //     ...projeto,
-    //     id: projeto.id.toString(),
-    //   };
 
     const camposEditados = {
       titulo: titulo,
@@ -152,15 +139,24 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({ id }) =>
       objeto: objeto,
       descricao: descricao,
       nomeCoordenador: coordenador,
-      dataInicio: dataInicioString || '',
-      dataTermino: dataTerminoString || '',
+      dataInicio: dataInicioString,
+      dataTermino: dataTerminoString,
       valor: parseFloat(valor.toString()),
     };
 
-    const projeto = MontarJsonEditado(projetoOriginal, camposEditados);
+    console.log("camposEditados:", camposEditados);
+
+    const projetoInicial = MontarJsonEditado(projetoOriginal, camposEditados);
+    
+    console.log("projetoInicial:", projetoInicial);
+
+    if (Object.keys(projetoInicial).length === 0) {
+      console.log("No changes detected");
+      return;
+    }
 
       const formData = MontarFormDataCadastro(
-        projeto,
+        projetoInicial,
         "edicao",
         isTipoArquivo(resumoPdf),
         isTipoArquivo(resumoExcel),
@@ -676,47 +672,39 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({ id }) =>
           </div>
           <div className={styles.proposta}>
               <h2 className={styles.arquivosTitulo}> Proposta </h2>
-              {documentos.map(doc => {
-                  if (doc.tipo === "proposta" && doc.caminho) {
-                      return (
-                          <Button
-                              key={doc.id}
-                              variant="primary"
-                              size="lg"
-                              className="mt-3"
-                              onClick={() => handleBaixar(doc.id, doc.nome)}
-                          >
-                              Ver proposta
-                          </Button>
-                      );
-                  } else {
-                      return (
-                        <p> Não há nenhuma proposta</p>
-                      );
-                  }
-              })}
+              {documentos.filter(doc => doc.tipo === "proposta" && doc.caminho).length > 0 ? (
+                  documentos.filter(doc => doc.tipo === "proposta" && doc.caminho).map(doc => (
+            <Button
+                key={doc.id}
+                variant="primary"
+                size="lg"
+                className="mt-3"
+                onClick={() => handleBaixar(doc.id, doc.nome)}
+            >
+                Ver proposta
+            </Button>
+        ))
+    ) : (
+        <p> Não há nenhuma proposta</p>
+    )}
           </div>
           <div className={styles.proposta}>
               <h2 className={styles.arquivosTitulo}> Contrato </h2>
-              {documentos.map(doc => {
-                  if (doc.tipo === "contrato" && doc.caminho) {
-                      return (
-                          <Button
-                              key={doc.id}
-                              variant="primary"
-                              size="lg"
-                              className="mt-3"
-                              onClick={() => handleBaixar(doc.id, doc.nome)}
-                          >
-                              Ver contrato
-                          </Button>
-                      );
-                  } else {
-                      return (
-                        <p> Não há nenhuma proposta</p>
-                      );
-                  }
-              })}
+              {documentos.filter(doc => doc.tipo === "contrato" && doc.caminho).length > 0 ? (
+                documentos.filter(doc => doc.tipo === "contrato" && doc.caminho).map(doc => (
+            <Button
+                key={doc.id}
+                variant="primary"
+                size="lg"
+                className="mt-3"
+                onClick={() => handleBaixar(doc.id, doc.nome)}
+            >
+                Ver contrato
+            </Button>
+        ))
+    ) : (
+        <p> Não há nenhum contrato</p>
+    )}
           </div>
         </>
       )}

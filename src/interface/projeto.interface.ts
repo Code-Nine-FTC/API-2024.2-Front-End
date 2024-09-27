@@ -47,8 +47,8 @@ export interface VisualizarProjeto {
     objeto: string;
     descricao: string;
     nomeCoordenador: string;
-    dataInicio: string;
-    dataTermino: string;
+    dataInicio: Date;
+    dataTermino: Date;
     valor: number;
     documentos: VisualizarDocumento[];
 }
@@ -60,7 +60,7 @@ export interface BuscarProjeto {
     dataTermino: string;
     classificacao: string;
     projetoSituacao: string;
-    startDate?: Date; 
-    endDate?: Date;
+    startDate?: string; 
+    endDate?: string;
     valor?: number;
 }

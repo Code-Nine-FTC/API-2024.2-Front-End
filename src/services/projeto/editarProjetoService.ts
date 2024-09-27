@@ -7,8 +7,8 @@ const EditarProjetoService = async (projetoDados: FormData, id: number) => {
         console.log(projetoDados);
         const resposta = await api.put(`/projeto/atualizar/${id}`, projetoDados, {
             headers: {
+                Authorization: `Bearer ${getToken()} `,
                 'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${getToken()} `
             }
         });
 

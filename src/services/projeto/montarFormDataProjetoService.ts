@@ -18,11 +18,11 @@ const MontarFormDataCadastro = (
         let json = JSON.stringify(projeto as EditarProjeto);
         formData.append('projeto', json);
     }
-    if (resumoExcel) {
-        formData.append('resumoExcel', resumoExcel);
-    }
     if (resumoPdf) {
         formData.append('resumoPdf', resumoPdf);
+    }
+    if (resumoExcel) {
+        formData.append('resumoExcel', resumoExcel);
     }
     if (proposta) {
         formData.append('proposta', proposta);

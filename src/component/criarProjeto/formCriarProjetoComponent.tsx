@@ -57,7 +57,7 @@ const CriarProjetoComponent = () => {
             nomeCoordenador: nomeCoordenador,
             dataInicio: dataInicioString || '',
             valor: valorFloat,
-            dataTermino: dataTerminoString,
+            dataTermino: dataTerminoString || '',
             contratante: contratante,
         }
 
