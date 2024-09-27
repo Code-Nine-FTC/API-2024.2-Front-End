@@ -133,7 +133,7 @@ const Home = () => {
                   validarDatas={() => {}}
                   cadastro={false}
                 />
-                <FloatingLabel
+                {/* <FloatingLabel
                   controlId="floatingSelectGrid"
                   label="Classificação"
                   className="mb-3"
@@ -178,7 +178,7 @@ const Home = () => {
                     <option value="Em Andamento">Em Andamento</option>
                     <option value="Concluído">Concluído</option>
                   </Form.Select>
-                </FloatingLabel>
+                </FloatingLabel> */}
               </div>
             <br />
             <Button type="submit" className={styles.botaoSubmit}>
