@@ -1,0 +1,47 @@
+@import url('./component/variable.css');
+@import 'bootstrap-icons/font/bootstrap-icons.css'; 
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+main {
+  max-width: auto;
+  /* min-height: calc(100vh - 95px); */
+  padding: 40px 20px;
+}
+
+.divtotal {
+  height: 100vh;
+}
+
+.tituloSetaVoltar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1%;
+}
+
+.setaVoltar {
+  color: var(--seta-voltar-color);
+  font-size: var(--seta-voltar-size);
+  margin-left: var(--seta-voltar-margin-left);
+}
+
+.setaVoltarBranca {
+  color: var(--seta-voltar-color-branca);
+  font-size: var(--seta-voltar-size);
+  margin-left: var(--seta-voltar-margin-left);
+}
+
+.titulo {
+  font-size: var(--title-font-size);
+  text-align: var(--title-centralizado);
+  flex-grow: 1;
+}

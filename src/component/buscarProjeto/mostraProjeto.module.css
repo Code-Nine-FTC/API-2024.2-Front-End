@@ -1,0 +1,189 @@
+@import url('../variable.css');
+
+.formMain {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+    margin-top: var(--title-margin-top);
+    padding: 0% 2%;
+}
+
+.formMain Form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.topoPagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editarExcluir {
+    width: fit-content;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5%;
+}
+
+.adicionarArquivo {
+    width: 50vw;
+}
+
+.adicionarArquivo label {
+    width: 100%;
+}
+
+.adicionarArquivo label, label img {
+    cursor: pointer;
+}
+
+.adicionarArquivo label span {
+    margin-left: 1%;
+}
+
+.adicionarArquivo label:hover span,
+.adicionarArquivo label:hover img,
+.adicionarArquivo label img:hover,
+.adicionarArquivo label span:hover {
+    color: var(--nav-link-hover-color);
+    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg); 
+}
+
+.arquivosEscolhidos {
+    margin-left: 2%;
+    margin-top: 1%;
+}
+
+.arquivoSpan {
+    margin-left: 1%;
+}
+
+.arquivoSpanExcluir {
+    cursor: pointer; 
+    margin-left: 1%;
+}
+
+.botaoEnviar {
+    margin-top: 2%;
+    margin-bottom: 4%;
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+
+.visualizarResumos {
+    display: flex;
+    justify-content: flex-start;
+    width: 50vw;
+}
+
+.visualizarResumos Button {
+    margin-right: 6%;
+}
+
+.botaoPdf {
+    background-color: var(--botao-resumo-pdf);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 1%;
+    margin-right: 1%;
+}
+
+.arquivologo {
+    width: 20%;
+    margin-right: 4%;
+}
+
+.proposta {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    width: 50vw;
+    background-color: #fff;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    padding: 20px;
+}
+
+.arquivosTitulo {
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.adicionarArquivos {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    min-height: 9vh;
+    width: 100%;
+    background-color: #fff;
+    margin-top: 1%;
+    margin-bottom: 2%;
+}
+
+.adicionarArquivos label {
+    display: flex;
+    align-items: center;
+    height: 6vh;
+    color: #9C9C9C
+}
+
+.adicionarArquivos label span {
+    margin-left: 2%;
+}
+
+.adicionarArquivos label img {
+    margin-left: auto;
+    margin-right: 1%;
+    height: 90%;
+    width: 5%;
+}
+
+.anexosEscolhidos {   
+    margin-left: 2%;
+}
+
+.botoesSalvarVoltar {
+    display: flex;
+    margin-top: 1%;
+    margin-bottom: 2%;
+}
+
+.botoesSalvarVoltar Button {
+    margin-right: 6%;
+    font-size: 1.1em;
+}
+
+@media screen and (max-width: 800px) {
+    .botaoEnviar button {
+        width: 40vw;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    /* .visualizarResumos {
+        width: 80vw;
+    } */
+    .botoesSalvarVoltar {
+        flex-direction: column;
+        width: 60%;
+    }
+
+    .botoesSalvarVoltar Button {
+        width: 100%;
+        margin-bottom: 4%;
+    }
+}

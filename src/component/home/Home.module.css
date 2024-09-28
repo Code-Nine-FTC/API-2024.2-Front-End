@@ -1,0 +1,102 @@
+@import url('../variable.css');
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+}
+
+p{
+    font-size: 1rem;
+    margin: 0;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo{
+    display: flex;
+    height: 20vh;
+    width: 30vw;
+}
+
+.titulo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2%;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 3%;
+    border-bottom: var(--border-color);
+}
+
+.filtros {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.5s ease-out;
+  }
+  
+.filtrosVisiveis {
+    min-height: fit-content;
+    max-height: 1500px; 
+    transition: max-height 0.5s ease-in;
+    overflow: visible;
+  }
+
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: fit-content;
+}
+
+.botaoSubmit{
+    width: 10vw;
+}
+
+.botaoFiltro{
+    width: 10vw;
+}
+
+.projetobox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: fit-content;
+    max-height: fit-content;
+    padding: 3%;
+    width: 97vw;
+    background-color: whitesmoke;
+    border-radius: 1.5rem;
+}
+
+.projeto{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 15%;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    min-height: fit-content;
+    height: 10vh;
+    padding: 3%;
+    border-bottom: var(--border-color);
+    border-width: 100%;
+    border-radius: 1rem;
+}
+
+.projeto:hover{
+    background-color: var(--form-color);
+    cursor: pointer;
+}
