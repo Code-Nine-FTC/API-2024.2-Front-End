@@ -5,6 +5,7 @@ import CriarProjeto from "../pages/criarProjeto";
 import Login from "../pages/loginPage";
 import AlteraDeletaVisualiza from "../pages/visualizarProjetos";
 import { AuthContext } from '../services/context';
+import Dashboard from "../pages/Dashboard";
 
 const Rotas: FC = () => {
     const { isAutenticado } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const Rotas: FC = () => {
             <>
                 {/* Apenas administradores podem adicionar projetos */}
                 <Route path="/adicionarprojeto" element={<CriarProjeto />} />
+                
             </>
         );  
        }  else {
@@ -30,6 +32,7 @@ const Rotas: FC = () => {
         
           <Routes>
             {/* Rotas abertas para todos */}
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/" element={<HomeBuscar />} />
             <Route path="/login" element={<Login />} />
             <Route path="/projeto/visualizar/:id" element={<AlteraDeletaVisualiza/>} />
