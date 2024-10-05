@@ -1,12 +1,12 @@
 @import url('../variable.css');
 
-body{
+body {
     margin: 0;
     padding: 0;
     background-color: var(--background-color);
 }
 
-p{
+p {
     font-size: 1rem;
     margin: 0;
 }
@@ -18,13 +18,13 @@ p{
     justify-content: center;
 }
 
-.logo{
+.logo {
     display: flex;
     height: 20vh;
     width: 30vw;
 }
 
-.titulo{
+.titulo {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,16 +42,16 @@ p{
     overflow: hidden;
     max-height: 0;
     transition: max-height 0.5s ease-out;
-  }
-  
+}
+
 .filtrosVisiveis {
     min-height: fit-content;
-    max-height: 1500px; 
+    max-height: 1500px;
     transition: max-height 0.5s ease-in;
     overflow: visible;
-  }
+}
 
-.form{
+.form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,15 +59,15 @@ p{
     min-height: fit-content;
 }
 
-.botaoSubmit{
+.botaoSubmit {
     width: 10vw;
 }
 
-.botaoFiltro{
+.botaoFiltro {
     width: 10vw;
 }
 
-.projetobox{
+.projetobox {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -80,23 +80,46 @@ p{
     border-radius: 1.5rem;
 }
 
-.projeto{
+.projeto {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
-    gap: 15%;
-    text-align: center;
+    justify-content: space-between; /* Garante que os elementos fiquem distribuídos igualmente */
     align-items: center;
+    gap: 5%; /* Diminui o espaço entre os itens */
     width: 100%;
     min-height: fit-content;
-    height: 10vh;
+    height: auto;
     padding: 3%;
     border-bottom: var(--border-color);
-    border-width: 100%;
     border-radius: 1rem;
+    word-wrap: break-word;
 }
 
-.projeto:hover{
+.projeto:hover {
     background-color: var(--form-color);
     cursor: pointer;
+}
+
+/* Estilos para garantir alinhamento uniforme */
+.projeto p {
+    white-space: normal;
+    overflow-wrap: break-word;
+    text-align: left;
+}
+
+/* Definir larguras específicas para cada coluna */
+.projeto p:nth-child(1) {
+    max-width: 25vw; /* Definindo uma largura máxima para o título */
+    width: 30%; /* Largura para o título */
+}
+
+.projeto p:nth-child(2),
+.projeto p:nth-child(3) {
+    width: 15%; /* Largura para as datas */
+    text-align: center; /* Alinha as datas no centro */
+}
+
+.projeto p:nth-child(4) {
+    width: 10%; /* Largura para o valor */
+    text-align: right; /* Alinha o valor à direita */
 }
