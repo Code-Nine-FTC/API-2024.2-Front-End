@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import BarGraph from './charts/bar'
 
 const DashboardFormComponent: React.FC = () => {
     return (
@@ -73,6 +74,9 @@ const DashboardFormComponent: React.FC = () => {
               </div>
             </div>
           </form>
+        </div>
+        <div>
+          <BarGraph />
         </div>
       </div>
     );
