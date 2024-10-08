@@ -1,7 +1,6 @@
-import React from 'react';
 import DashboardFormComponent from '../component/Dashboard/DashformFormComponent';
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   return (
     <div>
       <DashboardFormComponent />
