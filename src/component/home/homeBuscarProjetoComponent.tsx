@@ -157,7 +157,7 @@ const Home = () => {
                     </option>
                     <option value="Termo de Outorga">Termo de Outorga</option>
                   </Form.Select>
-                </FloatingLabel>
+                </FloatingLabel> */}
                 <FloatingLabel
                   controlId="floatingSelectGrid"
                   label="Situação do Projeto"
@@ -174,11 +174,10 @@ const Home = () => {
                       Selecionar uma Situação
                     </option>
                     <option value="">Todos</option>
-                    <option value="Em Aberto">Em Aberto</option>
                     <option value="Em Andamento">Em Andamento</option>
                     <option value="Concluído">Concluído</option>
                   </Form.Select>
-                </FloatingLabel> */}
+                </FloatingLabel>
               </div>
             <br />
             <Button type="submit" className={styles.botaoSubmit}>
