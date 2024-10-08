@@ -68,17 +68,17 @@ const DashboardFormComponent = () => {
           {erroMensagem && <div className="alert alert-danger">{erroMensagem}</div>}
      
           <Row className="mb-4">
-            <Form.Group as={Col} controlId="contratante">
-              <FloatingLabel controlId="contratante" label="Contratante">
-                <Form.Control type="text" value={contratante} onChange={(e) => setContratante(e.target.value)} />
+            <Form.Group as={Col} controlId="floatingInput">
+              <FloatingLabel controlId="floatingInput" label="Contratante" style={{ color: "#9C9C9C" }}>
+                <Form.Control placeholder="Contratante" type="text" value={contratante} onChange={(e) => setContratante(e.target.value)} />
               </FloatingLabel>
             </Form.Group>
           </Row>
 
           <Row className="mb-4">
-            <Form.Group as={Col} controlId="coordenador">
-              <FloatingLabel controlId="coordenador" label="Coordenador">
-                <Form.Control type="text" value={coordenador} onChange={(e) => setCoordenador(e.target.value)} />
+            <Form.Group as={Col} controlId="floatingInput">
+              <FloatingLabel controlId="floatingInput" label="Coordenador " style={{ color: "#9C9C9C" }} >
+                <Form.Control placeholder="Coordenador" type="text" value={coordenador} onChange={(e) => setCoordenador(e.target.value)} />
               </FloatingLabel>
             </Form.Group>
           </Row>
@@ -98,13 +98,13 @@ const DashboardFormComponent = () => {
 
           <Row className="mb-4">
             <Form.Group as={Col} controlId="valorMinimo" sm={6}>
-              <FloatingLabel controlId="valorMinimo" label="Valor mínimo">
-                <Form.Control type="text" value={valorMinimo} onChange={(e) => setValorMinimo(e.target.value)} />
+              <FloatingLabel controlId="valorMinimo" label="Valor mínimo" style={{ color: "#9C9C9C" }}>
+                <Form.Control placeholder="" type="text" value={valorMinimo} onChange={(e) => setValorMinimo(e.target.value)} />
               </FloatingLabel>
             </Form.Group>
             <Form.Group as={Col} controlId="valorMaximo" sm={6}>
-              <FloatingLabel controlId="valorMaximo" label="Valor máximo">
-                <Form.Control type="text" value={valorMaximo} onChange={(e) => setValorMaximo(e.target.value)} />
+              <FloatingLabel controlId="valorMaximo" label="Valor máximo" style={{ color: "#9C9C9C" }}>
+                <Form.Control placeholder="" type="text" value={valorMaximo} onChange={(e) => setValorMaximo(e.target.value)} />
               </FloatingLabel>
             </Form.Group>
           </Row>
