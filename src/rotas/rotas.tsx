@@ -18,7 +18,7 @@ const Rotas: FC = () => {
             <>
                 {/* Apenas administradores podem adicionar projetos */}
                 <Route path="/adicionarprojeto" element={<CriarProjeto />} />
-                
+                <Route path="/dashboard" element={<Dashboard />} />
             </>
         );  
        }  else {
@@ -32,7 +32,6 @@ const Rotas: FC = () => {
         
           <Routes>
             {/* Rotas abertas para todos */}
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/" element={<HomeBuscar />} />
             <Route path="/login" element={<Login />} />
             <Route path="/projeto/visualizar/:id" element={<AlteraDeletaVisualiza/>} />
