@@ -3,6 +3,7 @@ import { Button, FloatingLabel, Form, Row, Col } from 'react-bootstrap';
 import api from '../../services/api';
 import BarGraph from './charts/bar';
 import { getToken } from '../../services/auth';
+import { ChartOptions } from 'chart.js';
 
 const DashboardFormComponent = () => {
   const [contratante, setContratante] = useState('');
@@ -13,6 +14,7 @@ const DashboardFormComponent = () => {
   const [situacaoProjeto, setSituacaoProjeto] = useState('Todos');
   const [resultados, setResultados] = useState([]);
   const [erroMensagem, setErroMensagem] = useState('');
+   const [mostrarGrafico, setMostrarGrafico] = useState(false); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +54,7 @@ const DashboardFormComponent = () => {
           }
       });
       setResultados(resposta.data);
+       setMostrarGrafico(true); 
       limparFormulario();
     } catch (erro) {
       console.error('Erro ao enviar os dados:', erro);
@@ -150,8 +153,25 @@ const DashboardFormComponent = () => {
         </Form>
       </div>
 
+       {mostrarGrafico && (
+        <div>
+          <BarGraph
+            options={{ responsive: true } as ChartOptions<'bar'>}
+            data2={resultados.map((projeto: any) => ({
+              month: projeto.mes,
+              value: projeto.valor
+            }))}
+          />
+        </div>
+      )}
       <div>
-        <BarGraph />
+          <BarGraph
+            options={{ responsive: true } as ChartOptions<'bar'>}
+            data2={resultados.map((projeto: any) => ({
+              month: projeto.mes,
+              value: projeto.valor
+            }))}
+          />
       </div>
     </div>
   );
