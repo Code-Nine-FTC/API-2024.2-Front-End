@@ -6,6 +6,8 @@ export interface CadastrarProjetoJson {
     contratante: string;
     objeto: string;
     descricao?: string;
+    integrantes?: string;
+    links?: string;
     nomeCoordenador: string;
     valor: number;
     dataInicio: string;
@@ -33,6 +35,8 @@ export interface EditarProjeto {
     dataInicio: string;
     dataTermino?: string;
     valor?: number;
+    integrantes?: string;
+    links?: string;
     resumoPdfUrl?: string; 
     resumoExcelUrl?: string; 
     resumopropostaUrl?: string; 
@@ -50,6 +54,8 @@ export interface VisualizarProjeto {
     dataInicio: Date;
     dataTermino: Date;
     valor: number;
+    integrantes: string;
+    links: string;
     documentos: VisualizarDocumento[];
 }
 

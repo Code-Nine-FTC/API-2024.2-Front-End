@@ -61,6 +61,10 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [contratante, setContratante] = useState(
     projetoOriginal?.contratante || ""
   );
+  const [integrantes, setIntegrantes] = useState(
+    projetoOriginal?.integrantes || ""
+  );
+  const [links, setLinks] = useState(projetoOriginal?.links || "");
   const [objeto, setObjeto] = useState(projetoOriginal?.objeto || "");
   const [descricao, setDescricao] = useState(projetoOriginal?.descricao || "");
   const [coordenador, setCoordenador] = useState(
@@ -114,6 +118,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       setObjeto(projetoOriginal.objeto || "");
       setDescricao(projetoOriginal.descricao || "");
       setCoordenador(projetoOriginal.nomeCoordenador || "");
+      setIntegrantes(projetoOriginal.integrantes || "");
+      setLinks(projetoOriginal.links || "");
       setStartDate(
         projetoOriginal.dataInicio ? new Date(projetoOriginal.dataInicio) : null
       );
@@ -171,6 +177,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       objeto: objeto,
       descricao: descricao,
       nomeCoordenador: coordenador,
+      integrantes: integrantes,
+      links: links,
       dataInicio: dataInicioString,
       dataTermino: dataTerminoString,
       valor: parseFloat(valor.toString()),
@@ -182,6 +190,18 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
     console.log("projetoInicial:", projetoInicial);
 
+    if (projetoInicial.links) {
+      console.log("Links:", projetoInicial.links);
+    } else {
+      console.log("Links não encontrados no projetoInicial");
+    }
+    
+    if (projetoInicial.integrantes) {
+      console.log("Integrantes:", projetoInicial.integrantes);
+    } else {
+      console.log("Integrantes não encontrados no projetoInicial");
+    }
+    
     const hasChanges =
       Object.keys(projetoInicial).length > 0 ||
       resumoPdf ||
@@ -214,23 +234,20 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
       if (resposta.status === 200) {
         setIsEditing(false);
-        
-        
+
         SweetAlert2.fire({
           title: "Sucesso!",
           text: "Projeto editado com sucesso.",
           icon: "success",
           confirmButtonColor: "#3085d6",
-          confirmButtonText: "Ok"
+          confirmButtonText: "Ok",
         }).then((result) => {
           if (result.isConfirmed) {
             // Recarrega a página
             window.location.reload();
           }
         });
-      }
-
-         else {
+      } else {
         setError("Erro ao atualizar o projeto");
       }
     } catch (error) {
@@ -563,7 +580,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
         <FloatingLabel
           controlId="validationCustom04"
-          label="Objeto"
+          label="Objetivo"
           className="mb-3"
           style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
         >
@@ -602,6 +619,42 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             name="valor"
             value={valor}
             onChange={(e) => setValor(e.target.value)}
+            readOnly={!isEditing}
+          />
+        </FloatingLabel>
+
+        <FloatingLabel
+          controlId="validationCustom04"
+          label="Integrantes"
+          className="mb-3"
+          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
+        >
+          <Form.Control
+            type="text"
+            name="integrantes"
+            value={integrantes}
+            onChange={(e) => {
+              setIntegrantes(e.target.value); // Atualiza o estado corretamente
+              console.log("Integrantes:", e.target.value); // Verifique se o valor está sendo capturado
+            }}
+            readOnly={!isEditing}
+          />
+        </FloatingLabel>
+
+        <FloatingLabel
+          controlId="validationCustom04"
+          label="Links"
+          className="mb-3"
+          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
+        >
+          <Form.Control
+            type="text"
+            name="links"
+            value={links}
+            onChange={(e) => {
+              setLinks(e.target.value); // Atualiza o estado corretamente
+              console.log("Links:", e.target.value); // Verifique se o valor está sendo capturado
+            }}
             readOnly={!isEditing}
           />
         </FloatingLabel>
