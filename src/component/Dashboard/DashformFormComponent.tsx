@@ -48,13 +48,14 @@ const DashboardFormComponent = () => {
 
     try {
       console.log('Dados enviados:', dadosRequisicao);
-      const resposta = await api.post('/projetos/search', dadosRequisicao, {
+      const params = new URLSearchParams(dadosRequisicao).toString();
+      const resposta = await api.get(`/projetos/search?${params}`, {
           headers: {
               Authorization: `Bearer ${getToken()} `
           }
       });
       setResultados(resposta.data);
-       setMostrarGrafico(true); 
+      setMostrarGrafico(true); 
       limparFormulario();
     } catch (erro) {
       console.error('Erro ao enviar os dados:', erro);
