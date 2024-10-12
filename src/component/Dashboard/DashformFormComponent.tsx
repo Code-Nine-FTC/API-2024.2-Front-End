@@ -49,7 +49,7 @@ const DashboardFormComponent = () => {
     try {
       console.log('Dados enviados:', dadosRequisicao);
       const params = new URLSearchParams(dadosRequisicao).toString();
-      const resposta = await api.get(`/projetos/search?${params}`, {
+      const resposta = await api.get(`/dashboard/projetos/search?${params}`, {
           headers: {
               Authorization: `Bearer ${getToken()} `
           }
@@ -158,20 +158,20 @@ const DashboardFormComponent = () => {
         <div>
           <BarGraph
             options={{ responsive: true } as ChartOptions<'bar'>}
-            data2={resultados.map((projeto: any) => ({
+            data2={Array.isArray(resultados) ? resultados.map((projeto: any) => ({
               month: projeto.mes,
               value: projeto.valor
-            }))}
+            })): []}
           />
         </div>
       )}
       <div>
           <BarGraph
             options={{ responsive: true } as ChartOptions<'bar'>}
-            data2={resultados.map((projeto: any) => ({
+            data2={Array.isArray(resultados) ? resultados.map((projeto: any) => ({
               month: projeto.mes,
               value: projeto.valor
-            }))}
+            })): []}
           />
       </div>
     </div>
