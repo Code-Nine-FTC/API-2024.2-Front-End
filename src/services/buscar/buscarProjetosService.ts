@@ -25,6 +25,9 @@ export default async function ProcurarProjetoFunction(projeto: BuscarProjeto): P
             }
         });
 
+        if(projeto.status && projeto.status !== 'Todos') {
+            params['status'] = projeto.status;
+        }
 
         const url = api.getUri({ url: 'projeto/listar' });
 

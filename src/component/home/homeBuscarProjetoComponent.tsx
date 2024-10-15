@@ -17,8 +17,7 @@ const Home = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [referenciaProjeto, setReferenciaProjeto] = useState("");
   const [coordenador, setCoordenador] = useState("");
-  const [classificacao, setClassificacao] = useState("");
-  const [projetosituacao, setProjetoSituacao] = useState("");
+  const [status, setSatus] = useState("");
   const [projetos, setProjetos] = useState<any[]>([]);
   const navigate = useNavigate();
   const [isFetching, setIsFetching] = useState(false);
@@ -45,6 +44,7 @@ const Home = () => {
       nomeCoordenador: coordenador,
       dataInicio: startDate ? format(startDate, 'yyyy-MM-dd') : "",
       dataTermino: endDate ? format(endDate, 'yyyy-MM-dd') : "",
+      status: status,
     };  
       
     // Dentro da função fetchData
@@ -157,7 +157,7 @@ const Home = () => {
                     </option>
                     <option value="Termo de Outorga">Termo de Outorga</option>
                   </Form.Select>
-                </FloatingLabel> */}
+                </FloatingLabel>  */}
                 <FloatingLabel
                   controlId="floatingSelectGrid"
                   label="Situação do Projeto"
@@ -166,8 +166,8 @@ const Home = () => {
                 >
                   <Form.Select
                     aria-label="Floating label select example"
-                    value={projetosituacao}
-                    onChange={(e) => setProjetoSituacao(e.target.value)}
+                    value={status}
+                    onChange={(e) => setSatus(e.target.value)}
                     style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
                   >
                     <option disabled selected>

@@ -8,6 +8,7 @@ export interface CadastrarProjetoJson {
     descricao?: string;
     integrantes?: string;
     links?: string;
+    status: string;
     nomeCoordenador: string;
     valor: number;
     dataInicio: string;
@@ -37,6 +38,7 @@ export interface EditarProjeto {
     valor?: number;
     integrantes?: string;
     links?: string;
+    status: string;
     resumoPdfUrl?: string; 
     resumoExcelUrl?: string; 
     resumopropostaUrl?: string; 
@@ -55,6 +57,7 @@ export interface VisualizarProjeto {
     dataTermino: Date;
     valor: number;
     integrantes: string;
+    status: string;
     links: string;
     documentos: VisualizarDocumento[];
 }
@@ -64,6 +67,7 @@ export interface BuscarProjeto {
     nomeCoordenador: string;
     dataInicio: string;
     dataTermino: string;
+    status: string;
     startDate?: Date; 
     endDate?: Date;
     valor?: number;

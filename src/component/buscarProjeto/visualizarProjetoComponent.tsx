@@ -65,6 +65,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     projetoOriginal?.integrantes || ""
   );
   const [links, setLinks] = useState(projetoOriginal?.links || "");
+  const [status, setStatus] = useState(projetoOriginal?.status || "");
   const [objeto, setObjeto] = useState(projetoOriginal?.objeto || "");
   const [descricao, setDescricao] = useState(projetoOriginal?.descricao || "");
   const [coordenador, setCoordenador] = useState(
@@ -120,6 +121,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       setCoordenador(projetoOriginal.nomeCoordenador || "");
       setIntegrantes(projetoOriginal.integrantes || "");
       setLinks(projetoOriginal.links || "");
+      setStatus(projetoOriginal.status || "");
       setStartDate(
         projetoOriginal.dataInicio ? new Date(projetoOriginal.dataInicio) : null
       );
@@ -179,6 +181,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       nomeCoordenador: coordenador,
       integrantes: integrantes,
       links: links,
+      status: status,
       dataInicio: dataInicioString,
       dataTermino: dataTerminoString,
       valor: parseFloat(valor.toString()),
@@ -577,6 +580,27 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             readOnly={!isEditing}
           />
         </FloatingLabel>
+
+        <FloatingLabel
+                  controlId="floatingSelectGrid"
+                  label="Situação do Projeto"
+                  className="mb-3"
+                  style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
+                >
+                  <Form.Select
+                    aria-label="Floating label select example"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    disabled={!isEditing}
+                    style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
+                  >
+                    <option disabled selected>
+                      Selecionar uma Situação
+                    </option>
+                    <option value="Em Andamento">Em Andamento</option>
+                    <option value="Concluído">Concluído</option>
+                  </Form.Select>
+                </FloatingLabel>
 
         <FloatingLabel
           controlId="validationCustom04"
