@@ -44,7 +44,7 @@ const Home = () => {
       nomeCoordenador: coordenador,
       dataInicio: startDate ? format(startDate, 'yyyy-MM-dd') : "",
       dataTermino: endDate ? format(endDate, 'yyyy-MM-dd') : "",
-      status: status,
+      status: status || "",
     };  
       
     // Dentro da função fetchData
