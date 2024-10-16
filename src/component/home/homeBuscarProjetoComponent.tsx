@@ -17,7 +17,7 @@ const Home = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [referenciaProjeto, setReferenciaProjeto] = useState("");
   const [coordenador, setCoordenador] = useState("");
-  const [status, setSatus] = useState("");
+  const [status, setStatus] = useState("");
   const [projetos, setProjetos] = useState<any[]>([]);
   const navigate = useNavigate();
   const [isFetching, setIsFetching] = useState(false);
@@ -44,23 +44,20 @@ const Home = () => {
       nomeCoordenador: coordenador,
       dataInicio: startDate ? format(startDate, 'yyyy-MM-dd') : "",
       dataTermino: endDate ? format(endDate, 'yyyy-MM-dd') : "",
-      status: status || "",
+      status,
     };  
       
     // Dentro da função fetchData
     setIsFetching(true); // Inicia o estado de "buscando"
-  try {
-    const resposta = await ProcurarProjetoFunction(projeto);
-    // Lida com a resposta...
-  } catch (error) {
-    console.error("Erro ao encontrar projeto", error);
-    SweetAlert2.fire({
-      icon: "error",
-      title: "Erro ao encontrar projeto!",
-    });
-  } finally {
-    setIsFetching(false); // Finaliza o estado de "buscando"
-  }
+    try {
+      const resposta = await ProcurarProjetoFunction(projeto);
+      console.log('Resposta do servidor:', resposta);
+      // Lida com a resposta...
+    } catch (error) {
+      console.error('Erro ao buscar o projeto', error);
+    } finally {
+      setIsFetching(false); // Finaliza o estado de "buscando"
+    }
 
     try {
       const resposta = await ProcurarProjetoFunction(projeto);
@@ -133,51 +130,26 @@ const Home = () => {
                   validarDatas={() => {}}
                   cadastro={false}
                 />
-                {/* <FloatingLabel
-                  controlId="floatingSelectGrid"
-                  label="Classificação"
-                  className="mb-3"
-                  style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
-                >
-                  <Form.Select
-                    aria-label="Floating label select example"
-                    value={classificacao}
-                    onChange={(e) => setClassificacao(e.target.value)}
-                    style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
-                  >
-                    <option disabled selected>
-                      Selecionar uma Classificação
-                    </option>
-                    <option value="">Qualquer</option>
-                    <option value="Outros">AS, OF, PC e/ou outros</option>
-                    <option value="Contrato">Contrato</option>
-                    <option value="Patrocínio">Patrocínio</option>
-                    <option value="Termo de Cooperação">
-                      Termo de Cooperação
-                    </option>
-                    <option value="Termo de Outorga">Termo de Outorga</option>
-                  </Form.Select>
-                </FloatingLabel>  */}
-                <FloatingLabel
-                  controlId="floatingSelectGrid"
-                  label="Situação do Projeto"
-                  className="mb-3"
-                  style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
-                >
-                  <Form.Select
-                    aria-label="Floating label select example"
-                    value={status}
-                    onChange={(e) => setSatus(e.target.value)}
-                    style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
-                  >
-                    <option disabled selected>
-                      Selecionar uma Situação
-                    </option>
-                    <option value="">Todos</option>
-                    <option value="Em Andamento">Em Andamento</option>
-                    <option value="Concluído">Concluído</option>
-                  </Form.Select>
-                </FloatingLabel>
+                  <FloatingLabel
+                      controlId="floatingSelectGrid"
+                      label="Situação do Projeto"
+                      className="mb-3"
+                      style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
+                    >
+                      <Form.Select
+                        aria-label="Floating label select example"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
+                      >
+                        <option disabled value="">
+                          Selecionar uma Situação
+                        </option>
+                        <option value="">Todos</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Concluído">Concluído</option>
+                      </Form.Select>
+                  </FloatingLabel>
               </div>
             <br />
             <Button type="submit" className={styles.botaoSubmit}>

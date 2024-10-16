@@ -19,18 +19,21 @@ export default async function ProcurarProjetoFunction(projeto: BuscarProjeto): P
                     } else {
                         console.warn(`Data inválida para o campo ${key}:`, value);
                     }
+                } else if (key === 'status' && (value === 'Em Andamento' || value === 'Concluído')) {
+                    params[key] = value;
                 } else {
                     params[key] = value.toString();
                 }
             }
         });
-
-        if(projeto.status && projeto.status !== 'Todos') {
-            params['status'] = projeto.status;
+        
+        // Se o status não for 'Em Andamento' ou 'Concluído', busca todos os projetos
+        if (!params['status']) {
+            params['status'] = '';
         }
 
         const url = api.getUri({ url: 'projeto/listar' });
-
+        console.log('Parâmetros enviados:', params);
         // Se usar os filtros ele usa o params se nao ele busca tudo
         const resposta = await axios.get(url, { params });
 

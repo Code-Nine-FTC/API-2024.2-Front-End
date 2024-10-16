@@ -91,7 +91,7 @@ const DashboardFormComponent = () => {
 
           {erroMensagem && <div className="alert alert-danger">{erroMensagem}</div>}
      
-          <Row className="mb-4">
+          <Row className="mb-4 ">
             <Form.Group as={Col} controlId="floatingInput">
               <FloatingLabel controlId="floatingInput" label="Contratante" style={{ color: "#9C9C9C" }}>
                 <Form.Control placeholder="Contratante" type="text" value={contratante} onChange={(e) => setContratante(e.target.value)} />
