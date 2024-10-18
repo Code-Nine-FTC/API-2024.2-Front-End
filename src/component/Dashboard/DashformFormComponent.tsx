@@ -165,7 +165,7 @@ const DashboardFormComponent = () => {
           />
         </div>
       )}
-      <div>
+{/*       <div>
           <BarGraph
             options={{ responsive: true } as ChartOptions<'bar'>}
             data2={Array.isArray(resultados) ? resultados.map((projeto: any) => ({
@@ -173,7 +173,7 @@ const DashboardFormComponent = () => {
               value: projeto.valor
             })): []}
           />
-      </div>
+      </div> */}
     </div>
   );
 };
