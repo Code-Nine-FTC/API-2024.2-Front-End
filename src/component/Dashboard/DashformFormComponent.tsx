@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Row, Col } from 'react-bootstrap';
 import api from '../../services/api';
 import BarGraph from './charts/bar';
@@ -6,10 +6,10 @@ import { getToken } from '../../services/auth';
 import { ChartOptions } from 'chart.js';
 
 // Definindo a interface para os resultados
-interface ResultadoProjeto {
+/* interface ResultadoProjeto {
   month: string;
   value: number;
-}
+} */
 
 const DashboardFormComponent = () => {
   const [contratante, setContratante] = useState('');
@@ -18,7 +18,7 @@ const DashboardFormComponent = () => {
   const [valorMinimo, setValorMinimo] = useState('');
   const [valorMaximo, setValorMaximo] = useState('');
   const [situacaoProjeto, setSituacaoProjeto] = useState('Todos');
-  const [resultados, setResultados] = useState<ResultadoProjeto[]>([]); // Usando o tipo definido
+  const [resultados, setResultados] = useState/* <ResultadoProjeto[]> */([]); // Usando o tipo definido
   const [erroMensagem, setErroMensagem] = useState('');
   const [mostrarGrafico, setMostrarGrafico] = useState(false);
 
@@ -64,23 +64,18 @@ const DashboardFormComponent = () => {
         },
       });
 
-      // Verificando a resposta da API
-      console.log('Resposta da API:', resposta.data);
-
-      // Atualizando resultados apenas se a estrutura for a esperada
-      if (Array.isArray(resposta.data)) {
-        setResultados(resposta.data); // Agora deve funcionar corretamente
-      } else {
-        setErroMensagem('Dados retornados em formato inesperado.');
-      }
-      
-      setMostrarGrafico(true);
+      setResultados(resposta.data);
+      setMostrarGrafico(true); 
       limparFormulario();
     } catch (erro: any) {
       console.error('Erro ao enviar os dados:', erro.response ? erro.response : erro);
       setErroMensagem('Ocorreu um erro ao enviar os dados. Tente novamente.');
     }
   };
+
+  useEffect(() => {
+    console.log(resultados);
+  }, [resultados]);
 
   const limparFormulario = () => {
     setContratante('');
@@ -198,7 +193,10 @@ const DashboardFormComponent = () => {
         <div>
           <BarGraph
             options={{ responsive: true } as ChartOptions<'bar'>}
-            data2={resultados} // Passando os resultados para o gráfico
+            data2={Object.entries(resultados).map(([year, value]) => ({
+              month: year,
+              value: value
+            }))}
           />
         </div>
       )}
