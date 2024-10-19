@@ -5,6 +5,12 @@ import BarGraph from './charts/bar';
 import { getToken } from '../../services/auth';
 import { ChartOptions } from 'chart.js';
 
+// Definindo a interface para os resultados
+interface ResultadoProjeto {
+  month: string;
+  value: number;
+}
+
 const DashboardFormComponent = () => {
   const [contratante, setContratante] = useState('');
   const [coordenador, setCoordenador] = useState('');
@@ -12,9 +18,9 @@ const DashboardFormComponent = () => {
   const [valorMinimo, setValorMinimo] = useState('');
   const [valorMaximo, setValorMaximo] = useState('');
   const [situacaoProjeto, setSituacaoProjeto] = useState('Todos');
-  const [resultados, setResultados] = useState([]);
+  const [resultados, setResultados] = useState<ResultadoProjeto[]>([]); // Usando o tipo definido
   const [erroMensagem, setErroMensagem] = useState('');
-   const [mostrarGrafico, setMostrarGrafico] = useState(false); 
+  const [mostrarGrafico, setMostrarGrafico] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,19 +52,32 @@ const DashboardFormComponent = () => {
       ...(situacaoProjeto && { situacaoProjeto }),
     };
 
+    const params = new URLSearchParams(dadosRequisicao).toString();
+
+    console.log('Query Params:', params); // Log para verificar a query string
+
     try {
       console.log('Dados enviados:', dadosRequisicao);
-      const params = new URLSearchParams(dadosRequisicao).toString();
       const resposta = await api.get(`/dashboard/projetos/search?${params}`, {
-          headers: {
-              Authorization: `Bearer ${getToken()} `
-          }
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
-      setResultados(resposta.data);
-      setMostrarGrafico(true); 
+
+      // Verificando a resposta da API
+      console.log('Resposta da API:', resposta.data);
+
+      // Atualizando resultados apenas se a estrutura for a esperada
+      if (Array.isArray(resposta.data)) {
+        setResultados(resposta.data); // Agora deve funcionar corretamente
+      } else {
+        setErroMensagem('Dados retornados em formato inesperado.');
+      }
+      
+      setMostrarGrafico(true);
       limparFormulario();
-    } catch (erro) {
-      console.error('Erro ao enviar os dados:', erro);
+    } catch (erro: any) {
+      console.error('Erro ao enviar os dados:', erro.response ? erro.response : erro);
       setErroMensagem('Ocorreu um erro ao enviar os dados. Tente novamente.');
     }
   };
@@ -88,21 +107,30 @@ const DashboardFormComponent = () => {
       <h2 className="text-center my-4">Dashboard</h2>
       <div className="card shadow-sm p-4" style={{ borderRadius: '10px' }}>
         <Form onSubmit={handleSubmit}>
-
           {erroMensagem && <div className="alert alert-danger">{erroMensagem}</div>}
-     
-          <Row className="mb-4 ">
+
+          <Row className="mb-4">
             <Form.Group as={Col} controlId="floatingInput">
-              <FloatingLabel controlId="floatingInput" label="Contratante" style={{ color: "#9C9C9C" }}>
-                <Form.Control placeholder="Contratante" type="text" value={contratante} onChange={(e) => setContratante(e.target.value)} />
+              <FloatingLabel controlId="floatingInput" label="Contratante" style={{ color: '#9C9C9C' }}>
+                <Form.Control
+                  placeholder="Contratante"
+                  type="text"
+                  value={contratante}
+                  onChange={(e) => setContratante(e.target.value)}
+                />
               </FloatingLabel>
             </Form.Group>
           </Row>
 
           <Row className="mb-4">
             <Form.Group as={Col} controlId="floatingInput">
-              <FloatingLabel controlId="floatingInput" label="Coordenador " style={{ color: "#9C9C9C" }} >
-                <Form.Control placeholder="Coordenador" type="text" value={coordenador} onChange={(e) => setCoordenador(e.target.value)} />
+              <FloatingLabel controlId="floatingInput" label="Coordenador" style={{ color: '#9C9C9C' }}>
+                <Form.Control
+                  placeholder="Coordenador"
+                  type="text"
+                  value={coordenador}
+                  onChange={(e) => setCoordenador(e.target.value)}
+                />
               </FloatingLabel>
             </Form.Group>
           </Row>
@@ -111,11 +139,11 @@ const DashboardFormComponent = () => {
             <Form.Group as={Col} controlId="ano">
               <FloatingLabel controlId="ano" label="Ano">
                 <Form.Select value={ano} onChange={(e) => setAno(e.target.value)}>
-                    {obterOpcoesAno().map((Ano) => (
-                      <option key={Ano} value={Ano}>
-                        {Ano}
-                      </option>
-                    ))}
+                  {obterOpcoesAno().map((Ano) => (
+                    <option key={Ano} value={Ano}>
+                      {Ano}
+                    </option>
+                  ))}
                 </Form.Select>
               </FloatingLabel>
             </Form.Group>
@@ -123,13 +151,23 @@ const DashboardFormComponent = () => {
 
           <Row className="mb-4">
             <Form.Group as={Col} controlId="valorMinimo" sm={6}>
-              <FloatingLabel controlId="valorMinimo" label="Valor mínimo" style={{ color: "#9C9C9C" }}>
-                <Form.Control placeholder="" type="text" value={valorMinimo} onChange={(e) => setValorMinimo(e.target.value)} />
+              <FloatingLabel controlId="valorMinimo" label="Valor mínimo" style={{ color: '#9C9C9C' }}>
+                <Form.Control
+                  placeholder=""
+                  type="text"
+                  value={valorMinimo}
+                  onChange={(e) => setValorMinimo(e.target.value)}
+                />
               </FloatingLabel>
             </Form.Group>
             <Form.Group as={Col} controlId="valorMaximo" sm={6}>
-              <FloatingLabel controlId="valorMaximo" label="Valor máximo" style={{ color: "#9C9C9C" }}>
-                <Form.Control placeholder="" type="text" value={valorMaximo} onChange={(e) => setValorMaximo(e.target.value)} />
+              <FloatingLabel controlId="valorMaximo" label="Valor máximo" style={{ color: '#9C9C9C' }}>
+                <Form.Control
+                  placeholder=""
+                  type="text"
+                  value={valorMaximo}
+                  onChange={(e) => setValorMaximo(e.target.value)}
+                />
               </FloatingLabel>
             </Form.Group>
           </Row>
@@ -148,32 +186,22 @@ const DashboardFormComponent = () => {
 
           <Row>
             <Col className="text-center">
-              <Button variant="secondary" type="submit">Gerar</Button>
+              <Button variant="secondary" type="submit">
+                Gerar
+              </Button>
             </Col>
           </Row>
         </Form>
       </div>
 
-       {mostrarGrafico && (
+      {mostrarGrafico && (
         <div>
           <BarGraph
             options={{ responsive: true } as ChartOptions<'bar'>}
-            data2={Array.isArray(resultados) ? resultados.map((projeto: any) => ({
-              month: projeto.mes,
-              value: projeto.valor
-            })): []}
+            data2={resultados} // Passando os resultados para o gráfico
           />
         </div>
       )}
-{/*       <div>
-          <BarGraph
-            options={{ responsive: true } as ChartOptions<'bar'>}
-            data2={Array.isArray(resultados) ? resultados.map((projeto: any) => ({
-              month: projeto.mes,
-              value: projeto.valor
-            })): []}
-          />
-      </div> */}
     </div>
   );
 };
