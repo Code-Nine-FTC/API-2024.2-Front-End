@@ -190,15 +190,25 @@ const DashboardFormComponent = () => {
       </div>
 
       {mostrarGrafico && (
-        <div>
-          <BarGraph
-            options={{ responsive: true } as ChartOptions<'bar'>}
-            data2={Object.entries(resultados).map(([year, value]) => ({
-              month: year,
-              value: value
-            }))}
-          />
-        </div>
+          <div className="container my-4">
+              <div 
+                  className="card shadow-sm" // Adicionando a classe de sombra
+                  style={{ 
+                      backgroundColor: 'white', 
+                      border: '1px solid #ccc', // Cor da borda
+                      borderRadius: '10px', // Cantos arredondados
+                      padding: '20px' // Espaçamento interno
+                  }}
+              >
+                  <BarGraph
+                      options={{ responsive: true } as ChartOptions<'bar'>}
+                      data2={Object.entries(resultados).map(([year, value]) => ({
+                          month: year,
+                          value: value
+                      }))}
+                  />
+              </div>
+          </div>
       )}
     </div>
   );
