@@ -39,9 +39,17 @@ const CriarProjetoComponent = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [status, setSatus] = useState("");
+  const [camposOcultos, setCamposOcultos] = useState("");
   const [isValorInvalido, setIsValorInvalido] = useState(false);
   const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
   const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
+
+  const [hideTitulo, setHideTitulo] = useState(false);
+  const [hideReferencia, setHideReferencia] = useState(false);
+  const [hideContratante, setHideContratante] = useState(false);
+  const [hideCoordenador, setHideCoordenador] = useState(false);
+  const [hideValor, setHideValor] = useState(false);
+  const [hideStatus, setHideStatus] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,6 +68,16 @@ const CriarProjetoComponent = () => {
     const dataInicioString = startDate?.toISOString();
     const dataTerminoString = endDate?.toISOString();
 
+    const camposOcultos = [];
+    if (hideTitulo) camposOcultos.push("titulo");
+    if (hideReferencia) camposOcultos.push("referencia");
+    if (hideContratante) camposOcultos.push("contratante");
+    if (hideCoordenador) camposOcultos.push("coordenador");
+    if (hideValor) camposOcultos.push("valor");
+    if (hideStatus) camposOcultos.push("status");
+
+    const camposOcultosString = camposOcultos.join(", ");
+
     const projeto = {
       titulo: tituloProjeto,
       referencia: referenciaProjeto,
@@ -69,9 +87,11 @@ const CriarProjetoComponent = () => {
       status: status,
       dataTermino: dataTerminoString || "",
       contratante: contratante,
+      camposOcultos: camposOcultosString,
     };
 
     console.log(projeto);
+    console.log(camposOcultos);
 
     try {
       const resposta = await CadastrarProjetoFunction(projeto);
@@ -131,112 +151,175 @@ const CriarProjetoComponent = () => {
         </span>
         <h1 className="titulo"> Adicionar projeto </h1>
       </div>
+
       <section className={styles.formMain}>
         <Form noValidate validated={camposValidados} onSubmit={handleSubmit}>
-          <FloatingLabel
-            controlId="validationCustom01"
-            label="Titulo"
-            className="mb-3"
-            style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-          >
-            <Form.Control
-              type="text"
-              placeholder="Titulo do projetor"
-              required
-              value={tituloProjeto}
-              onChange={(e) => setTituloProjeto(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Por favor, insira o título do projeto.
-            </Form.Control.Feedback>
-          </FloatingLabel>
-          <FloatingLabel
-            label="Referência de projeto"
-            controlId="validationCustom02"
-            className="mb-3"
-            style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-          >
-            <Form.Control
-              type="text"
-              placeholder="Referência de projeto"
-              required
-              value={referenciaProjeto}
-              onChange={(e) => setReferenciaProjeto(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Por favor, insira a referência de projeto.
-            </Form.Control.Feedback>
-          </FloatingLabel>
-          <FloatingLabel
-            label="Contratante"
-            controlId="validationCustom03"
-            className="mb-3"
-            style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-          >
-            <Form.Control
-              type="text"
-              placeholder="Contratante"
-              value={contratante}
-              onChange={(e) => setContratante(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Por favor, insira o contratante.
-            </Form.Control.Feedback>
-          </FloatingLabel>
-          <FloatingLabel
-            label="Coordenador"
-            controlId="validationCustom06"
-            className="mb-3"
-            style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-          >
-            <Form.Control
-              type="text"
-              placeholder="Coordenador"
-              value={nomeCoordenador}
-              required
-              onChange={(e) => setCoordenador(e.target.value)}
-            />
-            <Form.Control.Feedback type="invalid">
-              Por favor, insira o coordenador.
-            </Form.Control.Feedback>
-          </FloatingLabel>
-          <FloatingLabel
-            controlId="floatingSelectGrid"
-            label="Situação do Projeto"
-            className="mb-3"
-            style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
-          >
-            <Form.Select
-              aria-label="Floating label select example"
-              value={status}
-              onChange={(e) => setSatus(e.target.value)}
-              style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
+          <InputGroup>
+            <Form.Text
+              className="flex-grow-1"
+              style={{
+                color: "#9C9C9C",
+                zIndex: 1,
+                paddingBottom: "10px",
+                whiteSpace: "normal",
+                wordWrap: "break-word",
+              }}
             >
-              <option disabled selected>
-                Selecionar uma Situação
-              </option>
-              <option value="Concluído">Concluído</option>
-              <option value="Em Andamento">Em Andamento</option>
+              Caso o checkbox ao lado seja marcado, os campos serão ocultos para
+              os usuarios comuns.
+            </Form.Text>
+          </InputGroup>
 
-            </Form.Select>
-          </FloatingLabel>
-          <FloatingLabel
-            label="Valor do projeto"
-            controlId="validationCustom07"
-            className="mb-3"
-            style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-          >
-            <Form.Control
-              type="number"
-              placeholder="Valor do projeto"
-              value={valor}
-              min="0"
-              onChange={(e) => setValor(e.target.value)}
+          <InputGroup className="mb-3">
+            <FloatingLabel
+              controlId="validationCustom01"
+              label="Titulo"
+              className="flex-grow-1"
+              style={{ color: "#9C9C9C", zIndex: 1 }}
+            >
+              <Form.Control
+                type="text"
+                placeholder="Titulo do projetor"
+                required
+                value={tituloProjeto}
+                onChange={(e) => setTituloProjeto(e.target.value)}
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira o título do projeto.
+              </Form.Control.Feedback>
+            </FloatingLabel>
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideTitulo}
+              onChange={(e) => setHideTitulo(e.target.checked)}
             />
-            <Form.Control.Feedback type="invalid">
-              Por favor, insira o valor do projeto.
-            </Form.Control.Feedback>
-          </FloatingLabel>
+          </InputGroup>
+          <InputGroup className="mb-3">
+            <FloatingLabel
+              label="Referência de projeto"
+              controlId="validationCustom02"
+              className="flex-grow-1"
+              style={{ color: "#9C9C9C", zIndex: 1 }}
+            >
+              <Form.Control
+                type="text"
+                placeholder="Referência de projeto"
+                required
+                value={referenciaProjeto}
+                onChange={(e) => setReferenciaProjeto(e.target.value)}
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira a referência de projeto.
+              </Form.Control.Feedback>
+            </FloatingLabel>
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideReferencia}
+              onChange={(e) => setHideReferencia(e.target.checked)}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <FloatingLabel
+              label="Contratante"
+              controlId="validationCustom03"
+              className="flex-grow-1"
+              style={{ color: "#9C9C9C", zIndex: 1 }}
+            >
+              <Form.Control
+                type="text"
+                placeholder="Contratante"
+                value={contratante}
+                onChange={(e) => setContratante(e.target.value)}
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira o contratante.
+              </Form.Control.Feedback>
+            </FloatingLabel>
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideContratante}
+              onChange={(e) => setHideContratante(e.target.checked)}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <FloatingLabel
+              label="Coordenador"
+              controlId="validationCustom06"
+              className="flex-grow-1"
+              style={{ color: "#9C9C9C", zIndex: 1 }}
+            >
+              <Form.Control
+                type="text"
+                placeholder="Coordenador"
+                value={nomeCoordenador}
+                required
+                onChange={(e) => setCoordenador(e.target.value)}
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira o coordenador.
+              </Form.Control.Feedback>
+            </FloatingLabel>
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideCoordenador}
+              onChange={(e) => setHideCoordenador(e.target.checked)}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <FloatingLabel
+              controlId="floatingSelectGrid"
+              label="Situação do Projeto"
+              className="flex-grow-1"
+              style={{ color: "#9C9C9C", zIndex: 0 }}
+            >
+              <Form.Select
+                aria-label="Floating label select example"
+                value={status}
+                onChange={(e) => setSatus(e.target.value)}
+                style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
+              >
+                <option disabled selected>
+                  Selecionar uma Situação
+                </option>
+                <option value="Pendente">Pendente</option>
+                <option value="Concluído">Concluído</option>
+                <option value="Em Andamento">Em Andamento</option>
+              </Form.Select>
+            </FloatingLabel>
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideStatus}
+              onChange={(e) => setHideStatus(e.target.checked)}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-3">
+            <FloatingLabel
+              label="Valor do projeto"
+              controlId="validationCustom07"
+              className="flex-grow-1"
+              style={{ color: "#9C9C9C", zIndex: 1 }}
+            >
+              <Form.Control
+                type="number"
+                placeholder="Valor do projeto"
+                value={valor}
+                min="0"
+                onChange={(e) => setValor(e.target.value)}
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira o valor do projeto.
+              </Form.Control.Feedback>
+            </FloatingLabel>
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideValor}
+              onChange={(e) => setHideValor(e.target.checked)}
+            />
+          </InputGroup>
           <Calendario
             startDate={startDate}
             endDate={endDate}
