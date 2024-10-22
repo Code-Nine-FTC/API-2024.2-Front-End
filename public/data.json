@@ -1,5 +1,66 @@
 [
-    { "month": "Janeiro", "value": 300 },
-    { "month": "Fevereiro", "value": 200 },
-    { "month": "Março", "value": 100 }
-  ]
+  {
+    "id": "1",
+    "evento": "Mudança de escopo",
+    "data": "2024-10-22T10:30:00-03:00",
+    "projeto": {
+      "id": 101,
+      "titulo": "Desenvolvimento de Software",
+      "referencia": "DS-2024-001",
+      "contratante": "Empresa XYZ",
+      "objeto": "Desenvolvimento de uma nova plataforma de e-commerce",
+      "descricao": "Mudança no escopo do projeto para incluir novas funcionalidades de pagamento.",
+      "nomeCoordenador": "João Silva",
+      "dataInicio": "2024-01-15T08:00:00-03:00",
+      "dataTermino": "2024-12-15T17:00:00-03:00",
+      "valor": 50000,
+      "integrantes": "Maria, Carlos, Ana",
+      "status": "Em andamento",
+      "resumoPdf": "data:application/pdf;base64,JVBERi0xLjQKJcfs..."
+    }
+  },
+  {
+    "id": "2",
+    "evento": "Revisão de cronograma",
+    "data": "2024-10-23T11:00:00-03:00",
+    "projeto": {
+      "id": 102,
+      "titulo": "Sistema de Gestão",
+      "referencia": "SG-2024-002",
+      "contratante": "Empresa ABC",
+      "valor": 75000,
+      "integrantes": "Pedro, Ana"
+    }
+  },
+  {
+    "id": "3",
+    "evento": "Aprovação de orçamento",
+    "data": "2024-10-24T09:15:00-03:00",
+    "projeto": {
+      "id": 103,
+      "titulo": "Aplicativo Móvel",
+      "referencia": "AM-2024-003",
+      "contratante": "Startup XYZ",
+      "objeto": "Criação de um app de entrega",
+      "descricao": "Aprovação do orçamento para o desenvolvimento do app.",
+      "nomeCoordenador": "Lucas Costa",
+      "dataInicio": "2024-02-01T08:00:00-03:00",
+      "dataTermino": "2024-11-30T17:00:00-03:00",
+      "valor": 60000,
+      "integrantes": "Ana, João, Tiago",
+      "links": "http://exemplo.com/projeto",
+      "status": "Aprovado",
+      "resumoExcel": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,UEsDBBQ..."
+    }
+  },
+  {
+    "id": "4",
+    "evento": "Alteração de requisitos",
+    "data": "2024-10-25T14:45:00-03:00",
+    "projeto": {
+      "id": 104,
+      "referencia": "AR-2024-004",
+      "contratante": "Empresa QWERTY"
+    }
+  }
+]
