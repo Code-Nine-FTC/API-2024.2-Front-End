@@ -72,3 +72,23 @@ export interface BuscarProjeto {
     endDate?: Date;
     valor?: number;
 }
+
+export interface MudancaProjeto {
+    id?: number;
+    titulo?: string;
+    referencia: string;
+    contratante?: string;
+    objeto?: string;
+    descricao?: string;
+    nomeCoordenador?: string;
+    dataInicio?: string;
+    dataTermino?: string;
+    valor?: number;
+    integrantes?: string;
+    links?: string;
+    status?: string;
+    resumoPdfUrl?: string; 
+    resumoExcelUrl?: string; 
+    resumopropostaUrl?: string; 
+    resumocontratoUrl?: string; 
+}
