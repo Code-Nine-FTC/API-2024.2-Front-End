@@ -39,7 +39,7 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
 
     return(
         <div>
-            <h1>Lista de Mudanças</h1>
+            <h1>Auditoria</h1>
             <ul>
                 {dados.map((dado) => (
                     <li key={dado.id}>
