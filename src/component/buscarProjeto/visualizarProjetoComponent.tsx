@@ -1,9 +1,8 @@
 import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import api from "../../services/api";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
-import { Button, Modal, Form, Alert, Spinner, FloatingLabel, InputGroup } from "react-bootstrap";
+import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup } from "react-bootstrap";
 import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
 import Calendario from "../date/calendarioComponent";
@@ -12,7 +11,6 @@ import pdflogo from "../../assets/editarProjeto/pdflogo.svg";
 import excellogo from "../../assets/editarProjeto/excellogo.svg";
 import attach from "../../assets/criarProjeto/attach.svg";
 import {
-  EditarProjeto,
   VisualizarProjeto,
 } from "../../interface/projeto.interface";
 import separarMensagens from "../../functions/separarMensagens";
@@ -31,7 +29,6 @@ import EditarProjetoService from "../../services/projeto/editarProjetoService";
 import VisualizarProjetoService from "../../services/projeto/visualizarProjetoService";
 import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
 import formatarData from "../../functions/formatarData";
-import AuditoriaComponent from "../auditoria/auditoriaComponent";
 
 interface MensagemValidacao {
   titulo: string;
@@ -48,7 +45,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>(
     { titulo: "", texto: "" }
   );
-  const [autenticado, setAutenticado] = useState<boolean>(isAuthenticated());
+  const [autenticado] = useState<boolean>(isAuthenticated());
   const [projetoOriginal, setProjeto] = useState<VisualizarProjeto | undefined>(
     undefined
   );
@@ -99,13 +96,9 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     null
   );
   const [documentos, setDocumentos] = useState<VisualizarDocumento[]>([]);
-  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleOpenModal = () => {
-    setShowModal(true);
-  }
 
   
 
@@ -436,7 +429,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           return;
         } else {
           if (arquivo.type === "application/pdf") {
-            if (resumoPdf != undefined) {
+            if (resumoPdf !== undefined) {
               setMensagemValidacao({
                 titulo: "Apenas um arquivo PDF pode ser adicionado.",
                 texto:
@@ -456,7 +449,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             arquivo.type ===
               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           ) {
-            if (resumoExcel != undefined) {
+            if (resumoExcel !== undefined) {
               setMensagemValidacao({
                 titulo: "Apenas um arquivo Excel pode ser adicionado.",
                 texto:

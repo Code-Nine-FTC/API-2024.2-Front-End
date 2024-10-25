@@ -1,5 +1,4 @@
 import { Mudanca } from "../../interface/auditoria.interface";
-import api from "../api";
 
 export default async function VisualizarMudancasFunction(projetoId?: string) {
   try {

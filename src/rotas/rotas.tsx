@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { Route, BrowserRouter, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import HomeBuscar from "../pages/homePage";
 import CriarProjeto from "../pages/criarProjeto";
 import Login from "../pages/loginPage";

@@ -2,13 +2,11 @@ import {
   Button,
   FloatingLabel,
   Form,
-  FormControl,
   InputGroup,
 } from "react-bootstrap";
-import React, { useState, useEffect, SetStateAction, Dispatch } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
-import { CadastrarProjeto } from "../../interface/projeto.interface";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from "react-router-dom";
@@ -17,17 +15,11 @@ interface MensagemValidacao {
   titulo: string;
   texto: string;
 }
-interface CalendarioProps {
-  startDate: Date | null;
-  endDate: Date | null;
-  setStartDate: Dispatch<SetStateAction<Date | null>>;
-  setEndDate: Dispatch<SetStateAction<Date | null>>;
-}
 
 const CriarProjetoComponent = () => {
   const navigate = useNavigate();
 
-  const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>(
+  const [mensagemValidacao] = useState<MensagemValidacao>(
     { titulo: "", texto: "" }
   );
   const [camposValidados, setValidado] = useState(false);
@@ -39,8 +31,6 @@ const CriarProjetoComponent = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [status, setSatus] = useState("");
-  const [camposOcultos, setCamposOcultos] = useState("");
-  const [isValorInvalido, setIsValorInvalido] = useState(false);
   const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
   const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
 
@@ -50,20 +40,6 @@ const CriarProjetoComponent = () => {
   const [hideCoordenador, setHideCoordenador] = useState(false);
   const [hideValor, setHideValor] = useState(false);
   const [hideStatus, setHideStatus] = useState(false);
-
-  const formatarValorBR = (valor: number | string): string => {
-    // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
-    let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
-    // Se a conversão não resultar em um número válido, retorna "0,00"
-    if (isNaN(numero)) return "0,00";
-    // Converte o número para ter sempre duas casas decimais
-    const [inteira, decimal] = numero.toFixed(2).split(".");
-    // Formata a parte inteira para incluir pontos a cada três dígitos
-    const inteiraFormatada = inteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    // Retorna o número formatado com vírgula separando os decimais
-    return `R$: ${inteiraFormatada},${decimal}`;
-  };
-  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -133,13 +109,6 @@ const CriarProjetoComponent = () => {
   const validarDatas = () => {
     setStartDateValid(startDate !== null);
     setEndDateValid(endDate !== null && (!startDate || endDate >= startDate));
-  };
-
-  const atualizarMensagem = (mensagens: string) => {
-    const [tituloErro, ...textoErro] = mensagens.split(". ");
-    const text = textoErro.join(". ");
-    setMensagemValidacao({ titulo: tituloErro, texto: text });
-    return;
   };
 
   useEffect(() => {
