@@ -2,6 +2,7 @@
   {
     "id": "1",
     "evento": "Mudança de escopo",
+    "usuario": "FAPG ADM",
     "data": "2024-10-22T10:30:00-03:00",
     "projeto": {
       "id": 101,
