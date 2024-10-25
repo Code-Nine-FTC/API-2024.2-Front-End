@@ -3,7 +3,11 @@ import api from '../../services/api';
 import VisualizarMudancasFunction from '../../services/auditoria/vizualizarMudancasService';
 import { Mudanca } from '../../interface/auditoria.interface';
 
-const AuditoriaComponent = () => {
+interface AuditoriaComponentProps {
+    projetoId?: string;
+}
+
+const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) => {
     const [dados, setDados] = useState<Mudanca[]>([])
     const [error, setError] = useState<string | null>(null)
 
@@ -40,6 +44,7 @@ const AuditoriaComponent = () => {
                 {dados.map((dado) => (
                     <li key={dado.id}>
                         {renderField('Evento', dado.evento)}
+                        {renderField('Usuário', dado.usuario)}
                         {renderField('Data', new Date(dado.data).toLocaleString())}
                         {renderField('Projeto', dado.projeto.titulo || 'Título não disponível')}
                         {renderField('Descrição', dado.projeto.descricao)}
