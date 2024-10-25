@@ -3,7 +3,7 @@ import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
-import { Button, Modal, Form, Alert, Spinner, FloatingLabel } from "react-bootstrap";
+import { Button, Modal, Form, Alert, Spinner, FloatingLabel, InputGroup } from "react-bootstrap";
 import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
 import Calendario from "../date/calendarioComponent";
@@ -76,6 +76,16 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [valor, setValor] = useState(projetoOriginal?.valor || "");
   const [startDateValid, setStartDateValid] = useState<boolean | null>(null);
+  const [hideTitulo, setHideTitulo] = useState(false);
+  const [hideReferencia, setHideReferencia] = useState(false);
+  const [hideObjeto, setHideObjeto] = useState(false);
+  const [hideIntegrantes, setHideIntegrantes] = useState(false);
+  const [hideLinks, setHideLinks] = useState(false);
+  const [hideDescricao, setHideDescricao] = useState(false);
+  const [hideContratante, setHideContratante] = useState(false);
+  const [hideCoordenador, setHideCoordenador] = useState(false);
+  const [hideValor, setHideValor] = useState(false);
+  const [hideStatus, setHideStatus] = useState(false);
   const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
   const [resumoPdf, setResumoPdf] = useState<FileOrVisualizarDocumento | null>(
     null
@@ -181,6 +191,20 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const camposOcultos = [];
+    if (hideTitulo) camposOcultos.push("titulo");
+    if (hideReferencia) camposOcultos.push("referencia");
+    if (hideContratante) camposOcultos.push("contratante");
+    if (hideCoordenador) camposOcultos.push("coordenador");
+    if (hideValor) camposOcultos.push("valor");
+    if (hideStatus) camposOcultos.push("status");
+    if (hideDescricao) camposOcultos.push("descricao");
+    if (hideIntegrantes) camposOcultos.push("integrantes");
+    if (hideLinks) camposOcultos.push("links");
+    if (hideObjeto) camposOcultos.push("objetivo");
+
+    const camposOcultosString = camposOcultos.join(", ");
+
     const camposEditados = {
       titulo: titulo,
       referencia: referencia,
@@ -193,6 +217,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       status: status,
       dataInicio: dataInicioString,
       dataTermino: dataTerminoString,
+      camposOcultos: camposOcultosString,
       valor: parseFloat(valor.toString()),
     };
 
@@ -207,13 +232,13 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     } else {
       console.log("Links não encontrados no projetoInicial");
     }
-    
+
     if (projetoInicial.integrantes) {
       console.log("Integrantes:", projetoInicial.integrantes);
     } else {
       console.log("Integrantes não encontrados no projetoInicial");
     }
-    
+
     const hasChanges =
       Object.keys(projetoInicial).length > 0 ||
       resumoPdf ||
@@ -544,169 +569,297 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       </div>
 
       <Form onSubmit={handleSubmit}>
-        <FloatingLabel
-          controlId="validationCustom01"
-          label="Titulo"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="text"
-            placeholder="Titulo do projeto"
-            required
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
-
-        <FloatingLabel
-          controlId="validationCustom02"
-          label="Referencia"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="text"
-            name="referencia"
-            value={referencia}
-            onChange={(e) => setReferencia(e.target.value)}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
-
-        <FloatingLabel
-          controlId="validationCustom03"
-          label="Contratante"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="text"
-            name="contratante"
-            value={contratante}
-            onChange={(e) => setContratante(e.target.value)}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
-
-        <FloatingLabel
-                  controlId="floatingSelectGrid"
-                  label="Situação do Projeto"
-                  className="mb-3"
-                  style={{ width: "50vw", color: "#9C9C9C", zIndex: 0 }}
-                >
-                  <Form.Select
-                    aria-label="Floating label select example"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    disabled={!isEditing}
-                    style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
-                  >
-                    <option disabled selected>
-                      Selecionar uma Situação
-                    </option>
-                    <option value="Em Andamento">Em Andamento</option>
-                    <option value="Concluído">Concluído</option>
-                  </Form.Select>
-                </FloatingLabel>
-
-        <FloatingLabel
-          controlId="validationCustom04"
-          label="Objetivo"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="text"
-            name="objeto"
-            value={objeto}
-            onChange={(e) => setObjeto(e.target.value)}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
-
-        <FloatingLabel
-          controlId="validationCustom04"
-          label="Descrição"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            as="textarea"
-            name="descricao"
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
-
-        <FloatingLabel
-          controlId="validationCustom04"
-          label="Valor"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="number"
-            name="valor"
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
-
-        <FloatingLabel
-          controlId="validationCustom04"
-          label="Integrantes"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="text"
-            name="integrantes"
-            value={integrantes}
-            onChange={(e) => {
-              setIntegrantes(e.target.value); // Atualiza o estado corretamente
-              console.log("Integrantes:", e.target.value); // Verifique se o valor está sendo capturado
+        {isEditing && (
+          <Form.Text
+            className="flex-grow-1"
+            style={{
+              color: "#9C9C9C",
+              zIndex: 1,
+              paddingBottom: "10px",
+              whiteSpace: "normal",
+              wordWrap: "break-word",
             }}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
+          >
+            Caso o checkbox ao lado seja marcado, os campos serão ocultos para
+            os usuários comuns.
+          </Form.Text>
+        )}
 
-        <FloatingLabel
-          controlId="validationCustom04"
-          label="Links"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="text"
-            name="links"
-            value={links}
-            onChange={(e) => {
-              setLinks(e.target.value); // Atualiza o estado corretamente
-              console.log("Links:", e.target.value); // Verifique se o valor está sendo capturado
-            }}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
+        {/* Titulo */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Titulo"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="text"
+              placeholder="Titulo do projeto"
+              required
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+              readOnly={!isEditing}
+            />
+            <Form.Control.Feedback type="invalid">
+              Por favor, insira o título do projeto.
+            </Form.Control.Feedback>
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideTitulo}
+              onChange={(e) => setHideTitulo(e.target.checked)}
+            />
+          )}
+        </InputGroup>
 
-        <FloatingLabel
-          controlId="validationCustom04"
-          label="Coordenador"
-          className="mb-3"
-          style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-        >
-          <Form.Control
-            type="text"
-            name="Coordenador"
-            value={coordenador}
-            onChange={(e) => setCoordenador(e.target.value)}
-            readOnly={!isEditing}
-          />
-        </FloatingLabel>
+        {/* Referencia */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Referência"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="text"
+              placeholder="Referencia"
+              required
+              value={referencia}
+              onChange={(e) => setReferencia(e.target.value)}
+              readOnly={!isEditing}
+            />
+            <Form.Control.Feedback type="invalid">
+              Por favor, insira a referencia do projeto.
+            </Form.Control.Feedback>
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideReferencia}
+              onChange={(e) => setHideReferencia(e.target.checked)}
+            />
+          )}
+        </InputGroup>
 
+        {/* Contratante */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Contratante"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="text"
+              placeholder="Contratante"
+              required
+              value={contratante}
+              onChange={(e) => setContratante(e.target.value)}
+              readOnly={!isEditing}
+            />
+            <Form.Control.Feedback type="invalid">
+              Por favor, insira o contratante do projeto.
+            </Form.Control.Feedback>
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              checked={hideContratante}
+              onChange={(e) => setHideContratante(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+
+        {/* Situação do Projeto */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationcustom01"
+            label="Situação do Projeto"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Select
+              aria-label="Floating label select example"
+              required
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              disabled={!isEditing}
+              style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
+            >
+              <option disabled selected>
+                Selecionar uma Situação
+              </option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Concluído">Concluído</option>
+            </Form.Select>
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for hiding status"
+              checked={hideStatus}
+              onChange={(e) => setHideStatus(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+
+        {/* Objetivo */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Objetivo"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="text"
+              name="objeto"
+              value={objeto}
+              onChange={(e) => setObjeto(e.target.value)}
+              readOnly={!isEditing}
+            />
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for hiding objetivo"
+              checked={hideObjeto}
+              onChange={(e) => setHideObjeto(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+
+        {/* Descrição */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom04"
+            label="Descrição"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              as="textarea"
+              name="descricao"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              readOnly={!isEditing}
+            />
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for hiding descricao"
+              checked={hideDescricao}
+              onChange={(e) => setHideDescricao(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+
+        {/* Valor */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Valor"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="number"
+              name="valor"
+              value={valor}
+              onChange={(e) => setValor(e.target.value)}
+              readOnly={!isEditing}
+            />
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for hiding valor"
+              checked={hideValor}
+              onChange={(e) => setHideValor(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+
+        {/* Integrantes */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Integrantes"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="text"
+              name="integrantes"
+              value={integrantes}
+              onChange={(e) => {
+                setIntegrantes(e.target.value); // Atualiza o estado corretamente
+                console.log("Integrantes:", e.target.value); // Verifique se o valor está sendo capturado
+              }}
+              readOnly={!isEditing}
+            />
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for hiding integrantes"
+              checked={hideIntegrantes}
+              onChange={(e) => setHideIntegrantes(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+
+        {/* Links */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Links"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="text"
+              name="links"
+              value={links}
+              onChange={(e) => {
+                setLinks(e.target.value); 
+                console.log("Links:", e.target.value); 
+              }}
+              readOnly={!isEditing}
+            />
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for hiding links"
+              checked={hideLinks}
+              onChange={(e) => setHideLinks(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+
+        {/* Coordenador */}
+        <InputGroup className="mb-3">
+          <FloatingLabel
+            controlId="validationCustom01"
+            label="Coordenador"
+            className="flex-grow-1"
+            style={{ color: "#9C9C9C", zIndex: 1 }}
+          >
+            <Form.Control
+              type="text"
+              name="Coordenador"
+              value={coordenador}
+              onChange={(e) => setCoordenador(e.target.value)}
+              readOnly={!isEditing}
+            />
+          </FloatingLabel>
+          {isEditing && (
+            <InputGroup.Checkbox
+              aria-label="Checkbox for hiding coordenador"
+              checked={hideCoordenador}
+              onChange={(e) => setHideCoordenador(e.target.checked)}
+            />
+          )}
+        </InputGroup>
+        <InputGroup className="mb-3">
         <Calendario
           startDate={startDate}
           endDate={endDate}
@@ -717,6 +870,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           validarDatas={validarDatas}
           cadastro={true}
         />
+        </InputGroup>
 
         {isEditing ? (
           <div className={styles.adicionarArquivo}>
