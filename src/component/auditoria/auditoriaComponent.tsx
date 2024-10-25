@@ -21,6 +21,14 @@ const AuditoriaComponent = () => {
         fetchMudancas()
     }, [])
 
+    const renderField = (label: string, value: string | number | undefined | null) => {
+        return value ? (
+            <>
+                <strong>{label}:</strong> {value}<br />
+            </>
+        ) : null;
+    };
+
     if (error) {
         return <div>Erro: {error}</div>;
     }
@@ -31,23 +39,14 @@ const AuditoriaComponent = () => {
             <ul>
                 {dados.map((dado) => (
                     <li key={dado.id}>
-                        <strong>Evento:</strong> {dado.evento}<br />
-                        <strong>Data:</strong> {new Date(dado.data).toLocaleString()}<br />
-                        <strong>Projeto:</strong> {dado.projeto.titulo}<br />
-                        {dado.projeto.descricao && (
-                            <>
-                                <strong>Descrição:</strong> {dado.projeto.descricao}<br />
-                            </>
-                        )}
-                        <strong>Contratante:</strong> {dado.projeto.contratante}<br />
-                        <strong>Status:</strong> {dado.projeto.status}<br />
-                        <strong>Valor:</strong> R$ {dado.projeto.valor?.toFixed(2)}<br />
-                        <strong>Integrantes:</strong> {dado.projeto.integrantes}<br />
-                        {dado.projeto.links && (
-                            <a href={dado.projeto.links} target="_blank" rel="noopener noreferrer">
-                                Ver mais
-                            </a>
-                        )}
+                        {renderField('Evento', dado.evento)}
+                        {renderField('Data', new Date(dado.data).toLocaleString())}
+                        {renderField('Projeto', dado.projeto.titulo || 'Título não disponível')}
+                        {renderField('Descrição', dado.projeto.descricao)}
+                        {renderField('Contratante', dado.projeto.contratante)}
+                        {renderField('Valor', dado.projeto.valor != null ? `R$ ${dado.projeto.valor.toFixed(2)}` : null)}
+                        {renderField('Integrantes', dado.projeto.integrantes)}
+                        {renderField('Status', dado.projeto.status)}
                     </li>
                 ))}
             </ul>
