@@ -1,7 +1,22 @@
 import { Mudanca } from "../../interface/auditoria.interface";
 import api from "../api";
 
-export default async function VisualizarMudancasFunction(){
+export default async function VisualizarMudancasFunction() {
+  try {
+      const response = await fetch('/data.json');
+      if (!response.ok) {
+          throw new Error(`Erro ao carregar os dados: ${response.statusText}`);
+      }
+      const data: Mudanca[] = await response.json();
+      console.log(data)
+      return { status: response.status, data };
+  } catch (error) {
+      console.error('Erro ao carregar os dados do projeto', error);
+      throw new Error('Erro ao carregar os dados do projeto. Tente novamente mais tarde');
+  }
+}
+
+/* export default async function VisualizarMudancasFunction(){
     try {
         const response = await api.get(`/mudancas`);
         console.log(response.data);
@@ -14,4 +29,4 @@ export default async function VisualizarMudancasFunction(){
         console.error('Erro ao carregar os dados do projeto', error);
         throw new Error('Erro ao carregar os dados do projeto. Tente novamente mais tarde')
       }
-}
+} */
