@@ -3,7 +3,14 @@ import api from "../api";
 
 export default async function VisualizarMudancasFunction(projetoId?: string) {
   try {
-      const response = await fetch('/data.json');
+    let response
+
+    if (projetoId){
+      response = await fetch('/data.json');
+    } else {
+      response = await fetch('/data.json')
+    }
+
       if (!response.ok) {
           throw new Error(`Erro ao carregar os dados: ${response.statusText}`);
       }
