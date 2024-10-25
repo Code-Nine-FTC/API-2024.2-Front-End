@@ -124,13 +124,14 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   }, [id]);
 
   const formatarValorBR = (valor: number | string): string => {
+    if (valor === null || valor === undefined) return "Valor Indisponível";
     // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
     let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
     // Se a conversão não resultar em um número válido, retorna "0,00"
     if (isNaN(numero)) return "Valor Inválido";
     // Retorna o número formatado com vírgula separando os decimais
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero);
-};
+  };
 
 
   useEffect(() => {
