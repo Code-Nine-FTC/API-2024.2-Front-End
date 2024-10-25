@@ -318,7 +318,7 @@ const CriarProjetoComponent = () => {
               style={{ color: "#9C9C9C", zIndex: 1 }}
             >
               <Form.Control
-                type="number"
+                type="text"
                 placeholder="Valor do projeto"
                 value={valor}
                 min="0"

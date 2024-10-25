@@ -232,7 +232,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       dataInicio: dataInicioString,
       dataTermino: dataTerminoString,
       camposOcultos: camposOcultosString,
-      valor: formatarValorBR(valor.toString()),
+      valor: valor.toString(),
     };
 
     console.log("camposEditados:", camposEditados);
