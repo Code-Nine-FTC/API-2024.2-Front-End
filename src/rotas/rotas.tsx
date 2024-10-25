@@ -21,8 +21,8 @@ const Rotas: FC = () => {
                 {/* Apenas administradores podem adicionar projetos */}
                 <Route path="/adicionarprojeto" element={<CriarProjeto />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/auditoria" element={<Auditoria />}/>
-                <Route path="/aditoria/:id" element={<AuditoriaPorId/>}/>
+                <Route path="/auditoria/" element={<Auditoria />}/>
+                <Route path="/auditoria/:id" element={<AuditoriaPorId/>}/>
             </>
         );  
        }  else {
