@@ -130,6 +130,20 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     fetchProjeto();
   }, [id]);
 
+  const formatarValorBR = (valor: number | string): string => {
+    // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
+    let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
+    // Se a conversão não resultar em um número válido, retorna "0,00"
+    if (isNaN(numero)) return "0,00";
+    // Converte o número para ter sempre duas casas decimais
+    const [inteira, decimal] = numero.toFixed(2).split(".");
+    // Formata a parte inteira para incluir pontos a cada três dígitos
+    const inteiraFormatada = inteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    // Retorna o número formatado com vírgula separando os decimais
+    return `${inteiraFormatada},${decimal}`;
+};
+
+
   useEffect(() => {
     if (projetoOriginal) {
       setTitulo(projetoOriginal.titulo || "");
@@ -149,7 +163,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           ? new Date(projetoOriginal.dataTermino)
           : null
       );
-      setValor(projetoOriginal.valor || "");
+      setValor(formatarValorBR(projetoOriginal.valor?.toString() || ""));
       setDocumentos(projetoOriginal.documentos);
       projetoOriginal.documentos.forEach((doc) => {
         if (doc.tipo === "resumoPdf" && doc.caminho) {
@@ -218,7 +232,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       dataInicio: dataInicioString,
       dataTermino: dataTerminoString,
       camposOcultos: camposOcultosString,
-      valor: parseFloat(valor.toString()),
+      valor: formatarValorBR(valor.toString()),
     };
 
     console.log("camposEditados:", camposEditados);
@@ -763,7 +777,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             style={{ color: "#9C9C9C", zIndex: 1 }}
           >
             <Form.Control
-              type="number"
+             type="text"
               name="valor"
               value={valor}
               onChange={(e) => setValor(e.target.value)}
