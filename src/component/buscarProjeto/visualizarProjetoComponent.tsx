@@ -127,13 +127,9 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
     let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
     // Se a conversão não resultar em um número válido, retorna "0,00"
-    if (isNaN(numero)) return "0,00";
-    // Converte o número para ter sempre duas casas decimais
-    const [inteira, decimal] = numero.toFixed(2).split(".");
-    // Formata a parte inteira para incluir pontos a cada três dígitos
-    const inteiraFormatada = inteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    if (isNaN(numero)) return "Valor Inválido";
     // Retorna o número formatado com vírgula separando os decimais
-    return `${inteiraFormatada},${decimal}`;
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero);
 };
 
 
