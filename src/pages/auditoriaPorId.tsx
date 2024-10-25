@@ -1,8 +1,8 @@
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import AuditoriaComponent from "../component/auditoria/auditoriaComponent";
 
-const AuditoriaPorId = () => {
-    const { id } = useParams<{ id: string }>(); // Captura o ID da URL
+const AuditoriaPorId: React.FC = () => {
+    const { id } = useParams<{ id: string }>()
 
     return(
         <div>
