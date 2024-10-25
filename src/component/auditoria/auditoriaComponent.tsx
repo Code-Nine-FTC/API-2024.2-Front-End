@@ -62,6 +62,7 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
     return (
         <div>
             <h1 className="text-center">Auditoria</h1>
+            {projetoId ? null : (
             <Form className="mb-4">
                 <Form.Group controlId="search">
                     <Form.Control
@@ -72,6 +73,7 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
                     />
                 </Form.Group>
             </Form>
+        )}
             <div className="row">
                 {filteredDados.map((dado) => (
                     <div className="col-md-4" key={dado.id}>
