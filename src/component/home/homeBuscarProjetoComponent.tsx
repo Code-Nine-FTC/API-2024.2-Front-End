@@ -9,7 +9,7 @@ import SweetAlert2 from "sweetalert2";
 import ProcurarProjetoFunction from "../../services/buscar/buscarProjetosService";
 import logo from "../../assets/logo-fapg.svg";
 import { FaRegFileLines } from "react-icons/fa6";
-import { parseISO, format, parse } from "date-fns";
+import { format, parse } from 'date-fns';
 
 const Home = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -23,6 +23,19 @@ const Home = () => {
   const [isFetching, setIsFetching] = useState(false);
 
   const resultadosRef = useRef<HTMLDivElement>(null);
+
+  const formatarValorBR = (valor: number | string): string => {
+    // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
+    let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
+    // Se a conversão não resultar em um número válido, retorna "0,00"
+    if (isNaN(numero)) return "0,00";
+    // Converte o número para ter sempre duas casas decimais
+    const [inteira, decimal] = numero.toFixed(2).split(".");
+    // Formata a parte inteira para incluir pontos a cada três dígitos
+    const inteiraFormatada = inteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    // Retorna o número formatado com vírgula separando os decimais
+    return `${inteiraFormatada},${decimal}`;
+  };
 
   const toggleFormVisibility = () => {
     setIsFormVisible((prevState) => !prevState);
@@ -213,7 +226,7 @@ const Home = () => {
                     <p>{projeto.titulo}</p>
                     <p>{dataInicio}</p>
                     <p>{dataTermino}</p>
-                    <p>{projeto.valor}</p>
+                    <p>{formatarValorBR(projeto.valor)}</p>
                   </div>
                 );
               })}
