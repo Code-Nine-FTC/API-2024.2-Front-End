@@ -7,6 +7,7 @@ import AlteraDeletaVisualiza from "../pages/visualizarProjetos";
 import { AuthContext } from '../services/context';
 import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
+import AuditoriaPorId from "../pages/auditoriaPorId";
 
 const Rotas: FC = () => {
     const { isAutenticado } = useContext(AuthContext);
@@ -21,6 +22,7 @@ const Rotas: FC = () => {
                 <Route path="/adicionarprojeto" element={<CriarProjeto />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/auditoria" element={<Auditoria />}/>
+                <Route path="/aditoria/:id" element={<AuditoriaPorId/>}/>
             </>
         );  
        }  else {
