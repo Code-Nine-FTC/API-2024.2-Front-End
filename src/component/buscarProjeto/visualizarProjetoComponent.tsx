@@ -3,7 +3,7 @@ import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
-import { Button, Form, Alert, Spinner, FloatingLabel } from "react-bootstrap";
+import { Button, Modal, Form, Alert, Spinner, FloatingLabel } from "react-bootstrap";
 import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
 import Calendario from "../date/calendarioComponent";
@@ -89,7 +89,15 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     null
   );
   const [documentos, setDocumentos] = useState<VisualizarDocumento[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
   const navigate = useNavigate();
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  }
+
+  
 
   useEffect(() => {
     const fetchProjeto = async () => {
