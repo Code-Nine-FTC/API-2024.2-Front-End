@@ -31,6 +31,7 @@ import EditarProjetoService from "../../services/projeto/editarProjetoService";
 import VisualizarProjetoService from "../../services/projeto/visualizarProjetoService";
 import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
 import formatarData from "../../functions/formatarData";
+import AuditoriaComponent from "../auditoria/auditoriaComponent";
 
 interface MensagemValidacao {
   titulo: string;
@@ -913,6 +914,11 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           </div>
         )}
       </Form>
+      <div>
+      <button onClick={() => navigate(`/auditoria/${id}`)}>
+          Auditoria
+        </button>
+      </div>
     </div>
   );
 };
