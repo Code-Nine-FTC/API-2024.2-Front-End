@@ -22,6 +22,8 @@ const DashboardFormComponent = () => {
   const [erroMensagem, setErroMensagem] = useState('');
   const [mostrarGrafico, setMostrarGrafico] = useState(false);
 
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -77,12 +79,25 @@ const DashboardFormComponent = () => {
     console.log(resultados);
   }, [resultados]);
 
+  const formatarValorBR = (valor: number | string): string => {
+    // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
+    let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
+    // Se a conversão não resultar em um número válido, retorna "0,00"
+    if (isNaN(numero)) return "0,00";
+    // Converte o número para ter sempre duas casas decimais
+    const [inteira, decimal] = numero.toFixed(2).split(".");
+    // Formata a parte inteira para incluir pontos a cada três dígitos
+    const inteiraFormatada = inteira.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    // Retorna o número formatado com vírgula separando os decimais
+    return `R$: ${inteiraFormatada},${decimal}`;
+  };
+
   const limparFormulario = () => {
     setContratante('');
     setCoordenador('');
     setAno('Todos');
-    setValorMinimo('');
-    setValorMaximo('');
+    setValorMinimo(formatarValorBR(''));
+    setValorMaximo(formatarValorBR(''));
     setSituacaoProjeto('Todos');
     setErroMensagem('');
   };
