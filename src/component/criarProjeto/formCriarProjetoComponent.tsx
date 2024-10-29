@@ -267,7 +267,6 @@ const CriarProjetoComponent = () => {
                 <option disabled selected>
                   Selecionar uma Situação
                 </option>
-                <option value="Pendente">Pendente</option>
                 <option value="Concluído">Concluído</option>
                 <option value="Em Andamento">Em Andamento</option>
               </Form.Select>
