@@ -103,7 +103,7 @@ const Home = () => {
           <br />
           <FloatingLabel
             controlId="floatingInput"
-            label="Referência"
+            label="Palavra-chave"
             className="mb-3"
             style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
           >
@@ -158,7 +158,6 @@ const Home = () => {
                 <option disabled value="">
                   Selecionar uma Situação
                 </option>
-                <option value="">Todos</option>
                 <option value="Em Andamento">Em Andamento</option>
                 <option value="Concluído">Concluído</option>
               </Form.Select>
