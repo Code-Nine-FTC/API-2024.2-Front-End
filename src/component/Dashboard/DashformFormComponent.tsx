@@ -96,8 +96,8 @@ const DashboardFormComponent = () => {
     setContratante('');
     setCoordenador('');
     setAno('Todos');
-    setValorMinimo(formatarValorBR(''));
-    setValorMaximo(formatarValorBR(''));
+    setValorMinimo(''/* formatarValorBR('') */);
+    setValorMaximo(''/* formatarValorBR('') */);
     setSituacaoProjeto('Todos');
     setErroMensagem('');
   };
