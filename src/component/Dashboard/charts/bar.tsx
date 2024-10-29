@@ -49,7 +49,7 @@ const BarGraph: React.FC<BarGraphProps> = ({ options, data2 }) => {
         labels: data2.map(row => row.month),
         datasets: [
             {
-                label: "Valor",
+                label: "Projetos",
                 data: data2.map(row => row.value),
                 backgroundColor: ["rgba(54, 162, 235, 1)"],
                 borderColor: ["rgba(54, 162, 235, 1)"],
