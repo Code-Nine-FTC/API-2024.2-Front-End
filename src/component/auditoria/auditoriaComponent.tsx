@@ -16,23 +16,30 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
     const [selectedDado, setSelectedDado] = useState<Auditoria | null>(null);
     const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => {
-        const fetchMudancas = async () => {
-            try {
-                const result = await VisualizarMudancasFunction();
-                if (result.data) {
-                    setDados(result.data);
-                    setFilteredDados(result.data);
-                    console.log(result.data)
-                } else {
-                    throw new Error("Dados não encontrados.");
-                }
-            } catch (err) {
-                setError((err as Error).message);
+    const fetchMudancas = async () => {
+        try {
+            const result = await VisualizarMudancasFunction();
+            if (result.data) {
+                setDados(result.data);
+                setFilteredDados(result.data);
+                console.log(result.data);
+            } else {
+                throw new Error("Dados não encontrados.");
             }
+        } catch (err) {
+            setError((err as Error).message);
         }
+    };
 
+    useEffect(() => {
+        // Chamada inicial
         fetchMudancas();
+
+        // Configura o intervalo para buscar mudanças a cada 5 segundos
+        const intervalId = setInterval(fetchMudancas, 30000);
+
+        // Limpeza do intervalo ao desmontar o componente
+        return () => clearInterval(intervalId);
     }, []);
 
     useEffect(() => {
