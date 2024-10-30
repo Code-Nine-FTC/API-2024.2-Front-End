@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Container, Row, Col, FloatingLabel } from 'react-bootstrap';
 import VisualizarMudancasFunction from '../../services/auditoria/vizualizarMudancasService';
 import { Mudanca } from '../../interface/auditoria.interface';
 import { Auditoria } from '../../interface/auditoria.interface';
@@ -65,43 +65,69 @@ const renderField = (label: string, oldValue: string | number | undefined | null
 
     return (
         <div>
-            <h1 className="text-center">Auditoria</h1>
+            <Row className='justify-content-center my-4'>
+                <h2 className="text-center">Auditoria</h2>
+            </Row>
+
             {projetoId ? null : (
-            <Form className="mb-4">
-                <Form.Group controlId="search">
-                    <Form.Control
-                        type="text"
-                        placeholder="Pesquisar por referência do projeto..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </Form.Group>
-            </Form>
-        )}
+                <Container className="mb-4">
+                    <Row className="justify-content-center mb-5">
+                        <Col md={6}> {/* Ajusta a largura em telas médias */}
+                            <FloatingLabel
+                                controlId="floatingInput"
+                                label="Referência"
+                                style={{
+                                    color: "#9C9C9C",
+                                    zIndex: 1,
+                                    backgroundColor: "#fff",
+                                    borderRadius: "8px",    
+                                }}
+                            >
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Palavra-chave"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    style={{
+                                        padding: '1rem'
+                                    }}
+                                />
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
+                </Container>
+            )}
             <div className="row">
-                {filteredDados.map((dado) => (
-                    <div className="col-md-4" key={dado.id}>
-                        <div
-                            className="card mb-4 shadow"
-                            onClick={() => handleOpenModal(dado)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <div className="card-body">
-                            <h6 className="card-title">{dado.tituloAntigo || 'Título não disponível'}</h6>
-                            {/* <p className="card-text">{dado.evento || 'Evento não disponível'}</p> */}
-                                <div className="d-flex justify-content-between">
-                                <small className="text-muted">
-                                        {dado.dataAlteracao ? new Date(dado.dataAlteracao).toLocaleString() : 'Data não disponível'}
-                                    </small>
-                                    <small className="text-muted">{dado.nomeCoordenador || 'Usuário não disponível'}</small>
+                <div className="row justify-content-center">
+                    {filteredDados.map((dado) => (
+                        <div className="col-md-11" key={dado.id}>
+                            <div
+                                className="card mb-4"
+                                onClick={() => handleOpenModal(dado)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <div className="card-body">
+                                <h6 className="card-title">{dado.tituloAntigo || 'Título não disponível'}</h6>
+                                {/* <p className="card-text">{dado.evento || 'Evento não disponível'}</p> */}
+                                    <div className="d-flex justify-content-between">
+                                    <small className="text-muted">
+                                            {dado.dataAlteracao ? new Date(dado.dataAlteracao).toLocaleString() : 'Data não disponível'}
+                                        </small>
+                                        <small className="text-muted">{dado.nomeCoordenador || 'Usuário não disponível'}</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal 
+                show={showModal} 
+                onHide={handleCloseModal} 
+                size='lg' 
+                centered
+            >
                 <Modal.Header closeButton style={{ backgroundColor: '#00359A', color: 'white' }}>
                     <Modal.Title>
                     <Modal.Title>
@@ -111,7 +137,6 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                 </Modal.Header>
                 <Modal.Body>
                     {renderField('Título', selectedDado?.tituloAntigo, selectedDado?.tituloNovo)}
-                    {renderField('Referência', selectedDado?.referencia, null)} {/* Exibe a referência única */}
                     {renderField('Contratante', selectedDado?.contratanteAntigo, selectedDado?.contratanteNovo)}
                     {renderField('Descrição', selectedDado?.descricaoAntiga, selectedDado?.descricaoNovo)}
                     {renderField('Valor', selectedDado?.valorAntigo != null ? `R$ ${selectedDado.valorAntigo.toFixed(2)}` : null, selectedDado?.valorNovo != null ? `R$ ${selectedDado.valorNovo.toFixed(2)}` : null)}
