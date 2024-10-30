@@ -20,8 +20,13 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
         const fetchMudancas = async () => {
             try {
                 const result = await VisualizarMudancasFunction();
-                setDados(result.data);
-                setFilteredDados(result.data);
+                if (result.data) {
+                    setDados(result.data);
+                    setFilteredDados(result.data);
+                    console.log(result.data)
+                } else {
+                    throw new Error("Dados não encontrados.");
+                }
             } catch (err) {
                 setError((err as Error).message);
             }
@@ -31,11 +36,13 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
     }, []);
 
     useEffect(() => {
-        setFilteredDados(
-            dados.filter(dado =>
-                dado.referencia?.toLowerCase().includes(searchTerm.toLowerCase())
-            )
+        const filtered = dados.filter(dado =>
+            dado.referenciaProjeto?.toLowerCase().includes(searchTerm.toLowerCase())
         );
+    
+        console.log('Dados filtrados:', filtered); // Log dos dados filtrados
+    
+        setFilteredDados(filtered);
     }, [searchTerm, dados]);
     
 
@@ -107,7 +114,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                                 style={{ cursor: 'pointer' }}
                             >
                                 <div className="card-body">
-                                <h6 className="card-title">{dado.tituloAntigo || 'Título não disponível'}</h6>
+                                <h6 className="card-title">{dado.titulo_antigo || 'Título não disponível'}</h6>
                                 {/* <p className="card-text">{dado.evento || 'Evento não disponível'}</p> */}
                                     <div className="d-flex justify-content-between">
                                     <small className="text-muted">
@@ -131,17 +138,27 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                 <Modal.Header closeButton style={{ backgroundColor: '#00359A', color: 'white' }}>
                     <Modal.Title>
                     <Modal.Title>
-                        {selectedDado?.referencia || 'Referência não disponível'} - {selectedDado?.dataAlteracao ? new Date(selectedDado.dataAlteracao).toLocaleString() : 'Data não disponível'}
+                        {selectedDado?.referenciaProjeto || 'Referência não disponível'} - {selectedDado?.dataAlteracao ? new Date(selectedDado.dataAlteracao).toLocaleString() : 'Data não disponível'}
                     </Modal.Title>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {renderField('Título', selectedDado?.tituloAntigo, selectedDado?.tituloNovo)}
-                    {renderField('Contratante', selectedDado?.contratanteAntigo, selectedDado?.contratanteNovo)}
-                    {renderField('Descrição', selectedDado?.descricaoAntiga, selectedDado?.descricaoNovo)}
-                    {renderField('Valor', selectedDado?.valorAntigo != null ? `R$ ${selectedDado.valorAntigo.toFixed(2)}` : null, selectedDado?.valorNovo != null ? `R$ ${selectedDado.valorNovo.toFixed(2)}` : null)}
-                    {renderField('Data de Início', selectedDado?.dataInicioAntiga ? new Date(selectedDado.dataInicioAntiga).toLocaleDateString() : null, selectedDado?.dataInicioNovo ? new Date(selectedDado.dataInicioNovo).toLocaleDateString() : null)}
-                    {renderField('Data de Término', selectedDado?.dataTerminoAntiga ? new Date(selectedDado.dataTerminoAntiga).toLocaleDateString() : null, selectedDado?.dataTerminoNovo ? new Date(selectedDado.dataTerminoNovo).toLocaleDateString() : null)}
+                    {renderField('Título', selectedDado?.titulo_antigo, selectedDado?.titulo_novo)}
+                    {renderField('Contratante', selectedDado?.contratante_antigo, selectedDado?.contratante_novo)}
+                    {renderField('Descrição', selectedDado?.descricao_antiga, selectedDado?.descricao_novo)}
+                    {renderField('Valor', selectedDado?.valor_antigo != null ? `R$ ${selectedDado.valor_antigo.toFixed(2)}` : null, selectedDado?.valor_novo != null ? `R$ ${selectedDado.valor_novo.toFixed(2)}` : null)}
+                    {renderField('Data de Início', 
+                        selectedDado?.dataInicio_antiga ? new Date(selectedDado.dataInicio_antiga as string).toLocaleDateString() : null, 
+                        selectedDado?.dataInicio_novo ? new Date(selectedDado.dataInicio_novo as string).toLocaleDateString() : null
+                    )}
+                    {renderField('Data de Término', 
+                        selectedDado?.dataTermino_antiga ? new Date(selectedDado.dataTermino_antiga as string).toLocaleDateString() : null, 
+                        selectedDado?.dataTermino_novo ? new Date(selectedDado.dataTermino_novo as string).toLocaleDateString() : null
+                    )} 
+                    {renderField('Integrantes', selectedDado?.integrantes_antigos || 'N/A', selectedDado?.integrantes_novo || null)} 
+                    {renderField('Links', selectedDado?.links_antigos || 'N/A', selectedDado?.links_novo || null)}
+                    {renderField('Objetivo', selectedDado?.objetivo_antigo || 'N/A', selectedDado?.objetivo_novo || null)}
+                    {renderField('Status', selectedDado?.status_antigo || 'N/A', selectedDado?.status_novo || null)}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" style={{ backgroundColor: '#00359A', borderColor: '#00359A' }} onClick={handleCloseModal}>
