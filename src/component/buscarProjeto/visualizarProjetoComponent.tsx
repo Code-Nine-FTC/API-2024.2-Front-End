@@ -1090,7 +1090,13 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             </Button>
             
             {/* Modal para o AuditoriaComponent */}
-            <Modal show={showModal} onHide={handleCloseModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+            <Modal 
+              show={showModal} 
+              onHide={handleCloseModal} 
+              size="xl" 
+              aria-labelledby="contained-modal-title-vcenter" 
+              centered
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Auditoria</Modal.Title>
                 </Modal.Header>
