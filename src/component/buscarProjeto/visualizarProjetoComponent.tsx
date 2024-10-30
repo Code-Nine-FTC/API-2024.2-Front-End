@@ -636,7 +636,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               required
               value={referencia}
               onChange={(e) => setReferencia(e.target.value)}
-              readOnly={!isEditing}
+              readOnly
             />
             <Form.Control.Feedback type="invalid">
               Por favor, insira a referencia do projeto.
