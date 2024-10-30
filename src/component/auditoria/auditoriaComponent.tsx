@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import VisualizarMudancasFunction from '../../services/auditoria/vizualizarMudancasService';
 import { Mudanca } from '../../interface/auditoria.interface';
+import { Auditoria } from '../../interface/auditoria.interface';
 
 interface AuditoriaComponentProps {
     projetoId?: string;
 }
 
 const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) => {
-    const [dados, setDados] = useState<Mudanca[]>([]);
-    const [filteredDados, setFilteredDados] = useState<Mudanca[]>([]);
+    const [dados, setDados] = useState<Auditoria[]>([]);
+    const [filteredDados, setFilteredDados] = useState<Auditoria[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [selectedDado, setSelectedDado] = useState<Mudanca | null>(null);
+    const [selectedDado, setSelectedDado] = useState<Auditoria | null>(null);
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
@@ -24,7 +25,7 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
             } catch (err) {
                 setError((err as Error).message);
             }
-        };
+        }
 
         fetchMudancas();
     }, []);
@@ -32,20 +33,23 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
     useEffect(() => {
         setFilteredDados(
             dados.filter(dado =>
-                dado.projeto.referencia?.toLowerCase().includes(searchTerm.toLowerCase())
+                dado.referencia?.toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
     }, [searchTerm, dados]);
+    
 
-    const renderField = (label: string, value: string | number | undefined | null) => {
-        return value ? (
-            <>
-                <strong>{label}:</strong> {value}<br />
-            </>
-        ) : null;
-    };
+const renderField = (label: string, oldValue: string | number | undefined | null, newValue: string | number | undefined | null) => {
+    return (
+        <>
+            <strong>{label}:</strong> {oldValue ? <span style={{ textDecoration: 'line-through', color: 'red' }}>{oldValue}</span> : 'N/A'} 
+            {newValue ? <span style={{ color: 'green' }}> ➜ {newValue}</span> : null}
+            <br />
+        </>
+    );
+};
 
-    const handleOpenModal = (dado: Mudanca) => {
+    const handleOpenModal = (dado: Auditoria) => {
         setSelectedDado(dado);
         setShowModal(true);
     };
@@ -83,13 +87,13 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
                             style={{ cursor: 'pointer' }}
                         >
                             <div className="card-body">
-                                <h6 className="card-title">{dado.projeto.titulo || 'Título não disponível'}</h6>
-                                <p className="card-text">{dado.evento || 'Evento não disponível'}</p>
+                            <h6 className="card-title">{dado.tituloAntigo || 'Título não disponível'}</h6>
+                            {/* <p className="card-text">{dado.evento || 'Evento não disponível'}</p> */}
                                 <div className="d-flex justify-content-between">
-                                    <small className="text-muted">
-                                        {dado.data ? new Date(dado.data).toLocaleString() : 'Data não disponível'}
+                                <small className="text-muted">
+                                        {dado.dataAlteracao ? new Date(dado.dataAlteracao).toLocaleString() : 'Data não disponível'}
                                     </small>
-                                    <small className="text-muted">{dado.usuario || 'Usuário não disponível'}</small>
+                                    <small className="text-muted">{dado.nomeCoordenador || 'Usuário não disponível'}</small>
                                 </div>
                             </div>
                         </div>
@@ -100,18 +104,19 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton style={{ backgroundColor: '#00359A', color: 'white' }}>
                     <Modal.Title>
-                        {selectedDado?.projeto.referencia || 'Referência não disponível'} - {selectedDado?.data ? new Date(selectedDado.data).toLocaleString() : 'Data não disponível'}
+                    <Modal.Title>
+                        {selectedDado?.referencia || 'Referência não disponível'} - {selectedDado?.dataAlteracao ? new Date(selectedDado.dataAlteracao).toLocaleString() : 'Data não disponível'}
+                    </Modal.Title>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h5>{selectedDado?.projeto.titulo || 'Título não disponível'} - {selectedDado?.usuario || 'Usuário não disponível'}</h5>
-                    {renderField('Evento', selectedDado?.evento)}
-                    {renderField('Descrição', selectedDado?.projeto.descricao)}
-                    {renderField('Contratante', selectedDado?.projeto.contratante)}
-                    {renderField('Valor', selectedDado?.projeto.valor != null ? `R$ ${selectedDado.projeto.valor.toFixed(2)}` : null)}
-                    {renderField('Integrantes', selectedDado?.projeto.integrantes)}
-                    {renderField('Status', selectedDado?.projeto.status)}
-                    {renderField('Data de alteração', selectedDado?.data ? new Date(selectedDado.data).toLocaleString() : 'Data não disponível')}
+                    {renderField('Título', selectedDado?.tituloAntigo, selectedDado?.tituloNovo)}
+                    {renderField('Referência', selectedDado?.referencia, null)} {/* Exibe a referência única */}
+                    {renderField('Contratante', selectedDado?.contratanteAntigo, selectedDado?.contratanteNovo)}
+                    {renderField('Descrição', selectedDado?.descricaoAntiga, selectedDado?.descricaoNovo)}
+                    {renderField('Valor', selectedDado?.valorAntigo != null ? `R$ ${selectedDado.valorAntigo.toFixed(2)}` : null, selectedDado?.valorNovo != null ? `R$ ${selectedDado.valorNovo.toFixed(2)}` : null)}
+                    {renderField('Data de Início', selectedDado?.dataInicioAntiga ? new Date(selectedDado.dataInicioAntiga).toLocaleDateString() : null, selectedDado?.dataInicioNovo ? new Date(selectedDado.dataInicioNovo).toLocaleDateString() : null)}
+                    {renderField('Data de Término', selectedDado?.dataTerminoAntiga ? new Date(selectedDado.dataTerminoAntiga).toLocaleDateString() : null, selectedDado?.dataTerminoNovo ? new Date(selectedDado.dataTerminoNovo).toLocaleDateString() : null)}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" style={{ backgroundColor: '#00359A', borderColor: '#00359A' }} onClick={handleCloseModal}>
