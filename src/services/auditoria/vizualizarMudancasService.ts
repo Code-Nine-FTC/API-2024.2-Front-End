@@ -1,6 +1,9 @@
+import { AxiosError } from "axios";
 import { Auditoria } from "../../interface/auditoria.interface";
+import api from "../api";
+import { getToken } from "../auth";
 
-export default async function VisualizarMudancasFunction(projetoId?: string) {
+/* export default async function VisualizarMudancasFunction(projetoId?: string) {
   try {
     let response
 
@@ -20,25 +23,33 @@ export default async function VisualizarMudancasFunction(projetoId?: string) {
       console.error('Erro ao carregar os dados do projeto', error);
       throw new Error('Erro ao carregar os dados do projeto. Tente novamente mais tarde');
   }
-}
-
-/* export default async function VizualizarMudancaFunction(projetoId?: string){
-  try {
-    let response
-    
-    if (projetoId){
-      response = await api.get(`/mudancas/${projetoId}`);
-    } else {
-      response = await api.get(`/mudancas`);
-    }
-      console.log(response.data);
-      if (response.status === 200) {
-          return { status: response.status, data: response.data };
-      } else {
-          return { status: response.status, message: response.data };
-      }
-    } catch (error) {
-      console.error('Erro ao carregar os dados do projeto', error);
-      throw new Error('Erro ao carregar os dados do projeto. Tente novamente mais tarde')
-    }
 } */
+
+  export default async function VisualizarMudancasFunction(projetoId?: string): Promise<any> {
+    try {
+        const resposta = projetoId
+            ? await api.get(`/auditorias/${projetoId}`, {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            })
+            : await api.get(`/auditorias`, {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            });
+
+        if (resposta.status === 200) {
+            return { status: resposta.status, data: resposta.data };
+        } else {
+            return { status: resposta.status, message: resposta.data || 'Erro ao carregar dados de auditoria.' };
+        }
+
+    } catch (error) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        const errorMessage = axiosError.response?.data?.message || 'Erro ao carregar os dados do projeto. Por favor, tente novamente mais tarde.';
+        
+        console.error('Erro ao carregar dados de auditoria:', errorMessage);
+        throw new Error(errorMessage);
+    }
+}
