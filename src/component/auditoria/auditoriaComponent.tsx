@@ -18,7 +18,9 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
 
     const fetchMudancas = async () => {
         try {
-            const result = await VisualizarMudancasFunction();
+            const result = projetoId
+                ? await VisualizarMudancasFunction(projetoId)
+                : await VisualizarMudancasFunction();
             if (result.data) {
                 setDados(result.data);
                 setFilteredDados(result.data);
