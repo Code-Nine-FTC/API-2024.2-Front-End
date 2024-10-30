@@ -2,7 +2,7 @@ import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
-import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup } from "react-bootstrap";
+import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal } from "react-bootstrap";
 import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
 import Calendario from "../date/calendarioComponent";
@@ -29,6 +29,7 @@ import EditarProjetoService from "../../services/projeto/editarProjetoService";
 import VisualizarProjetoService from "../../services/projeto/visualizarProjetoService";
 import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
 import formatarData from "../../functions/formatarData";
+import AuditoriaComponent from "../auditoria/auditoriaComponent";
 
 interface MensagemValidacao {
   titulo: string;
@@ -96,7 +97,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     null
   );
   const [documentos, setDocumentos] = useState<VisualizarDocumento[]>([]);
-
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
 
@@ -543,6 +544,9 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       }
     }
   };
+
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   return (
     <div className={styles.formMain}>
@@ -1081,9 +1085,24 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         )}
       </Form>
       <div>
-      <button onClick={() => navigate(`/auditoria/${id}`)}>
-          Auditoria
-        </button>
+      <Button variant="link" onClick={handleOpenModal}>
+                Auditoria
+            </Button>
+            
+            {/* Modal para o AuditoriaComponent */}
+            <Modal show={showModal} onHide={handleCloseModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Auditoria</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <AuditoriaComponent projetoId={id ? id.toString() : ''} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Fechar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
       </div>
     </div>
   );
