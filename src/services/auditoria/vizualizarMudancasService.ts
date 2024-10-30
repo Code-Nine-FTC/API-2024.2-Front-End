@@ -1,4 +1,4 @@
-import { Mudanca } from "../../interface/auditoria.interface";
+import { Auditoria } from "../../interface/auditoria.interface";
 
 export default async function VisualizarMudancasFunction(projetoId?: string) {
   try {
@@ -13,7 +13,7 @@ export default async function VisualizarMudancasFunction(projetoId?: string) {
       if (!response.ok) {
           throw new Error(`Erro ao carregar os dados: ${response.statusText}`);
       }
-      const data: Mudanca[] = await response.json();
+      const data: Auditoria[] = await response.json();
       console.log(data)
       return { status: response.status, data };
   } catch (error) {
