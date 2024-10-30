@@ -4,6 +4,6 @@ export const getAdminNavigationItems = (): NavigationItemInterface[] => {
     return [
         {label: "Dashboard", path: "/dashboard"},
         {label: "Adicionar projeto", path: "/adicionarProjeto"},
-        {label: "Auditoria", path: "/auditoria"}
+        {label: "Auditoria", path: "/auditorias"}
     ]
 };
