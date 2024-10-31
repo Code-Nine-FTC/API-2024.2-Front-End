@@ -124,7 +124,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                             >
                                 <div className="card-body">
                                 <h6 className="card-title">{dado.titulo_antigo || 'Título não disponível'}</h6>
-                                {/* <p className="card-text">{dado.evento || 'Evento não disponível'}</p> */}
+                                <p className="card-text">{dado.tipoAuditoria || 'Evento não disponível'}</p>
                                     <div className="d-flex justify-content-between">
                                     <small className="text-muted">
                                             {dado.dataAlteracao ? new Date(dado.dataAlteracao).toLocaleString() : 'Data não disponível'}
