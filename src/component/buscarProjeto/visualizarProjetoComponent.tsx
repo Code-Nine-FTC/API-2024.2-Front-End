@@ -85,11 +85,11 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [hideValor, setHideValor] = useState(false);
   const [hideStatus, setHideStatus] = useState(false);
   const [endDateValid, setEndDateValid] = useState<boolean | null>(null);
-  const [resumoPdf, setResumoPdf] = useState<FileOrVisualizarDocumento | null>(
-    null
+  const [resumoPdf, setResumoPdf] = useState<FileOrVisualizarDocumento | undefined>(
+    undefined
   );
   const [resumoExcel, setResumoExcel] =
-    useState<FileOrVisualizarDocumento | null>(null);
+    useState<FileOrVisualizarDocumento | undefined>(undefined);
   const [proposta, setProposta] = useState<FileOrVisualizarDocumento | null>(
     null
   );
