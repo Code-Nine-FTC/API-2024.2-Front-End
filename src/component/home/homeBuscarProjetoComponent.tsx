@@ -21,6 +21,8 @@ const Home = () => {
   const [projetos, setProjetos] = useState<any[]>([]);
   const navigate = useNavigate();
   const [isFetching, setIsFetching] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // Estado da página atual
+  const [projectsPerPage] = useState(10); // Número de projetos por página
 
   const resultadosRef = useRef<HTMLDivElement>(null);
 
@@ -94,6 +96,14 @@ const Home = () => {
       resultadosRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [projetos]);
+
+  // Cálculo dos projetos a serem exibidos na página atual
+  const indexOfLastProject = currentPage * projectsPerPage; // Último projeto do índice
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage; // Primeiro projeto do índice
+  const currentProjects = projetos.slice(indexOfFirstProject, indexOfLastProject); // Projetos a serem exibidos
+
+  // Calculo do número total de páginas
+  const totalPages = Math.ceil(projetos.length / projectsPerPage);
 
   return (
     <body>
@@ -189,14 +199,14 @@ const Home = () => {
         </div>
       </div>
       <br />
-          {projetos.length > 0 && (
+      {currentProjects.length > 0 && (
             <div
               id="resultados"
               ref={resultadosRef}
               className={styles.projetobox}
             >
               <p className={styles.titulo}>Resultados Encontrados</p>
-              {projetos.map((projeto) => {
+              {currentProjects.map((projeto) => {
                 console.log(projeto);
 
                 const dataInicio = projeto.dataInicio
@@ -226,6 +236,21 @@ const Home = () => {
                   </div>
                 );
               })}
+              <div className={styles.pagination}>
+                <Button 
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  Anterior
+                </Button>
+                <span>Página {currentPage} de {totalPages}</span>
+                <Button 
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  Próxima
+                </Button>
+              </div>
             </div>
           )}
         </Form>
