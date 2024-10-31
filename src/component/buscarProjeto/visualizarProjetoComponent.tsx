@@ -591,7 +591,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           </div>
         )}
       </div>
-
+  
       <Form onSubmit={handleSubmit}>
         {isEditing && (
           <Form.Text
@@ -608,20 +608,15 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             os usuários comuns.
           </Form.Text>
         )}
-
+  
         {/* Titulo */}
         <InputGroup className="mb-3">
-          <FloatingLabel
-            controlId="validationCustom01"
-            label="Titulo"
-            className="flex-grow-1"
-            style={{ color: "#9C9C9C", zIndex: 1 }}
-          >
+          <FloatingLabel controlId="validationCustom01" label="Titulo" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
             <Form.Control
               type="text"
               placeholder="Titulo do projeto"
               required
-              value={titulo}
+              value={(!autenticado && hideTitulo) ? "" : titulo}
               onChange={(e) => setTitulo(e.target.value)}
               readOnly={!isEditing}
             />
@@ -637,22 +632,17 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             />
           )}
         </InputGroup>
-
+  
         {/* Referencia */}
         <InputGroup className="mb-3">
-          <FloatingLabel
-            controlId="validationCustom01"
-            label="Referência"
-            className="flex-grow-1"
-            style={{ color: "#9C9C9C", zIndex: 1 }}
-          >
+          <FloatingLabel controlId="validationCustom01" label="Referência" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
             <Form.Control
               type="text"
               placeholder="Referencia"
               required
-              value={referencia}
+              value={(!autenticado && hideReferencia) ? "" : referencia}
               onChange={(e) => setReferencia(e.target.value)}
-              readOnly
+              readOnly={!isEditing}
             />
             <Form.Control.Feedback type="invalid">
               Por favor, insira a referencia do projeto.
@@ -667,34 +657,29 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           )}
         </InputGroup>
 
-        {/* Contratante */}
-        <InputGroup className="mb-3">
-          <FloatingLabel
-            controlId="validationCustom01"
-            label="Contratante"
-            className="flex-grow-1"
-            style={{ color: "#9C9C9C", zIndex: 1 }}
-          >
-            <Form.Control
-              type="text"
-              placeholder="Contratante"
-              required
-              value={contratante}
-              onChange={(e) => setContratante(e.target.value)}
-              readOnly={!isEditing}
-            />
-            <Form.Control.Feedback type="invalid">
-              Por favor, insira o contratante do projeto.
-            </Form.Control.Feedback>
-          </FloatingLabel>
-          {isEditing && (
-            <InputGroup.Checkbox
-              aria-label="Checkbox for following text input"
-              checked={hideContratante}
-              onChange={(e) => setHideContratante(e.target.checked)}
-            />
-          )}
-        </InputGroup>
+       {/* Contratante */}
+      <InputGroup className="mb-3">
+        <FloatingLabel controlId="validationCustom01" label="Contratante" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+          <Form.Control
+            type="text"
+            placeholder="Contratante"
+            required
+            value={(!autenticado && hideContratante) ? "" : contratante}
+            onChange={(e) => setContratante(e.target.value)}
+            readOnly={!isEditing}
+          />
+          <Form.Control.Feedback type="invalid">
+            Por favor, insira o contratante do projeto.
+          </Form.Control.Feedback>
+        </FloatingLabel>
+        {isEditing && (
+          <InputGroup.Checkbox
+            aria-label="Checkbox for following text input"
+            checked={hideContratante}
+            onChange={(e) => setHideContratante(e.target.checked)}
+          />
+        )}
+      </InputGroup>
 
         {/* Situação do Projeto */}
         <InputGroup className="mb-3">
@@ -707,7 +692,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Form.Select
               aria-label="Floating label select example"
               required
-              value={status}
+              value={(!autenticado && hideStatus) ? "" : status}
               onChange={(e) => setStatus(e.target.value)}
               disabled={!isEditing}
               style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
@@ -739,7 +724,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Form.Control
               type="text"
               name="objeto"
-              value={objeto}
+              value={(!autenticado && hideObjeto) ? "" : objeto}
               onChange={(e) => setObjeto(e.target.value)}
               readOnly={!isEditing}
             />
@@ -764,7 +749,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Form.Control
               as="textarea"
               name="descricao"
-              value={descricao}
+              value={(!autenticado && hideDescricao) ? "" :descricao}
               onChange={(e) => setDescricao(e.target.value)}
               readOnly={!isEditing}
             />
@@ -789,7 +774,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Form.Control
              type="text"
               name="valor"
-              value={valor}
+              value={(!autenticado && hideValor) ? "" :valor}
               onChange={(e) => setValor(e.target.value)}
               readOnly={!isEditing}
             />
@@ -814,7 +799,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Form.Control
               type="text"
               name="integrantes"
-              value={integrantes}
+              value={(!autenticado && hideIntegrantes) ? "" :integrantes}
               onChange={(e) => {
                 setIntegrantes(e.target.value); // Atualiza o estado corretamente
                 console.log("Integrantes:", e.target.value); // Verifique se o valor está sendo capturado
@@ -842,7 +827,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Form.Control
               type="text"
               name="links"
-              value={links}
+              value={(!autenticado && hideLinks) ? "" : links}
               onChange={(e) => {
                 setLinks(e.target.value); 
                 console.log("Links:", e.target.value); 
@@ -870,7 +855,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Form.Control
               type="text"
               name="Coordenador"
-              value={coordenador}
+              value={(!autenticado && hideCoordenador) ? "" :coordenador}
               onChange={(e) => setCoordenador(e.target.value)}
               readOnly={!isEditing}
             />
