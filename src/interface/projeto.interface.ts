@@ -63,7 +63,7 @@ export interface VisualizarProjeto {
 }
 
 export interface BuscarProjeto {
-    referenciaProjeto: string;
+    keyword: string;
     nomeCoordenador: string;
     dataInicio: string;
     dataTermino: string;

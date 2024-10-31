@@ -9,13 +9,12 @@ import SweetAlert2 from "sweetalert2";
 import ProcurarProjetoFunction from "../../services/buscar/buscarProjetosService";
 import logo from "../../assets/logo-fapg.svg";
 import { FaRegFileLines } from "react-icons/fa6";
-import { format, parse } from 'date-fns';
+import { format, parse } from "date-fns";
 
 const Home = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [referenciaProjeto, setReferenciaProjeto] = useState("");
   const [coordenador, setCoordenador] = useState("");
   const [status, setStatus] = useState("");
   const [projetos, setProjetos] = useState<any[]>([]);
@@ -23,17 +22,24 @@ const Home = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // Estado da página atual
   const [projectsPerPage] = useState(10); // Número de projetos por página
-
+  const [keyword, setKeyword] = useState("");
   const resultadosRef = useRef<HTMLDivElement>(null);
+  
 
   const formatarValorBR = (valor: number | string): string => {
     if (valor === null || valor === undefined) return "Valor Indisponível";
     // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
-    let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
+    let numero =
+      typeof valor === "string"
+        ? parseFloat(valor.replace(/\./g, "").replace(",", "."))
+        : valor;
     // Se a conversão não resultar em um número válido, retorna "0,00"
     if (isNaN(numero)) return "Valor Inválido";
     // Retorna o número formatado com vírgula separando os decimais
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero);
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(numero);
   };
 
   const toggleFormVisibility = () => {
@@ -50,12 +56,14 @@ const Home = () => {
     event.stopPropagation();
 
     const projeto = {
-      referenciaProjeto,
+      keyword,
       nomeCoordenador: coordenador,
       dataInicio: startDate ? format(startDate, "yyyy-MM-dd") : "",
       dataTermino: endDate ? format(endDate, "yyyy-MM-dd") : "",
       status,
     };
+
+    console.log("Palavra-chave enviada para o backend:", keyword);
 
     // Dentro da função fetchData
     setIsFetching(true); // Inicia o estado de "buscando"
@@ -100,7 +108,10 @@ const Home = () => {
   // Cálculo dos projetos a serem exibidos na página atual
   const indexOfLastProject = currentPage * projectsPerPage; // Último projeto do índice
   const indexOfFirstProject = indexOfLastProject - projectsPerPage; // Primeiro projeto do índice
-  const currentProjects = projetos.slice(indexOfFirstProject, indexOfLastProject); // Projetos a serem exibidos
+  const currentProjects = projetos.slice(
+    indexOfFirstProject,
+    indexOfLastProject
+  ); // Projetos a serem exibidos
 
   // Calculo do número total de páginas
   const totalPages = Math.ceil(projetos.length / projectsPerPage);
@@ -119,10 +130,9 @@ const Home = () => {
           >
             <Form.Control
               type="text"
-              placeholder="Referência"
-              value={referenciaProjeto}
-              onChange={(e) => setReferenciaProjeto(e.target.value)}
-              style={{fontSize: "1rem"}}
+              placeholder="Digite uma palavra-chave"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
             />
           </FloatingLabel>
           <div
@@ -175,31 +185,37 @@ const Home = () => {
           </div>
           <br />
           <div className="container d-flex flex-column align-items-center">
-        <div className="mb-3 w-100 d-flex justify-content-center">
-          
-          <Button
-            type="submit"
-            className={`btn btn-primary ${styles.botaoSubmit}`}
-            style={{ width: "20vw",  whiteSpace: "normal", wordBreak: "break-word" }}
-          >
-            Procurar
-          </Button>
-        </div>
+            <div className="mb-3 w-100 d-flex justify-content-center">
+              <Button
+                type="submit"
+                className={`btn btn-primary ${styles.botaoSubmit}`}
+                style={{
+                  width: "20vw",
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                }}
+              >
+                Procurar
+              </Button>
+            </div>
 
-        <div className="w-100 d-flex justify-content-center">
-         
-          <Button
-            onClick={toggleFormVisibility}
-            className={`btn btn-primary ${styles.botaoFiltro}`}
-            disabled={isFetching}
-            style={{ width: "20vw",  whiteSpace: "normal", wordBreak: "break-word" }}
-          >
-            {isFormVisible ? "Fechar Filtros" : "Abrir Filtros"}
-          </Button>
-        </div>
-      </div>
-      <br />
-      {currentProjects.length > 0 && (
+            <div className="w-100 d-flex justify-content-center">
+              <Button
+                onClick={toggleFormVisibility}
+                className={`btn btn-primary ${styles.botaoFiltro}`}
+                disabled={isFetching}
+                style={{
+                  width: "20vw",
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                }}
+              >
+                {isFormVisible ? "Fechar Filtros" : "Abrir Filtros"}
+              </Button>
+            </div>
+          </div>
+          <br />
+          {currentProjects.length > 0 && (
             <div
               id="resultados"
               ref={resultadosRef}
@@ -237,15 +253,21 @@ const Home = () => {
                 );
               })}
               <div className={styles.pagination}>
-                <Button 
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                <Button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1}
                 >
                   Anterior
                 </Button>
-                <span>Página {currentPage} de {totalPages}</span>
-                <Button 
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                <span>
+                  Página {currentPage} de {totalPages}
+                </span>
+                <Button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
                   disabled={currentPage === totalPages}
                 >
                   Próxima
