@@ -2,7 +2,7 @@ import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
-import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal } from "react-bootstrap";
+import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal, Card } from "react-bootstrap";
 import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
 import Calendario from "../date/calendarioComponent";
@@ -1085,9 +1085,20 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         )}
       </Form>
       <div>
-      <Button variant="link" onClick={handleOpenModal}>
-                Auditoria
-            </Button>
+      <div className="d-flex justify-content-center pb-3">
+        <Card 
+          onClick={handleOpenModal} 
+          className="text-center border-light shadow-sm" 
+          style={{ cursor: 'pointer', width: '200px' }}
+        >
+          <Card.Body className="bg-white">
+            <Card.Text className="text-primary fw-bold">
+              Auditoria
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </div>
+
             
             {/* Modal para o AuditoriaComponent */}
             <Modal 
