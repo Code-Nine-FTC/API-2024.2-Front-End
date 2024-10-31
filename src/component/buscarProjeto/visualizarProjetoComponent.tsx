@@ -1086,41 +1086,44 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         )}
       </Form>
       <div>
-      <div className="d-flex justify-content-center pb-3">
-        <Card 
-          onClick={handleOpenModal} 
-          className="text-center border-light shadow-sm" 
-          style={{ cursor: 'pointer', width: '200px' }}
-        >
-          <Card.Body className="bg-white">
-            <Card.Text className="text-primary fw-bold">
-              Auditoria
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </div>
 
+      {autenticado &&(
+        <div>
+          <div className="d-flex justify-content-center pb-3">
+          <Card 
+            onClick={handleOpenModal} 
+            className="text-center border-light shadow-sm" 
+            style={{ cursor: 'pointer', width: '200px' }}
+          >
+            <Card.Body className="bg-white">
+              <Card.Text className="text-primary fw-bold">
+                Auditoria
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </div>
             
-            {/* Modal para o AuditoriaComponent */}
-            <Modal 
-              show={showModal} 
-              onHide={handleCloseModal} 
-              size="xl" 
-              aria-labelledby="contained-modal-title-vcenter" 
-              centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Auditoria</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <AuditoriaComponent projetoId={id ? id.toString() : ''} />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>
-                        Fechar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+          <Modal 
+            show={showModal} 
+            onHide={handleCloseModal} 
+            size="xl" 
+            aria-labelledby="contained-modal-title-vcenter" 
+            centered
+          >
+              <Modal.Header closeButton>
+                  <Modal.Title>Auditoria</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                  <AuditoriaComponent projetoId={id ? id.toString() : ''} />
+              </Modal.Body>
+              <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseModal}>
+                      Fechar
+                  </Button>
+              </Modal.Footer>
+          </Modal>
+        </div>
+      )}
       </div>
     </div>
   );
