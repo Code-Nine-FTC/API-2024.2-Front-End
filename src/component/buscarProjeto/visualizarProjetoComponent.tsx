@@ -109,6 +109,22 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         const respostaProjeto = await VisualizarProjetoService(id);
         if (respostaProjeto.status === 200) {
           setProjeto(respostaProjeto.data);
+  
+          // Verifique se existem campos ocultos salvos no backend
+          const camposOcultosBackend = respostaProjeto.data.camposOcultos;
+          if (camposOcultosBackend) {
+            const camposOcultosArray = camposOcultosBackend.split(", ");
+            setHideTitulo(camposOcultosArray.includes("titulo"));
+            setHideReferencia(camposOcultosArray.includes("referencia"));
+            setHideContratante(camposOcultosArray.includes("contratante"));
+            setHideCoordenador(camposOcultosArray.includes("coordenador"));
+            setHideValor(camposOcultosArray.includes("valor"));
+            setHideStatus(camposOcultosArray.includes("status"));
+            setHideDescricao(camposOcultosArray.includes("descricao"));
+            setHideIntegrantes(camposOcultosArray.includes("integrantes"));
+            setHideLinks(camposOcultosArray.includes("links"));
+            setHideObjeto(camposOcultosArray.includes("objeto"));
+          }
         }
       } catch (error: any) {
         let errorMessage =
@@ -120,7 +136,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         setLoading(false);
       }
     };
-
+  
     fetchProjeto();
   }, [id]);
 
