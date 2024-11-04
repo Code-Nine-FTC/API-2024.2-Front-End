@@ -130,3 +130,17 @@ p {
     justify-content: center;
     padding-top: 20px; /* Espaçamento superior */
   }
+
+  @media (max-width: 600px) {
+    .projeto {
+        flex-direction: column; /* Empilha os itens verticalmente em telas pequenas */
+        align-items: flex-start; /* Alinha os itens ao topo */
+        padding: 5%; /* Ajusta o padding para maior espaçamento */
+    }
+
+    .projeto p {
+        width: 100%;
+        margin: 5px 0; /* Adiciona margem vertical para espaçamento */
+    }
+
+}
