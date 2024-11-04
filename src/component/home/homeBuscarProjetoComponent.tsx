@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Calendario from "../date/calendarioComponent";
 import styles from "./Home.module.css";
-import { Button } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 import SweetAlert2 from "sweetalert2";
 import ProcurarProjetoFunction from "../../services/buscar/buscarProjetosService";
 import logo from "../../assets/logo-fapg.svg";
@@ -253,25 +253,29 @@ const Home = () => {
                 );
               })}
               <div className={styles.pagination}>
-                <Button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                >
-                  Anterior
-                </Button>
-                <span>
-                  Página {currentPage} de {totalPages}
-                </span>
-                <Button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  Próxima
-                </Button>
+                <ButtonGroup className="mb-2">
+                  <Button
+                    variant="primary"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    style={{ borderRadius: '20px', padding: '10px 15px' }}
+                  >
+                    {"<"} {/* Ícone ou texto para "anterior" */}
+                  </Button>
+
+                  <span className="d-flex align-items-center" style={{ margin: '0 10px', fontSize: '16px' }}>
+                    Página {currentPage} de {totalPages}
+                  </span>
+
+                  <Button
+                    variant="primary"
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    style={{ borderRadius: '20px', padding: '10px 15px' }}
+                  >
+                    {">"} {/* Ícone ou texto para "próxima" */}
+                  </Button>
+                </ButtonGroup>
               </div>
             </div>
           )}
