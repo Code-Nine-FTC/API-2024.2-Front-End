@@ -21,10 +21,12 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
             const result = projetoId
                 ? await VisualizarMudancasFunction(projetoId)
                 : await VisualizarMudancasFunction();
+    
             if (result.data) {
-                setDados(result.data);
-                setFilteredDados(result.data);
-                console.log(result.data);
+                const dataArray = Array.isArray(result.data) ? result.data : [result.data];
+                setDados(dataArray);
+                setFilteredDados(dataArray);
+                console.log(dataArray);
             } else {
                 throw new Error("Dados não encontrados.");
             }
