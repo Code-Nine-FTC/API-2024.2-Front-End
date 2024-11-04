@@ -10,6 +10,7 @@ import ProcurarProjetoFunction from "../../services/buscar/buscarProjetosService
 import logo from "../../assets/logo-fapg.svg";
 import { FaRegFileLines } from "react-icons/fa6";
 import { format, parse } from "date-fns";
+import { isAuthenticated } from "../../services/auth";
 
 const Home = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -24,7 +25,9 @@ const Home = () => {
   const [projectsPerPage] = useState(10); // Número de projetos por página
   const [keyword, setKeyword] = useState("");
   const resultadosRef = useRef<HTMLDivElement>(null);
-  
+  const [autenticado] = useState<boolean>(isAuthenticated());
+  const [hideTitulo, setHideTitulo] = useState(false);
+  const [hideValor, setHideValor] = useState(false);
 
   const formatarValorBR = (valor: number | string): string => {
     if (valor === null || valor === undefined) return "Valor Indisponível";
@@ -70,7 +73,17 @@ const Home = () => {
     try {
       const resposta = await ProcurarProjetoFunction(projeto);
       console.log("Resposta do servidor:", resposta);
-      // Lida com a resposta...
+      const camposOcultosBackend = resposta.camposOcultos;
+      if (camposOcultosBackend) {
+        const camposOcultosArray = camposOcultosBackend.split(",");
+        setHideTitulo(camposOcultosArray.includes("titulo"));
+        setHideValor(camposOcultosArray.includes("valor"));
+      
+        console.log("hideTitulo:", camposOcultosArray.includes("titulo"));
+        console.log("hideValor:", camposOcultosArray.includes("valor"));
+      }
+
+
     } catch (error) {
       console.error("Erro ao buscar o projeto", error);
     } finally {
@@ -80,6 +93,16 @@ const Home = () => {
     try {
       const resposta = await ProcurarProjetoFunction(projeto);
       console.log("Resposta recebida:", resposta);
+
+      const camposOcultosBackend = resposta.camposOcultos;
+      if (camposOcultosBackend) {
+        const camposOcultosArray = camposOcultosBackend.split(",");
+        setHideTitulo(camposOcultosArray.includes("titulo"));
+        setHideValor(camposOcultosArray.includes("valor"));
+      
+        console.log("hideTitulo:", camposOcultosArray.includes("titulo"));
+        console.log("hideValor:", camposOcultosArray.includes("valor"));
+      }
 
       if (resposta.message) {
         SweetAlert2.fire({
@@ -245,10 +268,10 @@ const Home = () => {
                     onClick={() => navegarProjeto(projeto)}
                   >
                     <FaRegFileLines style={{ fontSize: 34 }} />
-                    <p>{projeto.titulo}</p>
+                    <p>{(autenticado || !hideTitulo) ? projeto.titulo : " "}</p>
                     <p>{dataInicio}</p>
                     <p>{dataTermino}</p>
-                    <p>{formatarValorBR(projeto.valor)}</p>
+                    <p>{(autenticado || !hideValor) ? formatarValorBR(projeto.valor) : " "}</p>
                   </div>
                 );
               })}
