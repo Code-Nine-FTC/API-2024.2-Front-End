@@ -123,3 +123,10 @@ p {
     width: 10%; /* Largura para o valor */
     text-align: right; /* Alinha o valor à direita */
 }
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px; /* Espaçamento superior */
+  }
