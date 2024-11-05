@@ -215,14 +215,16 @@ const Home = () => {
             </FloatingLabel>
           </div>
           <br />
-          <div className="container d-flex flex-column align-items-center">
+          <ButtonGroup className="container d-flex flex-column align-items-center"
+                       style={{ width: 'fit-content' }}
+          >
             <div className="mb-3 w-100 d-flex justify-content-center">
               <Button
                 type="submit"
                 className={`btn btn-primary ${styles.botaoSubmit}`}
                 style={{
-                  width: "20vw",
-                  whiteSpace: "normal",
+                  width: "100%",
+                  whiteSpace: "nowrap",
                   wordBreak: "break-word",
                 }}
               >
@@ -236,15 +238,15 @@ const Home = () => {
                 className={`btn btn-primary ${styles.botaoFiltro}`}
                 disabled={isFetching}
                 style={{
-                  width: "20vw",
-                  whiteSpace: "normal",
+                  width: "100%",
+                  whiteSpace: "nowrap",
                   wordBreak: "break-word",
                 }}
               >
                 {isFormVisible ? "Fechar Filtros" : "Abrir Filtros"}
               </Button>
             </div>
-          </div>
+          </ButtonGroup>
           <br />
           {currentProjects.length > 0 && (
             <div
