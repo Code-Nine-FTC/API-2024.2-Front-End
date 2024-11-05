@@ -138,12 +138,16 @@ p {
     .projeto p:nth-child(1) {
         /* max-width: 25vw; */ /* Definindo uma largura máxima para o título */
         width: 100%; /* Largura para o título */
+        text-align: left;
     }
     
-    .projeto p:nth-child(2),
+    .projeto p:nth-child(2){
+        width: 100%; /* Largura para as datas */
+        text-align: left; 
+    }
     .projeto p:nth-child(3) {
         width: 100%; /* Largura para as datas */
-        text-align: center; /* Alinha as datas no centro */
+        text-align: right; 
     }
     
     .projeto p:nth-child(4) {
