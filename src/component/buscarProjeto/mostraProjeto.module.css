@@ -171,6 +171,17 @@ input[type="number"] {
     .botaoEnviar button {
         width: 40vw;
     }
+
+    .topoPagina {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .topoPagina span {
+        align-content: left !important;
+    }
 }
 
 @media screen and (max-width: 800px) {
