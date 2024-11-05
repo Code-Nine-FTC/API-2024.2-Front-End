@@ -26,8 +26,8 @@ const Home = () => {
   const [keyword, setKeyword] = useState("");
   const resultadosRef = useRef<HTMLDivElement>(null);
   const [autenticado] = useState<boolean>(isAuthenticated());
-  const [hideTitulo, setHideTitulo] = useState(false);
-  const [hideValor, setHideValor] = useState(false);
+/*   const [hideTitulo, setHideTitulo] = useState(false);
+  const [hideValor, setHideValor] = useState(false); */
 
   const formatarValorBR = (valor: number | string): string => {
     if (valor === null || valor === undefined) return "Valor Indisponível";
@@ -76,8 +76,8 @@ const Home = () => {
       const camposOcultosBackend = resposta.camposOcultos;
       if (camposOcultosBackend) {
         const camposOcultosArray = camposOcultosBackend.split(",");
-        setHideTitulo(camposOcultosArray.includes("titulo"));
-        setHideValor(camposOcultosArray.includes("valor"));
+/*         setHideTitulo(camposOcultosArray.includes("titulo"));
+        setHideValor(camposOcultosArray.includes("valor")); */
       
         console.log("hideTitulo:", camposOcultosArray.includes("titulo"));
         console.log("hideValor:", camposOcultosArray.includes("valor"));
@@ -97,8 +97,8 @@ const Home = () => {
       const camposOcultosBackend = resposta.camposOcultos;
       if (camposOcultosBackend) {
         const camposOcultosArray = camposOcultosBackend.split(",");
-        setHideTitulo(camposOcultosArray.includes("titulo"));
-        setHideValor(camposOcultosArray.includes("valor"));
+/*         setHideTitulo(camposOcultosArray.includes("titulo"));
+        setHideValor(camposOcultosArray.includes("valor")); */
       
         console.log("hideTitulo:", camposOcultosArray.includes("titulo"));
         console.log("hideValor:", camposOcultosArray.includes("valor"));
@@ -138,6 +138,14 @@ const Home = () => {
 
   // Calculo do número total de páginas
   const totalPages = Math.ceil(projetos.length / projectsPerPage);
+
+  const isCampoOculto = (campo: string, camposOcultos: string | undefined): boolean => {
+    if (camposOcultos?.split(', ').includes(campo) && !autenticado){
+      return true
+    } else {
+      return false
+    }
+  };
 
   return (
     <body>
@@ -248,6 +256,11 @@ const Home = () => {
               {currentProjects.map((projeto) => {
                 console.log(projeto);
 
+                const hideTitulo = isCampoOculto("titulo", projeto.camposOcultos);
+                console.log(hideTitulo)
+                const hideValor = isCampoOculto("valor", projeto.camposOcultos);
+                console.log(hideValor)
+
                 const dataInicio = projeto.dataInicio
                   ? format(
                       parse(projeto.dataInicio, "yyyy-MM-dd", new Date()),
@@ -268,10 +281,10 @@ const Home = () => {
                     onClick={() => navegarProjeto(projeto)}
                   >
                     <FaRegFileLines style={{ fontSize: 34 }} />
-                    <p>{(autenticado || !hideTitulo) ? projeto.titulo : " "}</p>
+                    {!hideTitulo && <p>{projeto.titulo}</p>}
                     <p>{dataInicio}</p>
                     <p>{dataTermino}</p>
-                    <p>{(autenticado || !hideValor) ? formatarValorBR(projeto.valor) : " "}</p>
+                    {!hideValor && <p>{formatarValorBR(projeto.valor)}</p>}
                   </div>
                 );
               })}
