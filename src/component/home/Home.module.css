@@ -143,4 +143,19 @@ p {
         margin: 5px 0; /* Adiciona margem vertical para espaçamento */
     }
 
+    .projeto p:nth-child(1) {
+        /* max-width: 25vw; */ /* Definindo uma largura máxima para o título */
+        width: 100%; /* Largura para o título */
+    }
+    
+    .projeto p:nth-child(2),
+    .projeto p:nth-child(3) {
+        width: 100%; /* Largura para as datas */
+        text-align: center; /* Alinha as datas no centro */
+    }
+    
+    .projeto p:nth-child(4) {
+        width: 100%; /* Largura para o valor */
+        text-align: right; /* Alinha o valor à direita */
+    }
 }
