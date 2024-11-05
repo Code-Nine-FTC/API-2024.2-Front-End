@@ -99,5 +99,8 @@ input[type="number"] {
     .botaoEnviar button {
         width: 40vw;
     }
-    
+    .formMain {
+        padding-right: 5%;
+        padding-left: 5%;
+    }
 }

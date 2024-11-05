@@ -68,3 +68,9 @@
     border-color: #00359A;
     color: black;
 }
+
+@media screen and (max-width: 800px) {
+    .react-datepicker-wrapper {
+        width: 78vw !important;
+    }
+}

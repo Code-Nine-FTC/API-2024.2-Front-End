@@ -5,6 +5,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
+import { NumericFormat} from 'react-number-format';
 import styles from "./criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
@@ -285,12 +286,17 @@ const CriarProjetoComponent = () => {
               className="flex-grow-1"
               style={{ color: "#9C9C9C", zIndex: 1 }}
             >
-              <Form.Control
-                type="text"
-                placeholder="Valor do projeto"
+              <NumericFormat
+                className="form-control"
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                decimalScale={2}
+                fixedDecimalScale={true}
+                allowNegative={false}
+                placeholder="Valor"
                 value={valor}
-                min="0"
-                onChange={(e) => setValor(e.target.value)}
+                onValueChange={(values) => setValor(values.value)}
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o valor do projeto.

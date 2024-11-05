@@ -3,6 +3,7 @@ import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 import { useNavigate } from "react-router-dom";
 import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
 import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal, Card } from "react-bootstrap";
+import { NumericFormat } from 'react-number-format';
 import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
 import Calendario from "../date/calendarioComponent";
@@ -140,15 +141,15 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     fetchProjeto();
   }, [id]);
 
-  const formatarValorBR = (valor: number | string): string => {
-    if (valor === null || valor === undefined) return "Valor Indisponível";
-    // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
-    let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
-    // Se a conversão não resultar em um número válido, retorna "0,00"
-    if (isNaN(numero)) return "Valor Inválido";
-    // Retorna o número formatado com vírgula separando os decimais
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero);
-  };
+  // const formatarValorBR = (valor: number | string): string => {
+  //   if (valor === null || valor === undefined) return "Valor Indisponível";
+  //   // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
+  //   let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
+  //   // Se a conversão não resultar em um número válido, retorna "0,00"
+  //   if (isNaN(numero)) return "Valor Inválido";
+  //   // Retorna o número formatado com vírgula separando os decimais
+  //   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero);
+  // };
 
 
   useEffect(() => {
@@ -162,6 +163,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       setIntegrantes(projetoOriginal.integrantes || "");
       setLinks(projetoOriginal.links || "");
       setStatus(projetoOriginal.status || "");
+      setValor(projetoOriginal.valor || "");
       setStartDate(
         projetoOriginal.dataInicio ? new Date(projetoOriginal.dataInicio) : null
       );
@@ -170,7 +172,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           ? new Date(projetoOriginal.dataTermino)
           : null
       );
-      setValor(formatarValorBR(projetoOriginal.valor?.toString() || ""));
+      // setValor(formatarValorBR(projetoOriginal.valor?.toString() || ""));
       setDocumentos(projetoOriginal.documentos);
       projetoOriginal.documentos.forEach((doc) => {
         if (doc.tipo === "resumoPdf" && doc.caminho) {
@@ -565,7 +567,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <div className={styles.formMain}>
+    <>
       <div className={styles.topoPagina}>
         <span
           className="setaVoltar"
@@ -591,7 +593,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           </div>
         )}
       </div>
-  
+    <section className={styles.formMain}>
       <Form onSubmit={handleSubmit}>
         {isEditing && (
           <Form.Text
@@ -619,18 +621,22 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               value={(!autenticado && hideTitulo) ? "" : titulo}
               onChange={(e) => setTitulo(e.target.value)}
               readOnly={!isEditing}
+              style={{
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+              }}
             />
             <Form.Control.Feedback type="invalid">
               Por favor, insira o título do projeto.
             </Form.Control.Feedback>
           </FloatingLabel>
-          {isEditing && (
+          {/* {isEditing && (
             <InputGroup.Checkbox
               aria-label="Checkbox for following text input"
               checked={hideTitulo}
               onChange={(e) => setHideTitulo(e.target.checked)}
             />
-          )}
+          )} */}
         </InputGroup>
   
         {/* Referencia */}
@@ -643,18 +649,22 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               value={(!autenticado && hideReferencia) ? "" : referencia}
               onChange={(e) => setReferencia(e.target.value)}
               readOnly={!isEditing}
+              style={{
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+              }}
             />
             <Form.Control.Feedback type="invalid">
               Por favor, insira a referencia do projeto.
             </Form.Control.Feedback>
           </FloatingLabel>
-          {isEditing && (
+          {/* {isEditing && (
             <InputGroup.Checkbox
               aria-label="Checkbox for following text input"
               checked={hideReferencia}
               onChange={(e) => setHideReferencia(e.target.checked)}
             />
-          )}
+          )} */}
         </InputGroup>
 
        {/* Contratante */}
@@ -722,7 +732,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             style={{ color: "#9C9C9C", zIndex: 1 }}
           >
             <Form.Control
-              type="text"
+              as="textarea"
               name="objeto"
               value={(!autenticado && hideObjeto) ? "" : objeto}
               onChange={(e) => setObjeto(e.target.value)}
@@ -771,13 +781,19 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             className="flex-grow-1"
             style={{ color: "#9C9C9C", zIndex: 1 }}
           >
-            <Form.Control
-             type="text"
-              name="valor"
+            <NumericFormat
+              className="form-control"
+              thousandSeparator="."
+              decimalSeparator=","
+              prefix="R$ "
+              decimalScale={2}
+              fixedDecimalScale={true}
+              allowNegative={false}
+              placeholder="Valor"
               value={(!autenticado && hideValor) ? "" :valor}
-              onChange={(e) => setValor(e.target.value)}
+              onValueChange={(values) => setValor(values.value)}
               readOnly={!isEditing}
-            />
+          />
           </FloatingLabel>
           {isEditing && (
             <InputGroup.Checkbox
@@ -1085,6 +1101,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           </div>
         )}
       </Form>
+      </section>
       <div>
 
       {autenticado &&(
@@ -1125,7 +1142,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         </div>
       )}
       </div>
-    </div>
+    </>
   );
 };
 
