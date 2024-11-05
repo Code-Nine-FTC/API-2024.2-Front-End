@@ -95,6 +95,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                                 controlId="floatingInput"
                                 label="Referência"
                                 style={{
+                                    padding: "0",
                                     color: "#9C9C9C",
                                     zIndex: 1,
                                     backgroundColor: "#fff",
@@ -106,9 +107,6 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                                     placeholder="Palavra-chave"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    style={{
-                                        padding: '1rem'
-                                    }}
                                 />
                             </FloatingLabel>
                         </Col>
