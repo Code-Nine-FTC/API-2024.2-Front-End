@@ -59,14 +59,6 @@ p {
     min-height: fit-content;
 }
 
-.botaoSubmit {
-    width: 10vw;
-}
-
-.botaoFiltro {
-    width: 10vw;
-}
-
 .projetobox {
     display: flex;
     flex-direction: column;
