@@ -171,19 +171,6 @@ const Home = () => {
               isFormVisible ? styles.filtrosVisiveis : ""
             }`}
           >
-            <FloatingLabel
-              label="Coordenador"
-              controlId="floatingInput"
-              className="mb-3"
-              style={{ width: "50vw", color: "#9C9C9C", zIndex: 1 }}
-            >
-              <Form.Control
-                type="text"
-                placeholder="Coordenador"
-                value={coordenador}
-                onChange={(e) => setCoordenador(e.target.value)}
-              />
-            </FloatingLabel>
             <Calendario
               startDate={startDate}
               endDate={endDate}
