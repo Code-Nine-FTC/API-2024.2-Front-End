@@ -124,7 +124,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             setHideDescricao(camposOcultosArray.includes("descricao"));
             setHideIntegrantes(camposOcultosArray.includes("integrantes"));
             setHideLinks(camposOcultosArray.includes("links"));
-            setHideObjeto(camposOcultosArray.includes("objeto"));
+            setHideObjeto(camposOcultosArray.includes("objetivo"));
           }
         }
       } catch (error: any) {
@@ -226,8 +226,10 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     if (hideLinks) camposOcultos.push("links");
     if (hideObjeto) camposOcultos.push("objetivo");
 
-    const camposOcultosString = camposOcultos.join(", ");
-
+    let camposOcultosString = camposOcultos.join(", ");
+    if (camposOcultosString == "") {
+      camposOcultosString = "nenhum";
+    }
     const camposEditados = {
       titulo: titulo,
       referencia: referencia,
