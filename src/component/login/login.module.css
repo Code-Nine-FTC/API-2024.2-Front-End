@@ -35,3 +35,21 @@
     margin-top: 4%;
     width: 27vw;
 }
+
+.floatingLabel {
+    width: 27vw;
+    color: #9C9C9C;
+    z-index: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .floatingLabel {
+      width: fit-content;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .floatingLabel {
+      width: fit-content;
+    }
+  }

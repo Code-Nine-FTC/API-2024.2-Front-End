@@ -81,11 +81,7 @@ const LoginPage = () => {
                     <FloatingLabel
                         controlId="validateCustom01"
                         label="Email"
-                        className="mb-3"
-                        style={{width: '27vw',
-                            color: '#9C9C9C',
-                            zIndex: 1,
-                        }}
+                        className={`mb-3 ${styles.floatingLabel}`}
                     >
                         <Form.Control
                             type="email"
@@ -101,11 +97,7 @@ const LoginPage = () => {
                     <FloatingLabel
                         controlId="validateCustom02"
                         label="Senha"
-                        className="mb-3"
-                        style={{width: '27vw',
-                            color: '#9C9C9C',
-                            zIndex: 1,
-                        }}
+                        className={`mb-3 ${styles.floatingLabel}`}
                     >
                         <Form.Control
                             type="password"
