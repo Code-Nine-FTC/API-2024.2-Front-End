@@ -3,6 +3,7 @@ import { Modal, Button, Form, Container, Row, Col, FloatingLabel } from 'react-b
 import VisualizarMudancasFunction from '../../services/auditoria/vizualizarMudancasService';
 import { Mudanca } from '../../interface/auditoria.interface';
 import { Auditoria } from '../../interface/auditoria.interface';
+import BaixarArquivo from '../../services/projeto/baixarArquivo';
 
 interface AuditoriaComponentProps {
     projetoId?: string;
@@ -76,6 +77,72 @@ const renderField = (label: string, oldValue: string | number | undefined | null
         setShowModal(false);
         setSelectedDado(null);
     };
+
+    const handleBaixar = async (id: number, nome: string) => {
+        try {
+          await BaixarArquivo(id, nome);
+        } catch (error) {
+          console.error("Erro ao baixar o arquivo", error);
+            setError("Erro ao baixar arquivo"+error);
+          };
+        }
+
+    const renderTipoAuditoria = (tipoAuditoria: string) => {
+        switch (tipoAuditoria) {
+            case 'Atualização':
+                return (
+                    <>
+                        {selectedDado?.titulo_novo && renderField('Título', selectedDado?.titulo_antigo, selectedDado?.titulo_novo)}
+                        {selectedDado?.contratante_novo && renderField('Contratante', selectedDado?.contratante_antigo, selectedDado?.contratante_novo)}
+                        {selectedDado?.descricao_novo && renderField('Descrição', selectedDado?.descricao_antiga, selectedDado?.descricao_novo)}
+                        {selectedDado?.valor_novo && renderField('Valor', selectedDado?.valor_antigo != null ? `R$ ${selectedDado.valor_antigo.toFixed(2)}` : null, selectedDado?.valor_novo != null ? `R$ ${selectedDado.valor_novo.toFixed(2)}` : null)}
+                        {selectedDado?.dataInicio_novo && renderField('Data de Início', 
+                            selectedDado?.dataInicio_antiga ? new Date(selectedDado.dataInicio_antiga as string).toLocaleDateString() : null, 
+                            selectedDado?.dataInicio_novo ? new Date(selectedDado.dataInicio_novo as string).toLocaleDateString() : null
+                        )}
+                        {selectedDado?.dataTermino_novo && renderField('Data de Término', 
+                            selectedDado?.dataTermino_antiga ? new Date(selectedDado.dataTermino_antiga as string).toLocaleDateString() : null, 
+                            selectedDado?.dataTermino_novo ? new Date(selectedDado.dataTermino_novo as string).toLocaleDateString() : null
+                        )} 
+                        {selectedDado?.integrantes_novo && renderField('Integrantes', selectedDado?.integrantes_antigos || 'N/A', selectedDado?.integrantes_novo || null)} 
+                        {selectedDado?.links_novo && renderField('Links', selectedDado?.links_antigos || 'N/A', selectedDado?.links_novo || null)}
+                        {selectedDado?.objetivo_novo && renderField('Objetivo', selectedDado?.objetivo_antigo || 'N/A', selectedDado?.objetivo_novo || null)}
+                        {selectedDado?.status_novo && renderField('Status', selectedDado?.status_antigo || 'N/A', selectedDado?.status_novo || null)}
+                        {selectedDado?.documentos_novo && selectedDado.documentos_novo.length > 0 ? (
+                            <>
+                                <strong>Documentos adicionados:</strong>
+                                <ul>
+                                    {selectedDado?.documentos_novo.map((doc) => (
+                                        <>
+                                            <span style={{ color: 'green', cursor: 'pointer'}} onClick={() => handleBaixar(doc.id, doc.nome)}> {doc.nome} </span>
+                                            <br />
+                                        </>
+                                    ))}
+                                </ul>
+                            </>
+                        ): null}
+                    </>
+                )
+            case 'Criação':
+                return <strong>Edição de Projeto</strong>;
+            case 'Exclusão de arquivo':
+                return (
+                    <>
+                        <strong>Documento excluído:</strong>
+                            <ul>
+                                {selectedDado?.documentos_novo.map((doc) => (
+                                    <>
+                                        <span style={{ color: 'red', cursor: 'pointer'}} onClick={() => handleBaixar(doc.id, doc.nome)}> {doc.nome} </span>
+                                        <br />
+                                    </>
+                                ))}
+                            </ul>
+                    </>
+                )
+            default:
+                return <strong>Evento não disponível</strong>;
+        }
+    }
 
     if (error) {
         return <div>Erro: {error}</div>;
@@ -152,22 +219,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {renderField('Título', selectedDado?.titulo_antigo, selectedDado?.titulo_novo)}
-                    {renderField('Contratante', selectedDado?.contratante_antigo, selectedDado?.contratante_novo)}
-                    {renderField('Descrição', selectedDado?.descricao_antiga, selectedDado?.descricao_novo)}
-                    {renderField('Valor', selectedDado?.valor_antigo != null ? `R$ ${selectedDado.valor_antigo.toFixed(2)}` : null, selectedDado?.valor_novo != null ? `R$ ${selectedDado.valor_novo.toFixed(2)}` : null)}
-                    {renderField('Data de Início', 
-                        selectedDado?.dataInicio_antiga ? new Date(selectedDado.dataInicio_antiga as string).toLocaleDateString() : null, 
-                        selectedDado?.dataInicio_novo ? new Date(selectedDado.dataInicio_novo as string).toLocaleDateString() : null
-                    )}
-                    {renderField('Data de Término', 
-                        selectedDado?.dataTermino_antiga ? new Date(selectedDado.dataTermino_antiga as string).toLocaleDateString() : null, 
-                        selectedDado?.dataTermino_novo ? new Date(selectedDado.dataTermino_novo as string).toLocaleDateString() : null
-                    )} 
-                    {renderField('Integrantes', selectedDado?.integrantes_antigos || 'N/A', selectedDado?.integrantes_novo || null)} 
-                    {renderField('Links', selectedDado?.links_antigos || 'N/A', selectedDado?.links_novo || null)}
-                    {renderField('Objetivo', selectedDado?.objetivo_antigo || 'N/A', selectedDado?.objetivo_novo || null)}
-                    {renderField('Status', selectedDado?.status_antigo || 'N/A', selectedDado?.status_novo || null)}
+                    {renderTipoAuditoria(selectedDado?.tipoAuditoria || '')}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" style={{ backgroundColor: '#00359A', borderColor: '#00359A' }} onClick={handleCloseModal}>

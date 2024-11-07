@@ -52,7 +52,6 @@ export interface Auditoria {
     integrantes_novo?: string;
     objetivo_novo?: string;
     links_novo?: string;
-    arquivo_original1?: Uint8Array;
-    arquivo_original2?: Uint8Array;
+    documentos_novo: VisualizarDocumento[];
     dataAlteracao?: Date;
 }

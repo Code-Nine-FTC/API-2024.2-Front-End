@@ -528,7 +528,16 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               setState(undefined);
             }
             if (resultadoExclusao.status === 200) {
-              SweetAlert2.fire("Arquivo excluído com sucesso", "", "success");
+              SweetAlert2.fire({
+                title: "Arquivo excluído com sucesso",
+                text:"", 
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Ok",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    window.location.reload();
+                  }});
             } else {
               console.error(
                 "Erro ao excluir o arquivo",
