@@ -123,6 +123,36 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         ): null}
                     </>
                 )
+                case 'Cadastro':
+            // Exibe apenas os campos novos
+            return (
+                <>
+                    <h4><strong>Cadastro de Novo Projeto</strong></h4>
+                    {selectedDado?.titulo_novo && <p><strong>Título:</strong> {selectedDado?.titulo_novo}</p>}
+                    {selectedDado?.referenciaProjeto && <p><strong>Referência:</strong> {selectedDado?.referenciaProjeto}</p>}
+                    {selectedDado?.contratante_novo && <p><strong>Contratante:</strong> {selectedDado?.contratante_novo}</p>}
+                    {selectedDado?.descricao_novo && <p><strong>Descrição:</strong> {selectedDado?.descricao_novo}</p>}
+                    {selectedDado?.valor_novo != null && <p><strong>Valor:</strong> R$ {selectedDado?.valor_novo.toFixed(2)}</p>}
+                    {selectedDado?.dataInicio_novo && <p><strong>Data de Início:</strong> {new Date(selectedDado?.dataInicio_novo as string).toLocaleDateString()}</p>}
+                    {selectedDado?.dataTermino_novo && <p><strong>Data de Término:</strong> {new Date(selectedDado?.dataTermino_novo as string).toLocaleDateString()}</p>}
+                    {selectedDado?.status_novo && <p><strong>Status:</strong> {selectedDado?.status_novo}</p>}
+                    {selectedDado?.integrantes_novo && <p><strong>Integrantes:</strong> {selectedDado?.integrantes_novo}</p>}
+                    {selectedDado?.links_novo && <p><strong>Links:</strong> {selectedDado?.links_novo}</p>}
+                    {/* Verifica se documentos foram adicionados e exibe */}
+                    {selectedDado?.documentos_novo && selectedDado.documentos_novo.length > 0 && (
+                        <div>
+                            <strong>Documentos adicionados:</strong>
+                            <ul>
+                                {selectedDado?.documentos_novo.map((doc) => (
+                                    <li key={doc.id}>
+                                        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => handleBaixar(doc.id, doc.nome)}>{doc.nome}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </>
+            );
             case 'Criação':
                 return <strong>Edição de Projeto</strong>;
             case 'Exclusão de arquivo':
