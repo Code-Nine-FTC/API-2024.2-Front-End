@@ -147,8 +147,42 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     {selectedDado?.links_novo && renderField('Links', null, selectedDado?.links_novo || null)}
                 </>
             );
-            case 'Criação':
-                return <strong>Edição de Projeto</strong>;
+            case 'Exclusão':
+                return (
+                    <>
+                        <h4><strong>Exclusão de um projeto</strong></h4>
+                        {selectedDado?.titulo_antigo && renderField('Título', selectedDado?.titulo_antigo, null)}
+                        {/* {selectedDado?.titulo_novo && <p><strong>Título:</strong> {selectedDado?.titulo_novo}</p>} */}
+                        {selectedDado?.referenciaProjeto && renderField('Referência', selectedDado?.referenciaProjeto, null)}
+                        {selectedDado?.contratante_antigo && renderField('Contratante', selectedDado?.contratante_antigo, null)}
+                        {selectedDado?.descricao_antiga && renderField('Descrição', selectedDado?.descricao_antiga, null)}
+                        {selectedDado?.valor_antigo && renderField('Valor', selectedDado?.valor_antigo != null ? `R$ ${selectedDado.valor_antigo.toFixed(2)}` : null, null)}
+                        {selectedDado?.dataInicio_antiga && renderField('Data de Início', 
+                                selectedDado?.dataInicio_antiga ? new Date(selectedDado.dataInicio_antiga as string).toLocaleDateString() : null, 
+                                null
+                            )}
+                            {selectedDado?.dataTermino_antiga && renderField('Data de Término', 
+                                selectedDado?.dataTermino_antiga ? new Date(selectedDado.dataTermino_antiga as string).toLocaleDateString() : null, 
+                                null
+                            )} 
+                        {selectedDado?.status_antigo && renderField('Status', selectedDado?.status_antigo || null, null)}
+                        {selectedDado?.integrantes_antigos && renderField('Integrantes', selectedDado?.integrantes_antigos || null, null)} 
+                        {selectedDado?.links_antigos && renderField('Links', selectedDado?.links_antigos || null, null)}
+                        {selectedDado?.documentos_novo && selectedDado.documentos_novo.length > 0 ? (
+                            <>
+                                <strong>Documentos:</strong>
+                                <ul>
+                                    {selectedDado?.documentos_novo.map((doc) => (
+                                        <>
+                                            <span style={{ color: 'red', cursor: 'pointer'}} onClick={() => handleBaixar(doc.id, doc.nome)}> {doc.nome} </span>
+                                            <br />
+                                        </>
+                                    ))}
+                                </ul>
+                            </>
+                        ): null}
+                    </>
+                );
             case 'Exclusão de arquivo':
                 return (
                     <>
