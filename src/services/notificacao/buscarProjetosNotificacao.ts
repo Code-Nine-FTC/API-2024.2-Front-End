@@ -1,13 +1,13 @@
 import api from "../api";
 import { AxiosError } from 'axios';
-import { format, addDays } from 'date-fns';
+import { format, addDays, subDays } from 'date-fns';
 
 const BuscarProjetosEmAndamentoService = async () => {
     try {
         const params = {
-            
             status: 'Em Andamento',
-            dataTermino: format(addDays(new Date(), 7), 'yyyy-MM-dd')
+            dataTerminoMin: format(subDays(new Date(), 30), 'yyyy-MM-dd'), // Data de 30 dias atrás até hoje
+            dataTerminoMax: format(addDays(new Date(), 7), 'yyyy-MM-dd') // Data daqui a 7 dias
         };
 
         const resposta = await api.get('/projeto/listar', { params });

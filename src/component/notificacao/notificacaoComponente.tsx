@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Overlay, Popover } from 'react-bootstrap';
 import { FaBell } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 import BuscarProjetosEmAndamentoService from '../../services/notificacao/buscarProjetosNotificacao';
 import styles from './notificacao.module.css';
 
@@ -27,14 +27,26 @@ const Notifications: React.FC = () => {
       const response = await BuscarProjetosEmAndamentoService();
       if (response.status === 200) {
         const projetos = response.data;
-        const newNotifications = projetos.map((projeto: any) => ({
-          id: projeto.id,
-          message: `está em andamento e falta 1 semana para a data final.`,
-          date: format(new Date(projeto.dataTermino), 'dd/MM/yyyy'),
-          read: false,
-          projetoId: projeto.id,
-          titulo: projeto.titulo,
-        }));
+        const newNotifications = projetos.map((projeto: any) => {
+          const dataTermino = new Date(projeto.dataTermino);
+          const diasAtraso = differenceInDays(new Date(), dataTermino);
+          let message = '';
+
+          if (diasAtraso > 0) {
+            message = `está atrasado há ${diasAtraso} dias.`;
+          } else {
+            message = `está em andamento e falta 1 semana para a data final.`;
+          }
+
+          return {
+            id: projeto.id,
+            message,
+            date: format(dataTermino, 'dd/MM/yyyy'),
+            read: false,
+            projetoId: projeto.id,
+            titulo: projeto.titulo,
+          };
+        });
         setNotifications(newNotifications);
         const unread: number = newNotifications.filter((n: Notification) => !n.read).length;
         setUnreadCount(unread);
@@ -48,7 +60,7 @@ const Notifications: React.FC = () => {
     fetchNotifications();
     const interval = setInterval(() => {
       fetchNotifications();
-    }, 5000); 
+    }, 30000); // Atualiza a cada 30 segundos
 
     return () => clearInterval(interval);
   }, []);
@@ -82,8 +94,7 @@ const Notifications: React.FC = () => {
                   onClick={() => handleNotificationClick(notification.projetoId)}
                 >
                   <p className={styles.notificationMessage}>
-                    <span>O projeto</span>
-                    <span className={styles.notificationTitle}> {`${notification.titulo}`}</span> {notification.message}
+                    <span className={styles.notificationTitle}>{`O projeto ${notification.titulo}`}</span> {notification.message}
                   </p>
                   <p className={styles.notificationDate}>{notification.date}</p>
                 </div>
