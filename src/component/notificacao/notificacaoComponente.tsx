@@ -30,12 +30,16 @@ const Notifications: React.FC = () => {
         const newNotifications = projetos.map((projeto: any) => {
           const dataTermino = new Date(projeto.dataTermino);
           const diasAtraso = differenceInDays(new Date(), dataTermino);
+          const diasRestantes = differenceInDays(dataTermino, new Date());
           let message = '';
 
           if (diasAtraso > 0) {
             message = `está atrasado há ${diasAtraso} dias.`;
+          } else if (diasRestantes <= 7) {
+            message = `está em andamento e falta ${diasRestantes} dias para a data final.`;
           } else {
-            message = `está em andamento e falta 1 semana para a data final.`;
+            // Se o projeto não está atrasado e falta mais de uma semana, não cria uma notificação
+            return null;
           }
 
           return {
@@ -46,7 +50,7 @@ const Notifications: React.FC = () => {
             projetoId: projeto.id,
             titulo: projeto.titulo,
           };
-        });
+        }).filter((notification: null) => notification !== null); // Filtra notificações nulas
         setNotifications(newNotifications);
         const unread: number = newNotifications.filter((n: Notification) => !n.read).length;
         setUnreadCount(unread);
