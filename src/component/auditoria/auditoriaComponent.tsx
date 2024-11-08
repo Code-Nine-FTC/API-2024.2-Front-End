@@ -127,30 +127,24 @@ const renderField = (label: string, oldValue: string | number | undefined | null
             // Exibe apenas os campos novos
             return (
                 <>
-                    <h4><strong>Cadastro de Novo Projeto</strong></h4>
-                    {selectedDado?.titulo_novo && <p><strong>Título:</strong> {selectedDado?.titulo_novo}</p>}
-                    {selectedDado?.referenciaProjeto && <p><strong>Referência:</strong> {selectedDado?.referenciaProjeto}</p>}
-                    {selectedDado?.contratante_novo && <p><strong>Contratante:</strong> {selectedDado?.contratante_novo}</p>}
-                    {selectedDado?.descricao_novo && <p><strong>Descrição:</strong> {selectedDado?.descricao_novo}</p>}
-                    {selectedDado?.valor_novo != null && <p><strong>Valor:</strong> R$ {selectedDado?.valor_novo.toFixed(2)}</p>}
-                    {selectedDado?.dataInicio_novo && <p><strong>Data de Início:</strong> {new Date(selectedDado?.dataInicio_novo as string).toLocaleDateString()}</p>}
-                    {selectedDado?.dataTermino_novo && <p><strong>Data de Término:</strong> {new Date(selectedDado?.dataTermino_novo as string).toLocaleDateString()}</p>}
-                    {selectedDado?.status_novo && <p><strong>Status:</strong> {selectedDado?.status_novo}</p>}
-                    {selectedDado?.integrantes_novo && <p><strong>Integrantes:</strong> {selectedDado?.integrantes_novo}</p>}
-                    {selectedDado?.links_novo && <p><strong>Links:</strong> {selectedDado?.links_novo}</p>}
-                    {/* Verifica se documentos foram adicionados e exibe */}
-                    {selectedDado?.documentos_novo && selectedDado.documentos_novo.length > 0 && (
-                        <div>
-                            <strong>Documentos adicionados:</strong>
-                            <ul>
-                                {selectedDado?.documentos_novo.map((doc) => (
-                                    <li key={doc.id}>
-                                        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => handleBaixar(doc.id, doc.nome)}>{doc.nome}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+                    <h4><strong>Cadastro de um Novo Projeto</strong></h4>
+                    {selectedDado?.titulo_novo && renderField('Título', null, selectedDado?.titulo_novo)}
+                    {/* {selectedDado?.titulo_novo && <p><strong>Título:</strong> {selectedDado?.titulo_novo}</p>} */}
+                    {selectedDado?.referenciaProjeto && renderField('Referência', null, selectedDado?.referenciaProjeto)}
+                    {selectedDado?.contratante_novo && renderField('Contratante', null, selectedDado?.contratante_novo)}
+                    {selectedDado?.descricao_novo && renderField('Descrição', null, selectedDado?.descricao_novo)}
+                    {selectedDado?.valor_novo && renderField('Valor', null, selectedDado?.valor_novo != null ? `R$ ${selectedDado.valor_novo.toFixed(2)}` : null)}
+                    {selectedDado?.dataInicio_novo && renderField('Data de Início', 
+                            null, 
+                            selectedDado?.dataInicio_novo ? new Date(selectedDado.dataInicio_novo as string).toLocaleDateString() : null
+                        )}
+                        {selectedDado?.dataTermino_novo && renderField('Data de Término', 
+                            null, 
+                            selectedDado?.dataTermino_novo ? new Date(selectedDado.dataTermino_novo as string).toLocaleDateString() : null
+                        )} 
+                    {selectedDado?.status_novo && renderField('Status', null, selectedDado?.status_novo || null)}
+                    {selectedDado?.integrantes_novo && renderField('Integrantes', null, selectedDado?.integrantes_novo || null)} 
+                    {selectedDado?.links_novo && renderField('Links', null, selectedDado?.links_novo || null)}
                 </>
             );
             case 'Criação':
