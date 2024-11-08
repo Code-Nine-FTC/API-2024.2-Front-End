@@ -4,6 +4,7 @@ import api from '../../services/api';
 import BarGraph from './charts/bar';
 import { getToken } from '../../services/auth';
 import { ChartOptions } from 'chart.js';
+import { NumericFormat} from 'react-number-format';
 
 // Definindo a interface para os resultados
 /* interface ResultadoProjeto {
@@ -162,22 +163,34 @@ const DashboardFormComponent = () => {
           <Row className="mb-4">
             <Form.Group as={Col} controlId="valorMinimo" sm={6}>
               <FloatingLabel controlId="valorMinimo" label="Valor mínimo" style={{ color: '#9C9C9C' }}>
-                <Form.Control
-                  placeholder=""
-                  type="text"
-                  value={valorMinimo}
-                  onChange={(e) => setValorMinimo(e.target.value)}
-                />
+              <NumericFormat
+                className="form-control"
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                decimalScale={2}
+                fixedDecimalScale={true}
+                allowNegative={false}
+                placeholder="Valor"
+                value={valorMinimo}
+                onValueChange={(values) => setValorMinimo(values.value)}
+              />
               </FloatingLabel>
             </Form.Group>
             <Form.Group as={Col} controlId="valorMaximo" sm={6}>
               <FloatingLabel controlId="valorMaximo" label="Valor máximo" style={{ color: '#9C9C9C' }}>
-                <Form.Control
-                  placeholder=""
-                  type="text"
-                  value={valorMaximo}
-                  onChange={(e) => setValorMaximo(e.target.value)}
-                />
+              <NumericFormat
+                className="form-control"
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                decimalScale={2}
+                fixedDecimalScale={true}
+                allowNegative={false}
+                placeholder="Valor"
+                value={valorMaximo}
+                onValueChange={(values) => setValorMaximo(values.value)}
+              />
               </FloatingLabel>
             </Form.Group>
           </Row>
