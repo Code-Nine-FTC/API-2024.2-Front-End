@@ -147,22 +147,6 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     {selectedDado?.links_novo && renderField('Links', null, selectedDado?.links_novo || null)}
                 </>
             );
-            case 'Desativação do Projeto':  // Ajuste aqui para lidar com o tipo de auditoria 'Desativação do Projeto'
-            return (
-                <>
-                    <h4><strong>Projeto Desativado</strong></h4>
-                    {selectedDado?.titulo_antigo && <p><strong>Título:</strong> {selectedDado?.titulo_antigo}</p>}
-                    {selectedDado?.referenciaProjeto && <p><strong>Referência:</strong> {selectedDado?.referenciaProjeto}</p>}
-                    {selectedDado?.contratante_antigo && <p><strong>Contratante:</strong> {selectedDado?.contratante_antigo}</p>}
-                    {selectedDado?.descricao_antiga && <p><strong>Descrição:</strong> {selectedDado?.descricao_antiga}</p>}
-                    {selectedDado?.valor_antigo != null && <p><strong>Valor:</strong> R$ {selectedDado?.valor_antigo.toFixed(2)}</p>}
-                    {selectedDado?.dataInicio_antiga && <p><strong>Data de Início:</strong> {new Date(selectedDado?.dataInicio_antiga as string).toLocaleDateString()}</p>}
-                    {selectedDado?.dataTermino_antiga && <p><strong>Data de Término:</strong> {new Date(selectedDado?.dataTermino_antiga as string).toLocaleDateString()}</p>}
-                    {selectedDado?.status_antigo && <p><strong>Status:</strong> {selectedDado?.status_antigo}</p>}
-                    {selectedDado?.integrantes_antigos && <p><strong>Integrantes:</strong> {selectedDado?.integrantes_antigos}</p>}
-                    {selectedDado?.links_antigos && <p><strong>Links:</strong> {selectedDado?.links_antigos}</p>}
-                </>
-            );
             case 'Exclusão':
                 return (
                     <>
@@ -264,7 +248,10 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                                 style={{ cursor: 'pointer' }}
                             >
                                 <div className="card-body">
-                                <h6 className="card-title">{dado.titulo_antigo || 'Título não disponível'}</h6>
+                                {dado.tipoAuditoria === 'Cadastro' ? (
+                                    <h6 className="card-title">{dado.titulo_novo || 'Título não disponível'}</h6>) :
+                                    (<h6 className="card-title">{dado.titulo_antigo || 'Título não disponível'}</h6>
+                                )}
                                 <p className="card-text">{dado.tipoAuditoria || 'Evento não disponível'}</p>
                                     <div className="d-flex justify-content-between">
                                     <small className="text-muted">
