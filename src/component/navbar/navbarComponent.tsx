@@ -6,6 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { getAdminNavigationItems} from './navItens';
 import { logout, isAuthenticated } from '../../services/auth';
 import { useNavigate } from "react-router"
+import Notifications from '../notificacao/notificacaoComponente';
 
 const NavbarComponent = () => {
     const navigate = useNavigate();
@@ -36,8 +37,14 @@ const NavbarComponent = () => {
                         ))}
                     </Nav>
                     <Nav className='ms-auto'> 
-                        {logado ? <Nav.Link onClick={handleLogout}>Sair</Nav.Link> 
-                        : <Nav.Link href="/login">Entrar</Nav.Link>}
+                    {logado ? (
+                            <>
+                                <Notifications />
+                                <Nav.Link onClick={handleLogout}>Sair</Nav.Link>
+                            </>
+                        ) : (
+                            <Nav.Link href="/login">Entrar</Nav.Link>
+                        )}
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
