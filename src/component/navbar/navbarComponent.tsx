@@ -1,12 +1,13 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import { getAdminNavigationItems} from './navItens';
+import { getAdminNavigationItems } from './navItens';
 import { logout, isAuthenticated } from '../../services/auth';
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
 import Notifications from '../notificacao/notificacaoComponente';
+import styles from './navbar.module.css';
 
 const NavbarComponent = () => {
     const navigate = useNavigate();
@@ -28,7 +29,10 @@ const NavbarComponent = () => {
     return (
         <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: 'var(--primary-color)' }} variant='dark'>
             <Container fluid>
-                {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */} {/* Podemos usar de botão home depois */}
+                <div className={styles.notificationMobile}>
+                    {logado && <Notifications />}
+                </div>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav style={{ fontSize: 'var(--nav-font-size)'}}>
                         <Nav.Link href="/">Home</Nav.Link>
@@ -39,7 +43,9 @@ const NavbarComponent = () => {
                     <Nav className='ms-auto'> 
                     {logado ? (
                             <>
-                                <Notifications />
+                                <div className={styles.notificationDesktop}>
+                                    <Notifications />
+                                </div>
                                 <Nav.Link onClick={handleLogout}>Sair</Nav.Link>
                             </>
                         ) : (
@@ -47,10 +53,9 @@ const NavbarComponent = () => {
                         )}
                     </Nav>
                 </Navbar.Collapse>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             </Container>
         </Navbar>
-    )
-}
+    );
+};
 
 export default NavbarComponent;

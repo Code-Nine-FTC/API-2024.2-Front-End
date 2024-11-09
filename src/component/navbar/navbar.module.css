@@ -1,0 +1,26 @@
+.notificationMobile {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .notificationMobile {
+      display: block;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+  
+    .navbar-toggler {
+      margin-left: auto;
+    }
+  }
+  
+  .notificationDesktop {
+    display: none;
+  }
+  
+  @media (min-width: 769px) {
+    .notificationDesktop {
+      display: block;
+    }
+  }
