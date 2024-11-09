@@ -53,8 +53,8 @@ export interface VisualizarProjeto {
     objeto: string;
     descricao: string;
     nomeCoordenador: string;
-    dataInicio: Date;
-    dataTermino: Date;
+    dataInicio: string;
+    dataTermino: string;
     valor: number;
     integrantes: string;
     status: string;

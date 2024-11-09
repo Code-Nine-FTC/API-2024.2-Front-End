@@ -36,8 +36,8 @@ export interface Auditoria {
     contratante_antigo?: string;
     descricao_antiga?: string;
     valor_antigo?: number;
-    dataInicio_antiga?: String;
-    dataTermino_antiga?: String;
+    dataInicio_antiga?: string;
+    dataTermino_antiga?: string;
     status_antigo?: string;
     integrantes_antigos?: string;
     objetivo_antigo?: string;
@@ -46,8 +46,8 @@ export interface Auditoria {
     contratante_novo?: string;
     descricao_novo?: string;
     valor_novo?: number;
-    dataInicio_novo?: String;
-    dataTermino_novo?: String;
+    dataInicio_novo?: string;
+    dataTermino_novo?: string;
     status_novo?: string;
     integrantes_novo?: string;
     objetivo_novo?: string;
