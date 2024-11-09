@@ -31,6 +31,7 @@ import VisualizarProjetoService from "../../services/projeto/visualizarProjetoSe
 import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
 import formatarData from "../../functions/formatarData";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
+import { parse, format } from 'date-fns';
 
 interface MensagemValidacao {
   titulo: string;
@@ -164,14 +165,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       setLinks(projetoOriginal.links || "");
       setStatus(projetoOriginal.status || "");
       setValor(projetoOriginal.valor || "");
-      setStartDate(
-        projetoOriginal.dataInicio ? new Date(projetoOriginal.dataInicio) : null
-      );
-      setEndDate(
-        projetoOriginal.dataTermino
-          ? new Date(projetoOriginal.dataTermino)
-          : null
-      );
+      setStartDate(parse(projetoOriginal.dataInicio, 'yyyy-MM-dd', new Date()));
+      setEndDate(parse(projetoOriginal.dataTermino, 'yyyy-MM-dd', new Date()));
       // setValor(formatarValorBR(projetoOriginal.valor?.toString() || ""));
       setDocumentos(projetoOriginal.documentos);
       projetoOriginal.documentos.forEach((doc) => {
@@ -208,8 +203,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     setEndDateValid(endDate !== null && (!startDate || endDate >= startDate));
   };
 
-  const dataInicioString = formatarData(startDate);
-  const dataTerminoString = formatarData(endDate);
+  const dataInicioString = startDate ? format(startDate, 'yyyy-MM-dd') : null;
+  const dataTerminoString = endDate ? format(endDate, 'yyyy-MM-dd') : null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -897,8 +892,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         </InputGroup>
         <InputGroup className="mb-3">
         <Calendario
-          startDate={startDate}
-          endDate={endDate}
+          startDate={startDate ? startDate : null}
+          endDate={endDate ? endDate : null}
           setStartDate={setStartDate}
           setEndDate={setEndDate}
           startDateValid={startDateValid}
