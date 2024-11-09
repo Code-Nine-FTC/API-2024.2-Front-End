@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Overlay, Popover } from 'react-bootstrap';
 import { FaBell } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { format, differenceInDays } from 'date-fns';
+import { parse, format, differenceInCalendarDays } from 'date-fns';
 import BuscarProjetosEmAndamentoService from '../../services/notificacao/buscarProjetosNotificacao';
 import styles from './notificacao.module.css';
 
@@ -28,9 +28,9 @@ const Notifications: React.FC = () => {
       if (response.status === 200) {
         const projetos = response.data;
         const newNotifications = projetos.map((projeto: any) => {
-          const dataTermino = new Date(projeto.dataTermino);
-          const diasAtraso = differenceInDays(new Date(), dataTermino);
-          const diasRestantes = differenceInDays(dataTermino, new Date());
+          const dataTermino = parse(projeto.dataTermino, 'yyyy-MM-dd', new Date());
+          const diasAtraso = differenceInCalendarDays(new Date(), dataTermino);
+          const diasRestantes = differenceInCalendarDays(dataTermino, new Date());
           let message = '';
 
           if (diasAtraso > 0) {
