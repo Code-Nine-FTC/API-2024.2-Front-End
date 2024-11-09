@@ -4,6 +4,7 @@ import VisualizarMudancasFunction from '../../services/auditoria/vizualizarMudan
 import { Mudanca } from '../../interface/auditoria.interface';
 import { Auditoria } from '../../interface/auditoria.interface';
 import BaixarArquivo from '../../services/projeto/baixarArquivo';
+import { parse, format } from 'date-fns';
 
 interface AuditoriaComponentProps {
     projetoId?: string;
@@ -58,7 +59,13 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
     }, [searchTerm, dados]);
     
 
-const renderField = (label: string, oldValue: string | number | undefined | null, newValue: string | number | undefined | null) => {
+    const formatarData = (stringData: string) => {
+        const [year, month, day] = stringData.split('-');
+        const dataFormatada = `${day}/${month}/${year}`;
+        return dataFormatada;
+    }
+    
+const renderField = (label: string, oldValue: string | number | undefined | null , newValue: string | number | undefined | null ) => {
     return (
         <>
             <strong>{label}:</strong> {oldValue ? <span style={{ textDecoration: 'line-through', color: 'red' }}>{oldValue}</span> : 'N/A'} 
@@ -97,12 +104,12 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         {selectedDado?.descricao_novo && renderField('Descrição', selectedDado?.descricao_antiga, selectedDado?.descricao_novo)}
                         {selectedDado?.valor_novo && renderField('Valor', selectedDado?.valor_antigo != null ? `R$ ${selectedDado.valor_antigo.toFixed(2)}` : null, selectedDado?.valor_novo != null ? `R$ ${selectedDado.valor_novo.toFixed(2)}` : null)}
                         {selectedDado?.dataInicio_novo && renderField('Data de Início', 
-                            selectedDado?.dataInicio_antiga ? new Date(selectedDado.dataInicio_antiga as string).toLocaleDateString() : null, 
-                            selectedDado?.dataInicio_novo ? new Date(selectedDado.dataInicio_novo as string).toLocaleDateString() : null
+                            selectedDado?.dataInicio_antiga ? formatarData(selectedDado.dataInicio_antiga) : null, 
+                            selectedDado?.dataInicio_novo ? formatarData(selectedDado.dataInicio_novo) : null
                         )}
                         {selectedDado?.dataTermino_novo && renderField('Data de Término', 
-                            selectedDado?.dataTermino_antiga ? new Date(selectedDado.dataTermino_antiga as string).toLocaleDateString() : null, 
-                            selectedDado?.dataTermino_novo ? new Date(selectedDado.dataTermino_novo as string).toLocaleDateString() : null
+                            selectedDado?.dataTermino_antiga ? formatarData(selectedDado.dataTermino_antiga) : null, 
+                            selectedDado?.dataTermino_novo ? formatarData(selectedDado.dataTermino_novo) : null
                         )} 
                         {selectedDado?.integrantes_novo && renderField('Integrantes', selectedDado?.integrantes_antigos || 'N/A', selectedDado?.integrantes_novo || null)} 
                         {selectedDado?.links_novo && renderField('Links', selectedDado?.links_antigos || 'N/A', selectedDado?.links_novo || null)}
@@ -147,6 +154,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     {selectedDado?.links_novo && renderField('Links', null, selectedDado?.links_novo || null)}
                 </>
             );
+
             case 'Exclusão':
                 return (
                     <>
