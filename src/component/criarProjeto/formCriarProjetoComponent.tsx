@@ -5,12 +5,13 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
-import { NumericFormat} from 'react-number-format';
+import { NumberFormatValues, NumericFormat} from 'react-number-format';
 import styles from "./criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
 import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from "react-router-dom";
+import { parse, format } from 'date-fns';
 
 interface MensagemValidacao {
   titulo: string;
@@ -41,6 +42,7 @@ const CriarProjetoComponent = () => {
   const [hideCoordenador, setHideCoordenador] = useState(false);
   const [hideValor, setHideValor] = useState(false);
   const [hideStatus, setHideStatus] = useState(false);
+  const [valorValid, setValorValid] = useState<boolean | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,8 +58,8 @@ const CriarProjetoComponent = () => {
     const valorFloat = parseFloat(valor);
     setValidado(true);
 
-    const dataInicioString = startDate?.toISOString();
-    const dataTerminoString = endDate?.toISOString();
+    const dataInicioString = startDate ? format(startDate, 'yyyy-MM-dd') : null;
+    const dataTerminoString = endDate ? format(endDate, 'yyyy-MM-dd') : null;
 
     const camposOcultos = [];
     if (hideTitulo) camposOcultos.push("titulo");
@@ -286,17 +288,22 @@ const CriarProjetoComponent = () => {
               className="flex-grow-1"
               style={{ color: "#9C9C9C", zIndex: 1 }}
             >
-              <NumericFormat
-                className="form-control"
+              <Form.Control
+                as={NumericFormat}
                 thousandSeparator="."
                 decimalSeparator=","
                 prefix="R$ "
                 decimalScale={2}
-                fixedDecimalScale={true}
+                fixedDecimalScale
                 allowNegative={false}
                 placeholder="Valor"
                 value={valor}
-                onValueChange={(values) => setValor(values.value)}
+                isInvalid={valorValid === false}
+                isValid={valorValid === true}
+                onValueChange={(values: NumberFormatValues) => setValor(values.value)}
+                required
+                name="valor"
+                id="valor"
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o valor do projeto.
@@ -309,8 +316,8 @@ const CriarProjetoComponent = () => {
             />
           </InputGroup>
           <Calendario
-            startDate={startDate}
-            endDate={endDate}
+            startDate={startDate ? startDate: null}
+            endDate={endDate ? endDate: null}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
             startDateValid={startDateValid}
