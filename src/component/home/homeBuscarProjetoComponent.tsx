@@ -54,6 +54,9 @@ const Home = () => {
     navigate(`/projeto/visualizar/${projeto.id}`);
   };
 
+  const dataInicioString = startDate ? format(startDate, 'yyyy-MM-dd') : null;
+  const dataTerminoString = endDate ? format(endDate, 'yyyy-MM-dd') : null;
+
   const fetchData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -61,8 +64,8 @@ const Home = () => {
     const projeto = {
       keyword,
       nomeCoordenador: coordenador,
-      dataInicio: startDate ? format(startDate, "yyyy-MM-dd") : "",
-      dataTermino: endDate ? format(endDate, "yyyy-MM-dd") : "",
+      dataInicio: dataInicioString ? dataInicioString : "",
+      dataTermino: dataTerminoString ? dataTerminoString : "",
       status,
     };
 
@@ -172,8 +175,8 @@ const Home = () => {
             }`}
           >
             <Calendario
-              startDate={startDate}
-              endDate={endDate}
+              startDate={startDate? startDate : null}
+              endDate={endDate ? endDate : null}
               setStartDate={setStartDate}
               setEndDate={setEndDate}
               startDateValid={true}

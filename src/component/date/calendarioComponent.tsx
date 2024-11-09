@@ -1,9 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { FaCalendarAlt } from 'react-icons/fa';
 import '../date/DatePickerStyles.css';
+import { parse, format } from 'date-fns';
 
 interface CalendarioProps {
     startDate: Date | null;
@@ -15,15 +16,25 @@ interface CalendarioProps {
     validarDatas: () => void;
     cadastro?: boolean;
 }
-const Calendario: React.FC<CalendarioProps> = ({ 
-    startDate, 
-    endDate, 
-    setStartDate, 
+
+const Calendario: React.FC<CalendarioProps> = ({
+    startDate,
+    endDate,
+    setStartDate,
     setEndDate,
     startDateValid,
     endDateValid,
     validarDatas,
-    cadastro }) => {
+    cadastro
+}) => {
+
+    const parseDate = (dateString: string | null): Date | null => {
+        return dateString ? parse(dateString, 'yyyy-MM-dd', new Date()) : null;
+    };
+
+    const formatDate = (date: Date | null): string | null => {
+        return date ? format(date, 'yyyy-MM-dd') : null;
+    };
 
     return (
         <>
@@ -76,4 +87,4 @@ const Calendario: React.FC<CalendarioProps> = ({
         </>
     )
 }
-export default Calendario
+export default Calendario;
