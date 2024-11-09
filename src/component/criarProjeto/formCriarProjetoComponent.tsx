@@ -174,11 +174,6 @@ const CriarProjetoComponent = () => {
                 Por favor, insira o título do projeto.
               </Form.Control.Feedback>
             </FloatingLabel>
-            <InputGroup.Checkbox
-              aria-label="Checkbox for following text input"
-              checked={hideTitulo}
-              onChange={(e) => setHideTitulo(e.target.checked)}
-            />
           </InputGroup>
           <InputGroup className="mb-3">
             <FloatingLabel
@@ -198,11 +193,6 @@ const CriarProjetoComponent = () => {
                 Por favor, insira a referência de projeto.
               </Form.Control.Feedback>
             </FloatingLabel>
-            <InputGroup.Checkbox
-              aria-label="Checkbox for following text input"
-              checked={hideReferencia}
-              onChange={(e) => setHideReferencia(e.target.checked)}
-            />
           </InputGroup>
 
           <InputGroup className="mb-3">

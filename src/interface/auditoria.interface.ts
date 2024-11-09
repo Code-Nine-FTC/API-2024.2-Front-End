@@ -48,6 +48,8 @@ export interface Auditoria {
     valor_novo?: number;
     dataInicio_novo?: string;
     dataTermino_novo?: string;
+    camposOcultos_novo?: string;
+    camposOcultos_antigo?: string;
     status_novo?: string;
     integrantes_novo?: string;
     objetivo_novo?: string;

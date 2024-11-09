@@ -130,6 +130,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         {selectedDado?.links_novo && renderField('Links', selectedDado?.links_antigos || 'N/A', selectedDado?.links_novo || null)}
                         {selectedDado?.objetivo_novo && renderField('Objetivo', selectedDado?.objetivo_antigo || 'N/A', selectedDado?.objetivo_novo || null)}
                         {selectedDado?.status_novo && renderField('Status', selectedDado?.status_antigo || 'N/A', selectedDado?.status_novo || null)}
+                        {selectedDado?.camposOcultos_novo && renderField('Campos Ocultos', selectedDado?.camposOcultos_antigo || 'N/A', selectedDado?.camposOcultos_novo || null)}
                         {selectedDado?.documentos_novo && selectedDado.documentos_novo.length > 0 ? (
                             <>
                                 <strong>Documentos adicionados:</strong>
@@ -167,6 +168,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     {selectedDado?.status_novo && renderField('Status', null, selectedDado?.status_novo || null)}
                     {selectedDado?.integrantes_novo && renderField('Integrantes', null, selectedDado?.integrantes_novo || null)} 
                     {selectedDado?.links_novo && renderField('Links', null, selectedDado?.links_novo || null)}
+                    {selectedDado?.camposOcultos_novo && renderField('Campos Ocultos', null, selectedDado?.camposOcultos_novo || null)}
                 </>
             );
 
@@ -191,6 +193,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         {selectedDado?.status_antigo && renderField('Status', selectedDado?.status_antigo || null, null)}
                         {selectedDado?.integrantes_antigos && renderField('Integrantes', selectedDado?.integrantes_antigos || null, null)} 
                         {selectedDado?.links_antigos && renderField('Links', selectedDado?.links_antigos || null, null)}
+                        {selectedDado?.camposOcultos_antigo && renderField('Campos Ocultos', null, selectedDado?.camposOcultos_antigo || null)}
                         {selectedDado?.documentos_novo && selectedDado.documentos_novo.length > 0 ? (
                             <>
                                 <strong>Documentos:</strong>
