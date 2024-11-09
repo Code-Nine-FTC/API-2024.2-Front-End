@@ -74,6 +74,21 @@ const renderField = (label: string, oldValue: string | number | undefined | null
         </>
     );
 };
+    const formatarValorBR = (valor: number | string): string => {
+        if (valor === null || valor === undefined) return "Valor Indisponível";
+        // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
+        let numero =
+        typeof valor === "string"
+            ? parseFloat(valor.replace(/\./g, "").replace(",", "."))
+            : valor;
+        // Se a conversão não resultar em um número válido, retorna "0,00"
+        if (isNaN(numero)) return "Valor Inválido";
+        // Retorna o número formatado com vírgula separando os decimais
+        return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        }).format(numero);
+    };
 
     const handleOpenModal = (dado: Auditoria) => {
         setSelectedDado(dado);
@@ -102,7 +117,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         {selectedDado?.titulo_novo && renderField('Título', selectedDado?.titulo_antigo, selectedDado?.titulo_novo)}
                         {selectedDado?.contratante_novo && renderField('Contratante', selectedDado?.contratante_antigo, selectedDado?.contratante_novo)}
                         {selectedDado?.descricao_novo && renderField('Descrição', selectedDado?.descricao_antiga, selectedDado?.descricao_novo)}
-                        {selectedDado?.valor_novo && renderField('Valor', selectedDado?.valor_antigo != null ? `R$ ${selectedDado.valor_antigo.toFixed(2)}` : null, selectedDado?.valor_novo != null ? `R$ ${selectedDado.valor_novo.toFixed(2)}` : null)}
+                        {selectedDado?.valor_novo && renderField('Valor', selectedDado?.valor_antigo != null ? `${formatarValorBR(selectedDado?.valor_antigo)}` : null, selectedDado?.valor_novo != null ? `${formatarValorBR(selectedDado?.valor_novo)}` : null)}
                         {selectedDado?.dataInicio_novo && renderField('Data de Início', 
                             selectedDado?.dataInicio_antiga ? formatarData(selectedDado.dataInicio_antiga) : null, 
                             selectedDado?.dataInicio_novo ? formatarData(selectedDado.dataInicio_novo) : null
@@ -140,14 +155,14 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     {selectedDado?.referenciaProjeto && renderField('Referência', null, selectedDado?.referenciaProjeto)}
                     {selectedDado?.contratante_novo && renderField('Contratante', null, selectedDado?.contratante_novo)}
                     {selectedDado?.descricao_novo && renderField('Descrição', null, selectedDado?.descricao_novo)}
-                    {selectedDado?.valor_novo && renderField('Valor', null, selectedDado?.valor_novo != null ? `R$ ${selectedDado.valor_novo.toFixed(2)}` : null)}
+                    {selectedDado?.valor_novo && renderField('Valor', null, selectedDado?.valor_novo != null ? `${formatarValorBR(selectedDado?.valor_novo)}` : null)}
                     {selectedDado?.dataInicio_novo && renderField('Data de Início', 
                             null, 
-                            selectedDado?.dataInicio_novo ? new Date(selectedDado.dataInicio_novo as string).toLocaleDateString() : null
+                            selectedDado?.dataInicio_novo ? formatarData(selectedDado.dataInicio_novo) : null
                         )}
                         {selectedDado?.dataTermino_novo && renderField('Data de Término', 
                             null, 
-                            selectedDado?.dataTermino_novo ? new Date(selectedDado.dataTermino_novo as string).toLocaleDateString() : null
+                            selectedDado?.dataTermino_novo ? formatarData(selectedDado.dataTermino_novo) : null
                         )} 
                     {selectedDado?.status_novo && renderField('Status', null, selectedDado?.status_novo || null)}
                     {selectedDado?.integrantes_novo && renderField('Integrantes', null, selectedDado?.integrantes_novo || null)} 
@@ -164,13 +179,13 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         {selectedDado?.referenciaProjeto && renderField('Referência', selectedDado?.referenciaProjeto, null)}
                         {selectedDado?.contratante_antigo && renderField('Contratante', selectedDado?.contratante_antigo, null)}
                         {selectedDado?.descricao_antiga && renderField('Descrição', selectedDado?.descricao_antiga, null)}
-                        {selectedDado?.valor_antigo && renderField('Valor', selectedDado?.valor_antigo != null ? `R$ ${selectedDado.valor_antigo.toFixed(2)}` : null, null)}
+                        {selectedDado?.valor_antigo && renderField('Valor', selectedDado?.valor_antigo != null ? `${formatarValorBR(selectedDado?.valor_antigo)}` : null, null)}
                         {selectedDado?.dataInicio_antiga && renderField('Data de Início', 
-                                selectedDado?.dataInicio_antiga ? new Date(selectedDado.dataInicio_antiga as string).toLocaleDateString() : null, 
+                                selectedDado?.dataInicio_antiga ? formatarData(selectedDado.dataInicio_antiga) : null, 
                                 null
                             )}
                             {selectedDado?.dataTermino_antiga && renderField('Data de Término', 
-                                selectedDado?.dataTermino_antiga ? new Date(selectedDado.dataTermino_antiga as string).toLocaleDateString() : null, 
+                                selectedDado?.dataTermino_antiga ? formatarData(selectedDado.dataTermino_antiga) : null, 
                                 null
                             )} 
                         {selectedDado?.status_antigo && renderField('Status', selectedDado?.status_antigo || null, null)}
