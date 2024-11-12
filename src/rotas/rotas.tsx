@@ -7,7 +7,7 @@ import AlteraDeletaVisualiza from "../pages/visualizarProjetos";
 import { AuthContext } from '../services/context';
 import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
-
+import CriarBolsista from "../pages/criarBolsista";
 const Rotas: FC = () => {
     const { isAutenticado } = useContext(AuthContext);
 
@@ -19,6 +19,7 @@ const Rotas: FC = () => {
             <>
                 {/* Apenas administradores podem adicionar projetos */}
                 <Route path="/adicionarprojeto" element={<CriarProjeto />} />
+                <Route path="/bolsistas" element={<CriarBolsista />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/auditorias/" element={<Auditoria />}/>
                 <Route path="/auditorias/:id" element={<Auditoria/>}/>

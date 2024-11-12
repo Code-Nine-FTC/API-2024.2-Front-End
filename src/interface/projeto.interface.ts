@@ -92,3 +92,4 @@ export interface MudancaProjeto {
     resumopropostaUrl?: string; 
     resumocontratoUrl?: string; 
 }
+
