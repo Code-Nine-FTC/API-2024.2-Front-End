@@ -8,6 +8,7 @@ import { logout, isAuthenticated } from '../../services/auth';
 import { useNavigate } from "react-router";
 import Notifications from '../notificacao/notificacaoComponente';
 import styles from './navbar.module.css';
+import CadastrosDropdownComponent from '../cadastros/cadastrosDropdown/CadastrosDropdownComponent';
 
 const NavbarComponent = () => {
     const navigate = useNavigate();
@@ -39,6 +40,9 @@ const NavbarComponent = () => {
                         {getNavigationItems().map((item, index) => (
                             <Nav.Link key={index} href={item.path}>{item.label}</Nav.Link>
                         ))}
+                        {logado && (
+                            <CadastrosDropdownComponent/>
+                        )}
                     </Nav>
                     <Nav className='ms-auto'> 
                     {logado ? (
