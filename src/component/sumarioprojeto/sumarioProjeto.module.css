@@ -1,0 +1,15 @@
+.nav{
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    align-items: center;
+    margin-top: 1%;
+}
+
+.data{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 100vw;
+}
