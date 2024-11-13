@@ -9,6 +9,8 @@ import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
 import CriarBolsista from "../pages/criarBolsista";
 import CadastroMaterial from "../pages/cadastroMaterial";
+import SumarioProjeto from "../pages/sumarioprojetoPage";
+
 
 const Rotas: FC = () => {
     const { isAutenticado } = useContext(AuthContext);
@@ -24,9 +26,8 @@ const Rotas: FC = () => {
                 <Route path="/bolsistas" element={<CriarBolsista />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/auditorias/" element={<Auditoria />}/>
-                <Route path="/auditorias/:id" element={<Auditoria/>}/>
+                <Route path="/sumarioProjeto" element={<SumarioProjeto />} />
                 <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/>
-                <Route path="/cadastroReceita" element={<CadastroReceita/>}/>
             </>
         );  
        }  else {
