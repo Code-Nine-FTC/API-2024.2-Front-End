@@ -21,10 +21,11 @@ const CadastrosDropdownComponent: React.FC<CadastrosDropdownComponentProps> = ({
         </Dropdown.Toggle>
 
         <Dropdown.Menu className={`${styles.dropdownMenu}`}>
-          <Dropdown.Item href="#/action-1" className={styles.dropdownItem}>Parceiros</Dropdown.Item>
-          <Dropdown.Item onClick={() => navigate('/bolsistas')} className={styles.dropdownItem}>Bolsistas</Dropdown.Item>
-          <Dropdown.Item onClick={() => navigate('/cadastroMaterial')} className={styles.dropdownItem}>Materiais</Dropdown.Item>
-          <Dropdown.Item href="#/action-1" className={styles.dropdownItem}>Classificação de Demandas</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate('/adicionarProjeto')} className={styles.dropdownItem}>Projeto</Dropdown.Item>
+          <Dropdown.Item href="#/action-1" className={styles.dropdownItem}>Parceiro</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate('/bolsistas')} className={styles.dropdownItem}>Bolsista</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate('/cadastroMaterial')} className={styles.dropdownItem}>Material</Dropdown.Item>
+          <Dropdown.Item href="#/action-1" className={styles.dropdownItem}>Classificação de Demanda</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </Nav.Item>
