@@ -22,6 +22,7 @@
 }
 
 .dropdownToggle {
+    --bs-navbar-active-color: rgba(255, 255, 255, 0.55) !important;
     display: inline-flex;
     align-items: center;
 }
@@ -51,6 +52,16 @@
     transform: scaleY(1);
 }
 
+.dropdownHover:hover .dropdownToggle {
+    --bs-navbar-active-color: rgba(255, 255, 255, 0.75) !important;
+}
+
 .dropdownHover:hover #nav-dropdown::after {
     transform: rotate(180deg);
+}
+
+@media-screen (600px) {
+    .dropdownMenu {
+        visibility: visible;
+    }
 }
