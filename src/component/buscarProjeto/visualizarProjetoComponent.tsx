@@ -32,7 +32,7 @@ import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
 import formatarData from "../../functions/formatarData";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
-import FormCadastrarGasto from "../gastos/formCadastrarGastoComponent";
+import FormCadastrarGasto from "../cadastros/cadastroGasto/formCadastrarGastoComponent";
 
 interface MensagemValidacao {
   titulo: string;

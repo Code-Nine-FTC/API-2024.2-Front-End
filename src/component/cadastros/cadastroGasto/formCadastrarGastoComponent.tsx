@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
-import { VisualizarMaterial } from '../../interface/cadastros/material.interface';
+import { VisualizarMaterial } from '../../../interface/cadastros/material.interface';
 import styles from './cadastrarGastos.module.css'
 import { Form, InputGroup, FloatingLabel, Button } from 'react-bootstrap';
-import Calendario from '../date/calendarioComponent';
+import Calendario from '../../date/calendarioComponent';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
-import attach from '../../assets/criarProjeto/attach.svg';
-import arquivoIcon from '../../assets/criarProjeto/arquivo.svg';
-import ValidadorDeArquivos from '../../functions/validadorDeArquivos';
-import separarMensagens from '../../functions/separarMensagens';
+import attach from '../../../assets/criarProjeto/attach.svg';
+import arquivoIcon from '../../../assets/criarProjeto/arquivo.svg';
+import ValidadorDeArquivos from '../../../functions/validadorDeArquivos';
+import separarMensagens from '../../../functions/separarMensagens';
 import SweetAlert2 from 'sweetalert2';
+import buscarMateriaisService from '../../../services/materiais/buscarMateriaisService';
+import CadastrarGastosService from '../../../services/gastos/cadastrarGastosService';
+import { FormDataGastoCadastro } from '../../../interface/cadastros/gasto.interface';
 
 interface MensagemValidacao {
     titulo: string;
@@ -25,16 +28,104 @@ export default function FormCadastrarGasto (props: props) {
     const [dataGasto, setDataGasto] = useState("");
     const [valor, setValor] = useState("");
     const [materiais, setMateriais] = useState<VisualizarMaterial[]>([]);
-    const [materialSelecionado, setMaterialSelecionado] = useState<VisualizarMaterial | null>(null);
+    const [materialSelecionado, setMaterialSelecionado] = useState<VisualizarMaterial | undefined>(undefined);
     const [notaFiscal, setNotaFiscal] = useState<File | null>(null);
     const [camposValidados, setCamposValidados] = useState(false);
     const [valorValid, setValorValid] = useState<boolean | null>(null);
     const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({ titulo: "", texto: "" });
+    const [erro, setErro] = useState("");
+    const [validado, setValidado] = useState(false);
     
     const valorFloat = parseFloat(valor);
     
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const form = event.currentTarget;
+
+        if (form.checkValidity() === false) {
+            setValidado(true);
+            return;
+        }
+        
+        if (materialSelecionado == undefined) {
+            setValidado(true);
+        }
+
+        const valorFloat = parseFloat(valor);
+        setValidado(true);
+
+        const gasto = {
+            documento,
+            tipoDocumento,
+            fornecedor,
+            dataGasto,
+            valor: valorFloat,
+            material: materialSelecionado
+        }
+        const formData = new FormData();
+        formData.append('gasto', JSON.stringify(gasto));
+        formData.append('idProjeto', props.projetoId);
+        if (notaFiscal) {
+            formData.append('notaFiscal', notaFiscal);
+        }
+        console.log(formData);
+
+        try {
+            const resposta = await CadastrarGastosService(formData);
+            if (resposta.status === 200) {
+                SweetAlert2.fire({
+                    title: "Sucesso!",
+                    text: "Gasto cadastrado com sucesso!",
+                    icon: "success",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Ok",
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                console.error(resposta.message);
+                setErro(resposta.message);
+            }
+        } catch (error: any) {
+            console.error(error);
+            setErro(error.message);
+        }
     }
+
+    useEffect(() => {
+        SweetAlert2.fire({
+          icon: "error",
+          title: "Erro ao cadastrar gasto",
+          text: erro,
+        });
+    }, [erro]);
+
+    useEffect(() => {
+        if (mensagemValidacao.titulo && mensagemValidacao.texto) {
+          SweetAlert2.fire({
+            icon: "error",
+            title: mensagemValidacao.titulo,
+            text: mensagemValidacao.texto,
+          });
+        }
+      }, [mensagemValidacao]);
+    
+    useEffect(() => {
+        const fetchMateriais = async () => {
+            const respostaMateriais = await buscarMateriaisService();
+            if (respostaMateriais.status === 200) {
+                setMateriais(respostaMateriais.data);
+            } else {
+                console.error(respostaMateriais.message);
+                setErro(respostaMateriais.message);
+            }
+        }
+        fetchMateriais();
+    }, [])
 
     const atualizarMensagem = (mensagens: string) => {
         const [tituloErro, ...textoErro] = mensagens.split(". ");
@@ -79,26 +170,39 @@ export default function FormCadastrarGasto (props: props) {
 
     return (
         <section className={styles.mainModal}>
-            <Form noValidate validated={camposValidados} onSubmit={handleSubmit}>
+            <Form noValidate validated={validado} onSubmit={handleSubmit}>
             <InputGroup className="mb-3">
                     <FloatingLabel
-                    controlId="floatingSelectGrid"
+                    controlId="validationCustom01"
                     label="Material"
                     className="flex-grow-1"
                     style={{ color: "#9C9C9C", zIndex: 0 }}
                     >
                     <Form.Select
                         aria-label="Floating label select example"
-                        value={materialSelecionado?.id}
-                        onChange={(e) => setTipoDocumento(e.target.value)}
+                        value={materialSelecionado?.id || ""}
+                        onChange={(e) => {
+                            const selectedId = e.target.value;
+                            const selectedMaterial = materiais.find(material => material.id === selectedId);
+                            setMaterialSelecionado(selectedMaterial);
+                          }}
                         style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
+                        required
                     >
                         <option disabled selected>
-                        Selecionar uma Situação
+                        Selecionar um material
                         </option>
-                        <option value="CPF">CPF</option>
-                        <option value="CNPJ">CNPJ</option>
+                        {materiais.length > 0 ? materiais.map(material => (
+                            <option key={material.id} value={material.id}>
+                            {material.nome}
+                        </option>
+                        )): 
+                        <option disabled>Nenhum material cadastrado</option>
+                        }
                     </Form.Select>
+                    <Form.Control.Feedback type="invalid">
+                        Por favor, selecione um material.
+                    </Form.Control.Feedback>
                     </FloatingLabel>
                 </InputGroup>
                 
@@ -124,7 +228,7 @@ export default function FormCadastrarGasto (props: props) {
 
                 <InputGroup className="mb-3">
                     <FloatingLabel
-                    controlId="floatingSelectGrid"
+                    controlId="validationCustom03"
                     label="Tipo do documento"
                     className="flex-grow-1"
                     style={{ color: "#9C9C9C", zIndex: 0 }}
@@ -134,20 +238,24 @@ export default function FormCadastrarGasto (props: props) {
                         value={tipoDocumento}
                         onChange={(e) => setTipoDocumento(e.target.value)}
                         style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
+                        required
                     >
                         <option disabled selected>
-                        Selecionar uma Situação
+                        Selecionar um tipo de documento
                         </option>
                         <option value="CPF">CPF</option>
                         <option value="CNPJ">CNPJ</option>
                     </Form.Select>
+                    <Form.Control.Feedback type="invalid">
+                        Por favor, insira o tipo do documento.
+                    </Form.Control.Feedback>
                     </FloatingLabel>
                 </InputGroup>
 
                 <InputGroup className="mb-3">
                     <FloatingLabel
                     label="Fornecedor"
-                    controlId="validationCustom06"
+                    controlId="validationCustom04"
                     className="flex-grow-1"
                     style={{ color: "#9C9C9C", zIndex: 1 }}
                     >
@@ -187,7 +295,7 @@ export default function FormCadastrarGasto (props: props) {
                 <InputGroup className="mb-3">
                     <FloatingLabel
                     label="Valor do projeto"
-                    controlId="validationCustom07"
+                    controlId="validationCustom06"
                     className="flex-grow-1"
                     style={{ color: "#9C9C9C", zIndex: 1 }}
                     >
@@ -241,7 +349,7 @@ export default function FormCadastrarGasto (props: props) {
               </div>
             )}
                 <div className={styles.botaoEnviar}>
-                    <Button type="submit">Enviar</Button>
+                    <Button size='lg' type="submit">Enviar</Button>
                 </div>
                 </Form>
         </section>
