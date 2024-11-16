@@ -32,6 +32,7 @@ import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
 import formatarData from "../../functions/formatarData";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
+import FormCadastrarGasto from "../gastos/formCadastrarGastoComponent";
 
 interface MensagemValidacao {
   titulo: string;
@@ -100,6 +101,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   );
   const [documentos, setDocumentos] = useState<VisualizarDocumento[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [showModalGasto, setShowModalGasto] = useState(false);
   const navigate = useNavigate();
 
 
@@ -571,6 +573,9 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+  const handleOpenModalGasto = () => setShowModalGasto(true);
+  const handleCloseModalGasto = () => setShowModalGasto(false);
+  
 
   return (
     <>
@@ -1108,45 +1113,79 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
         )}
       </Form>
       </section>
-      <div>
-
+    <div>
       {autenticado &&(
-        <div>
+          <div>
+            <div className="d-flex justify-content-center pb-3">
+            <Card 
+              onClick={handleOpenModal} 
+              className="text-center border-light shadow-sm" 
+              style={{ cursor: 'pointer', width: '200px' }}
+            >
+              <Card.Body className="bg-white">
+                <Card.Text className="text-primary fw-bold">
+                  Auditoria
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </div>
+              
+            <Modal 
+              show={showModal} 
+              onHide={handleCloseModal} 
+              size="xl" 
+              aria-labelledby="contained-modal-title-vcenter" 
+              centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Auditoria</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <AuditoriaComponent projetoId={id ? id.toString() : ''} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Fechar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
           <div className="d-flex justify-content-center pb-3">
-          <Card 
-            onClick={handleOpenModal} 
-            className="text-center border-light shadow-sm" 
-            style={{ cursor: 'pointer', width: '200px' }}
-          >
-            <Card.Body className="bg-white">
-              <Card.Text className="text-primary fw-bold">
-                Auditoria
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </div>
+            <Card 
+              onClick={handleOpenModalGasto} 
+              className="text-center border-light shadow-sm" 
+              style={{ cursor: 'pointer', width: '200px' }}
+            >
+              <Card.Body className="bg-white">
+                <Card.Text className="text-primary fw-bold">
+                  Adicionar Gastos
+                </Card.Text>
+              </Card.Body>
+            </Card>
+
+          </div>
             
-          <Modal 
-            show={showModal} 
-            onHide={handleCloseModal} 
-            size="xl" 
-            aria-labelledby="contained-modal-title-vcenter" 
-            centered
-          >
-              <Modal.Header closeButton>
-                  <Modal.Title>Auditoria</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                  <AuditoriaComponent projetoId={id ? id.toString() : ''} />
-              </Modal.Body>
-              <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCloseModal}>
-                      Fechar
-                  </Button>
-              </Modal.Footer>
-          </Modal>
-        </div>
-      )}
+            <Modal 
+                show={showModalGasto} 
+                onHide={handleCloseModalGasto} 
+                size="xl" 
+                aria-labelledby="contained-modal-title-vcenter" 
+                centered
+              >
+                  <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                      <Modal.Title style={{color: "white"}}>Auditoria</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                      <FormCadastrarGasto projetoId={id ? id.toString() : '' }/>
+                  </Modal.Body>
+                  <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseModalGasto}>
+                          Fechar
+                      </Button>
+                  </Modal.Footer>
+            </Modal>
+          </div>
+        )}
       </div>
     </>
   );

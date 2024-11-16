@@ -1,0 +1,56 @@
+@import url('../variable.css');
+
+.mainModal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.headerModal {
+    background-color: (--primary-color);
+    display: flex;
+    justify-content: space-between;
+    padding: 1%;
+}
+
+.headerModal span {
+    color: var(--text-color);
+}
+
+.adicionarArquivo {
+    width: 50vw;
+}
+
+.adicionarArquivo label {
+    width: 100%;
+}
+
+.adicionarArquivo label, label img {
+    cursor: pointer;
+}
+
+.adicionarArquivo label span {
+    margin-left: 1%;
+}
+
+.adicionarArquivo label:hover span,
+.adicionarArquivo label:hover img,
+.adicionarArquivo label img:hover,
+.adicionarArquivo label span:hover {
+    color: var(--nav-link-hover-color);
+    filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg); 
+}
+
+.arquivosEscolhidos {
+    margin-left: 2%;
+    margin-top: 1%;
+}
+
+.arquivoSpan {
+    margin-left: 1%;
+}
+
+.arquivoSpanExcluir {
+    cursor: pointer; 
+    margin-left: 1%;
+}
