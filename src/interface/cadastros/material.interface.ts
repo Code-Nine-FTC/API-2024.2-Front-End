@@ -8,7 +8,7 @@ export interface MaterialCadastro {
 }
 
 export interface VisualizarMaterial {
-    id: string
+    id: number
     nome: string
     valor: number
     fornecedor: string

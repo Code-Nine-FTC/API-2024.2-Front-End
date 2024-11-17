@@ -25,7 +25,7 @@ export default function FormCadastrarGasto (props: props) {
     const [documento, setDocumento] = useState("");
     const [tipoDocumento, setTipoDocumento] = useState("");
     const [fornecedor, setFornecedor] = useState("");
-    const [dataGasto, setDataGasto] = useState("");
+    const [data, setData] = useState("");
     const [valor, setValor] = useState("");
     const [materiais, setMateriais] = useState<VisualizarMaterial[]>([]);
     const [materialSelecionado, setMaterialSelecionado] = useState<VisualizarMaterial | undefined>(undefined);
@@ -34,6 +34,7 @@ export default function FormCadastrarGasto (props: props) {
     const [valorValid, setValorValid] = useState<boolean | null>(null);
     const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({ titulo: "", texto: "" });
     const [erro, setErro] = useState("");
+    const [erroMateriais, setErroMateriais] = useState("");
     const [validado, setValidado] = useState(false);
     
     const valorFloat = parseFloat(valor);
@@ -48,10 +49,10 @@ export default function FormCadastrarGasto (props: props) {
             setValidado(true);
             return;
         }
-        
-        if (materialSelecionado == undefined) {
-            setValidado(true);
-        }
+
+        // if (materialSelecionado == "") {
+        //     setValidado(true);
+        // }
 
         const valorFloat = parseFloat(valor);
         setValidado(true);
@@ -60,10 +61,11 @@ export default function FormCadastrarGasto (props: props) {
             documento,
             tipoDocumento,
             fornecedor,
-            dataGasto,
+            data,
             valor: valorFloat,
             material: materialSelecionado
         }
+        console.log("Gasto", gasto);
         const formData = new FormData();
         formData.append('gasto', JSON.stringify(gasto));
         formData.append('idProjeto', props.projetoId);
@@ -75,6 +77,7 @@ export default function FormCadastrarGasto (props: props) {
         try {
             const resposta = await CadastrarGastosService(formData);
             if (resposta.status === 200) {
+                setErro("");
                 SweetAlert2.fire({
                     title: "Sucesso!",
                     text: "Gasto cadastrado com sucesso!",
@@ -97,11 +100,13 @@ export default function FormCadastrarGasto (props: props) {
     }
 
     useEffect(() => {
+        if (erro !== "") {
         SweetAlert2.fire({
           icon: "error",
           title: "Erro ao cadastrar gasto",
           text: erro,
         });
+    }
     }, [erro]);
 
     useEffect(() => {
@@ -118,10 +123,11 @@ export default function FormCadastrarGasto (props: props) {
         const fetchMateriais = async () => {
             const respostaMateriais = await buscarMateriaisService();
             if (respostaMateriais.status === 200) {
+                setErroMateriais("");
                 setMateriais(respostaMateriais.data);
             } else {
                 console.error(respostaMateriais.message);
-                setErro(respostaMateriais.message);
+                setErroMateriais(respostaMateriais.message);
             }
         }
         fetchMateriais();
@@ -182,14 +188,14 @@ export default function FormCadastrarGasto (props: props) {
                         aria-label="Floating label select example"
                         value={materialSelecionado?.id || ""}
                         onChange={(e) => {
-                            const selectedId = e.target.value;
+                            const selectedId = Number(e.target.value);
                             const selectedMaterial = materiais.find(material => material.id === selectedId);
                             setMaterialSelecionado(selectedMaterial);
                           }}
                         style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
                         required
                     >
-                        <option disabled selected>
+                        <option disabled selected value="">
                         Selecionar um material
                         </option>
                         {materiais.length > 0 ? materiais.map(material => (
@@ -204,6 +210,9 @@ export default function FormCadastrarGasto (props: props) {
                         Por favor, selecione um material.
                     </Form.Control.Feedback>
                     </FloatingLabel>
+                    {erroMateriais && (
+                        <p style={{color: "red"}}>{erroMateriais}</p>
+                    )}
                 </InputGroup>
                 
                 <InputGroup className="mb-3">
@@ -240,7 +249,7 @@ export default function FormCadastrarGasto (props: props) {
                         style={{ fontSize: 14, color: "#9C9C9C", zIndex: 1 }}
                         required
                     >
-                        <option disabled selected>
+                        <option disabled selected value="">
                         Selecionar um tipo de documento
                         </option>
                         <option value="CPF">CPF</option>
@@ -282,9 +291,9 @@ export default function FormCadastrarGasto (props: props) {
                     <Form.Control
                         type="date"
                         placeholder="Data"
-                        value={dataGasto}
+                        value={data}
                         required
-                        onChange={(e) => setDataGasto(e.target.value)}
+                        onChange={(e) => setData(e.target.value)}
                     />
                     <Form.Control.Feedback type="invalid">
                         Por favor, insira a data.

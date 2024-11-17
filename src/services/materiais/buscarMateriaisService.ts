@@ -18,7 +18,6 @@ export default async function buscarMateriaisService () {
     } catch (error) {
         const axiosError = error as AxiosError<{ message?: string }>;
         const errorMessage = axiosError.response?.data?.message || 'Erro ao buscar materiais. Por favor, tente novamente mais tarde.';
-        
         console.error('Erro ao buscar materiais:', errorMessage);
         throw new Error(errorMessage);
     }
