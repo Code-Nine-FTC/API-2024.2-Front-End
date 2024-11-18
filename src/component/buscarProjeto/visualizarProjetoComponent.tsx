@@ -1098,20 +1098,20 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       </section>
     <div>
       {autenticado &&(
-          <div>
+          <div className={styles.botoes}>
             <div className="d-flex justify-content-center pb-3">
-            <Card 
-              onClick={handleOpenModal} 
-              className="text-center border-light shadow-sm" 
-              style={{ cursor: 'pointer', width: '200px' }}
-            >
-              <Card.Body className="bg-white">
-                <Card.Text className="text-primary fw-bold">
-                  Auditoria
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </div>
+              <Card 
+                onClick={handleOpenModal} 
+                className="text-center border-light shadow-sm" 
+                style={{ cursor: 'pointer', width: '200px', marginRight: '3%' }}
+              >
+                <Card.Body className="bg-white">
+                  <Card.Text className="text-primary fw-bold">
+                    Auditoria
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </div>
               
             <Modal 
               show={showModal} 
@@ -1137,7 +1137,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Card 
               onClick={handleOpenModalGasto} 
               className="text-center border-light shadow-sm" 
-              style={{ cursor: 'pointer', width: '200px' }}
+              style={{ cursor: 'pointer', width: '200px', marginRight: '3%' }}
             >
               <Card.Body className="bg-white">
                 <Card.Text className="text-primary fw-bold">
@@ -1167,6 +1167,20 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                       </Button>
                   </Modal.Footer>
             </Modal>
+            <div className="d-flex justify-content-center pb-3">
+              <Card 
+                onClick={handleOpenModal} 
+                className="text-center border-light shadow-sm" 
+                style={{ cursor: 'pointer', width: '200px', marginRight: '3%' }}
+              >
+                <Card.Body className="bg-white">
+                  <Card.Text className="text-primary fw-bold">
+                    Adicionar Receita
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </div>
+
           </div>
         )}
       </div>

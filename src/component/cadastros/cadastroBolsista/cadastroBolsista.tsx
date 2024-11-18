@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./criarBolsistas.module.css";
 import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import CadastrarBolsista from "../../../services/projeto/cadastrarBolsistaService";
+import CadastrarBolsista from "../../../services/projeto/cadastrar/cadastrarBolsistaService";
 
 const CadastroBolsista = () => {
   const navigate = useNavigate();
