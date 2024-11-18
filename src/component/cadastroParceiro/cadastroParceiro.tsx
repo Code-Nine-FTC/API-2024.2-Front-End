@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./criarParceiros.module.css";
 import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import CadastrarParceiro from "../../services/projeto/cadastrarParceiroService";
+import CadastrarParceiro from "../../services/projeto/cadastrar/cadastrarParceiroService";
 
 const CadastroParceiro = () => {
   const navigate = useNavigate();

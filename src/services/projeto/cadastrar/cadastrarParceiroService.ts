@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
-import { getToken } from '../auth';
-import api from '../api';
-import { CadastroParceiro } from '../../interface/parceiro.interface';
+import { getToken } from '../../auth';
+import api from '../../api';
+import { CadastroParceiro } from '../../../interface/parceiro.interface';
 
 export default async function CadastrarParceiro (parceiro: CadastroParceiro): Promise<any> {
     try {

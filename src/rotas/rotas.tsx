@@ -10,9 +10,8 @@ import Auditoria from "../pages/auditoria";
 import CriarBolsista from "../pages/criarBolsista";
 import CadastroMaterial from "../pages/cadastroMaterial";
 import SumarioProjeto from "../pages/sumarioprojetoPage";
-
-
 import CriarParceiro from "../pages/criarParceiro";
+
 const Rotas: FC = () => {
     const { isAutenticado } = useContext(AuthContext);
 

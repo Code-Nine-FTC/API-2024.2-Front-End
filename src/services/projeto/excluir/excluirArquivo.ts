@@ -1,5 +1,5 @@
-import api from "../api";
-import { getToken } from "../auth";
+import api from "../../api";
+import { getToken } from "../../auth";
 
 export default async function ExcluirArquivo (id: number): Promise<any> {
     try {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import MontarFormDataCadastro from "../../services/projeto/montarFormDataProjetoService";
+import MontarFormDataCadastro from "../../services/projeto/utils/montarFormDataProjetoService";
 import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal, Card } from "react-bootstrap";
 import { NumericFormat } from 'react-number-format';
 import styles from "./mostraProjeto.module.css";
@@ -11,25 +11,19 @@ import arquivoIcon from "../../assets/criarProjeto/arquivo.svg";
 import pdflogo from "../../assets/editarProjeto/pdflogo.svg";
 import excellogo from "../../assets/editarProjeto/excellogo.svg";
 import attach from "../../assets/criarProjeto/attach.svg";
-import {
-  VisualizarProjeto,
-} from "../../interface/projeto.interface";
+import { VisualizarProjeto } from "../../interface/projeto.interface";
 import separarMensagens from "../../functions/separarMensagens";
 import ValidadorDeArquivos from "../../functions/validadorDeArquivos";
 import isVisualizarDocumento from "../../functions/isVisualizarDocumento";
 import isTipoArquivo from "../../functions/isTipoArquivo";
-import BaixarArquivo from "../../services/projeto/baixarArquivo";
-import ExcluirArquivo from "../../services/projeto/excluirArquivo";
+import BaixarArquivo from "../../services/projeto/utils/baixarArquivo";
+import ExcluirArquivo from "../../services/projeto/excluir/excluirArquivo";
 import SweetAlert2 from "sweetalert2";
-import {
-  VisualizarDocumento,
-  FileOrVisualizarDocumento,
-} from "../../interface/documento.interface";
-import ExcluirProjeto from "../../services/projeto/excluirProjetoService";
-import EditarProjetoService from "../../services/projeto/editarProjetoService";
-import VisualizarProjetoService from "../../services/projeto/visualizarProjetoService";
-import MontarJsonEditado from "../../services/projeto/montarJsonEditado";
-import formatarData from "../../functions/formatarData";
+import { VisualizarDocumento, FileOrVisualizarDocumento } from "../../interface/documento.interface";
+import ExcluirProjeto from "../../services/projeto/excluir/excluirProjetoService";
+import EditarProjetoService from "../../services/projeto/editar/editarProjetoService";
+import VisualizarProjetoService from "../../services/projeto/visualizar/visualizarProjetoService";
+import MontarJsonEditado from "../../services/projeto/utils/montarJsonEditado";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
 import FormCadastrarGasto from "../cadastros/cadastroGasto/formCadastrarGastoComponent";
@@ -143,17 +137,6 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   
     fetchProjeto();
   }, [id]);
-
-  // const formatarValorBR = (valor: number | string): string => {
-  //   if (valor === null || valor === undefined) return "Valor Indisponível";
-  //   // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
-  //   let numero = typeof valor === "string" ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : valor;
-  //   // Se a conversão não resultar em um número válido, retorna "0,00"
-  //   if (isNaN(numero)) return "Valor Inválido";
-  //   // Retorna o número formatado com vírgula separando os decimais
-  //   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero);
-  // };
-
 
   useEffect(() => {
     if (projetoOriginal) {
