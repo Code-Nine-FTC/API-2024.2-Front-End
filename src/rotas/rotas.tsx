@@ -8,10 +8,14 @@ import { AuthContext } from '../services/context';
 import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
 import CriarBolsista from "../pages/criarBolsista";
+<<<<<<< Updated upstream
 import CadastroMaterial from "../pages/cadastroMaterial";
 import SumarioProjeto from "../pages/sumarioprojetoPage";
 
 
+=======
+import CriarParceiro from "../pages/criarParceiro";
+>>>>>>> Stashed changes
 const Rotas: FC = () => {
     const { isAutenticado } = useContext(AuthContext);
 
@@ -24,6 +28,7 @@ const Rotas: FC = () => {
                 {/* Apenas administradores podem adicionar projetos */}
                 <Route path="/adicionarprojeto" element={<CriarProjeto />} />
                 <Route path="/bolsistas" element={<CriarBolsista />} />
+                <Route path="/parceiros" element={<CriarParceiro />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/auditorias/" element={<Auditoria />}/>
                 <Route path="/sumarioProjeto" element={<SumarioProjeto />} />
