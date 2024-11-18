@@ -4,25 +4,17 @@ import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, Title, Toolt
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, Title, Tooltip, Legend, PointElement);
 
-const ChartComponent: React.FC = () => {
-  const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+interface ChartComponentProps {
+    data: any;
+}
 
-  const data = {
+const ChartComponent: React.FC<ChartComponentProps> = ({ data }) => {
+  const labels = data.labels || []; // Verifica se labels existe
+  const datasets = data.datasets || []; // Verifica se datasets existe
+
+  const chartData = {
     labels: labels,
-    datasets: [
-      {
-        label: 'Receitas',
-        data: labels.map(() => Math.random() * 200 - 100), 
-        borderColor: 'rgba(255, 99, 132, 1)',
-        backgroundColor: 'rgba(255, 99, 132, 1)',
-      },
-      {
-        label: 'Despesas',
-        data: labels.map(() => Math.random() * 200 - 100), 
-        borderColor: 'rgba(54, 162, 235, 1)',
-        backgroundColor: 'rgba(54, 162, 235, 1)',
-      },
-    ],
+    datasets: datasets,
   };
 
   const options = {
@@ -33,12 +25,12 @@ const ChartComponent: React.FC = () => {
       },
       title: {
         display: true,
-        text: 'Sumário dos Projetos',
+        text: 'Sumário de Receitas e Gastos',
       },
     },
   };
 
-  return <Line data={data} options={options} />;
+  return <Line data={chartData} options={options} />;
 };
 
 export default ChartComponent;
