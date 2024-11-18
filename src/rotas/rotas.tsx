@@ -8,14 +8,11 @@ import { AuthContext } from '../services/context';
 import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
 import CriarBolsista from "../pages/criarBolsista";
-<<<<<<< Updated upstream
 import CadastroMaterial from "../pages/cadastroMaterial";
 import SumarioProjeto from "../pages/sumarioprojetoPage";
 
 
-=======
 import CriarParceiro from "../pages/criarParceiro";
->>>>>>> Stashed changes
 const Rotas: FC = () => {
     const { isAutenticado } = useContext(AuthContext);
 
