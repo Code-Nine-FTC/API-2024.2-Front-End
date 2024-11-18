@@ -1,4 +1,4 @@
-import CadastroBolsista from "../component/cadastroBolsista/cadastroBolsista";
+import CadastroBolsista from "../component/cadastros/cadastroBolsista/cadastroBolsista";
 
 const CriarBolsista = () => {
     return (
