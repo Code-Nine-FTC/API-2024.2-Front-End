@@ -5,15 +5,18 @@ import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import CadastrarBolsista from "../../services/projeto/cadastrarBolsistaService";
 
-const CadastroBolsista = () => {
+interface props {
+  idProjeto: string
+}
+
+const CadastroBolsista = (props: props) => {
   const navigate = useNavigate();
   const [nome, setNome] = useState("");
-  const [cpfoucnpj, setCPFouCNPJ] = useState("");
+  const [documento, setDocumento] = useState("");
   const [rg, setRG] = useState("");
   const [tipoBolsa, setTipoBolsa] = useState("");
   const [duracaoBolsa, setDuracaoBolsa] = useState("");
   const [areaAtuacao, setAreaAtuacao] = useState("");
-  const [referenciaProjeto, setReferenciaProjeto] = useState("");
   const [camposValidados, setValidado] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,12 +32,12 @@ const CadastroBolsista = () => {
   
     const bolsista = {
       nome,
-      CPFouCNPJ: cpfoucnpj,
+      documento: documento,
       RG: rg,
       tipoBolsa,
       duracaoBolsa,
       areaAtuacao,
-      referenciaProjeto,
+      idProjeto: props.idProjeto,
     };
   
     console.log(bolsista);
@@ -46,7 +49,7 @@ const CadastroBolsista = () => {
         title: "Bolsista cadastrado com sucesso!",
         icon: "success",
       });
-      navigate("/");
+      navigate("/bolsista/visualizar");
     } catch (error) {
       console.log(error);
       SweetAlert2.fire({
@@ -103,8 +106,9 @@ const CadastroBolsista = () => {
               <Form.Control
                 type="text"
                 placeholder="CPF ou CNPJ"
-                value={cpfoucnpj}
-                onChange={(e) => setCPFouCNPJ(e.target.value)}
+                value={documento}
+                onChange={(e) => setDocumento(e.target.value)}
+                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o cpf ou cnpj do bolsista.
@@ -124,6 +128,7 @@ const CadastroBolsista = () => {
                 placeholder="RG"
                 value={rg}
                 onChange={(e) => setRG(e.target.value)}
+                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o RG do bolsista.
@@ -143,6 +148,7 @@ const CadastroBolsista = () => {
                 placeholder="tipo Bolsa"
                 value={tipoBolsa}
                 onChange={(e) => setTipoBolsa(e.target.value)}
+                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o tipo da bolsa.
@@ -162,6 +168,7 @@ const CadastroBolsista = () => {
                 placeholder="Duração Bolsa"
                 value={duracaoBolsa}
                 onChange={(e) => setDuracaoBolsa(e.target.value)}
+                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira a duração da bolsa.
@@ -182,34 +189,16 @@ const CadastroBolsista = () => {
                 placeholder="Area de atuação"
                 value={areaAtuacao}
                 onChange={(e) => setAreaAtuacao(e.target.value)}
+                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira a area de atuação.
               </Form.Control.Feedback>
             </FloatingLabel>
             </InputGroup>
-
-            <InputGroup className="mb-3">
-            <FloatingLabel
-              label="Referência de projeto"
-              controlId="validationCustom02"
-              className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
-            >
-              <Form.Control
-                type="text"
-                placeholder="Referência de projeto"
-                required
-                value={referenciaProjeto}
-                onChange={(e) => setReferenciaProjeto(e.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                Por favor, insira a referência de projeto.
-              </Form.Control.Feedback>
-            </FloatingLabel>
-            </InputGroup>
+            
           <div className={styles.botaoEnviar}>
-            <Button type="submit">Enviar</Button>
+            <Button type="submit">Cadastrar</Button>
           </div>
         </Form>
       </section>

@@ -33,6 +33,7 @@ import formatarData from "../../functions/formatarData";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
 import FormCadastrarGasto from "../cadastros/cadastroGasto/formCadastrarGastoComponent";
+import CadastroBolsista from "../cadastroBolsista/cadastroBolsista";
 
 interface MensagemValidacao {
   titulo: string;
@@ -102,6 +103,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [documentos, setDocumentos] = useState<VisualizarDocumento[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showModalGasto, setShowModalGasto] = useState(false);
+  const [showModalBolsista, setShowModalBolsista] = useState(false);
   const navigate = useNavigate();
 
 
@@ -575,7 +577,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const handleCloseModal = () => setShowModal(false);
   const handleOpenModalGasto = () => setShowModalGasto(true);
   const handleCloseModalGasto = () => setShowModalGasto(false);
-  
+  const handleOpenModalBolsista = () => setShowModalBolsista(true);
+  const handleCloseModalBolsista = () => setShowModalBolsista(false);
 
   return (
     <>
@@ -1184,7 +1187,45 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                       </Button>
                   </Modal.Footer>
             </Modal>
+
+            <div className="d-flex justify-content-center pb-3">
+            <Card 
+              onClick={handleOpenModalBolsista} 
+              className="text-center border-light shadow-sm" 
+              style={{ cursor: 'pointer', width: '200px' }}
+            >
+              <Card.Body className="bg-white">
+                <Card.Text className="text-primary fw-bold">
+                  Adicionar Bolsista
+                </Card.Text>
+              </Card.Body>
+            </Card>
+
           </div>
+            
+            <Modal 
+                show={showModalBolsista} 
+                onHide={handleCloseModalBolsista} 
+                size="xl" 
+                aria-labelledby="contained-modal-title-vcenter" 
+                centered
+              >
+                  <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                      <Modal.Title style={{color: "white"}}>Bolsista</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                      <CadastroBolsista idProjeto={id ? id.toString() : '' }/>
+                  </Modal.Body>
+                  <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseModalBolsista}>
+                          Fechar
+                      </Button>
+                  </Modal.Footer>
+            </Modal>
+
+          </div>
+
+          
         )}
       </div>
     </>
