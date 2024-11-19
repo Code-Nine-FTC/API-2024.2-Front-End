@@ -1,14 +1,9 @@
-import {
-  Button,
-  FloatingLabel,
-  Form,
-  InputGroup,
-} from "react-bootstrap";
+import { Button, FloatingLabel, Form, InputGroup } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
 import { NumberFormatValues, NumericFormat} from 'react-number-format';
 import styles from "./criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
-import CadastrarProjetoFunction from "../../services/projeto/cadastarProjetoService";
+import CadastrarProjetoFunction from "../../services/projeto/cadastrar/cadastarProjetoService";
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from "react-router-dom";
 import { parse, format } from 'date-fns';

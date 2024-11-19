@@ -3,20 +3,17 @@ import React, { useState } from "react";
 import styles from "./criarBolsistas.module.css";
 import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import CadastrarBolsista from "../../services/projeto/cadastrar/cadastrarBolsistaService";
+import CadastrarBolsista from "../../../services/projeto/cadastrar/cadastrarBolsistaService";
 
-interface props {
-  idProjeto: string
-}
-
-const CadastroBolsista = (props: props) => {
+const CadastroBolsista = () => {
   const navigate = useNavigate();
   const [nome, setNome] = useState("");
-  const [documento, setDocumento] = useState("");
+  const [cpfoucnpj, setCPFouCNPJ] = useState("");
   const [rg, setRG] = useState("");
   const [tipoBolsa, setTipoBolsa] = useState("");
   const [duracaoBolsa, setDuracaoBolsa] = useState("");
   const [areaAtuacao, setAreaAtuacao] = useState("");
+  const [referenciaProjeto, setReferenciaProjeto] = useState("");
   const [camposValidados, setValidado] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,12 +29,12 @@ const CadastroBolsista = (props: props) => {
   
     const bolsista = {
       nome,
-      documento: documento,
+      CPFouCNPJ: cpfoucnpj,
       RG: rg,
       tipoBolsa,
       duracaoBolsa,
       areaAtuacao,
-      idProjeto: props.idProjeto,
+      referenciaProjeto,
     };
   
     console.log(bolsista);
@@ -49,7 +46,7 @@ const CadastroBolsista = (props: props) => {
         title: "Bolsista cadastrado com sucesso!",
         icon: "success",
       });
-      navigate("/bolsista/visualizar");
+      navigate("/");
     } catch (error) {
       console.log(error);
       SweetAlert2.fire({
@@ -106,9 +103,8 @@ const CadastroBolsista = (props: props) => {
               <Form.Control
                 type="text"
                 placeholder="CPF ou CNPJ"
-                value={documento}
-                onChange={(e) => setDocumento(e.target.value)}
-                required
+                value={cpfoucnpj}
+                onChange={(e) => setCPFouCNPJ(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o cpf ou cnpj do bolsista.
@@ -128,7 +124,6 @@ const CadastroBolsista = (props: props) => {
                 placeholder="RG"
                 value={rg}
                 onChange={(e) => setRG(e.target.value)}
-                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o RG do bolsista.
@@ -148,7 +143,6 @@ const CadastroBolsista = (props: props) => {
                 placeholder="tipo Bolsa"
                 value={tipoBolsa}
                 onChange={(e) => setTipoBolsa(e.target.value)}
-                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o tipo da bolsa.
@@ -168,7 +162,6 @@ const CadastroBolsista = (props: props) => {
                 placeholder="Duração Bolsa"
                 value={duracaoBolsa}
                 onChange={(e) => setDuracaoBolsa(e.target.value)}
-                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira a duração da bolsa.
@@ -189,16 +182,34 @@ const CadastroBolsista = (props: props) => {
                 placeholder="Area de atuação"
                 value={areaAtuacao}
                 onChange={(e) => setAreaAtuacao(e.target.value)}
-                required
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira a area de atuação.
               </Form.Control.Feedback>
             </FloatingLabel>
             </InputGroup>
-            
+
+            <InputGroup className="mb-3">
+            <FloatingLabel
+              label="Referência de projeto"
+              controlId="validationCustom02"
+              className="flex-grow-1"
+              style={{ color: "#9C9C9C", zIndex: 1 }}
+            >
+              <Form.Control
+                type="text"
+                placeholder="Referência de projeto"
+                required
+                value={referenciaProjeto}
+                onChange={(e) => setReferenciaProjeto(e.target.value)}
+              />
+              <Form.Control.Feedback type="invalid">
+                Por favor, insira a referência de projeto.
+              </Form.Control.Feedback>
+            </FloatingLabel>
+            </InputGroup>
           <div className={styles.botaoEnviar}>
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit">Enviar</Button>
           </div>
         </Form>
       </section>

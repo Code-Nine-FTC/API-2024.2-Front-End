@@ -4,7 +4,6 @@ import styles from "../component/login/login.module.css"
 import { FloatingLabel, Form, Button } from "react-bootstrap"
 import LoginAdminService from "../services/administrador/loginService"
 import { useContext } from 'react';
-import criptografarSenha from "../functions/criptografaSenha"
 import { AuthContext } from "../services/context"
 import { login } from "../services/auth"
 import avatar from "../assets/login/Avatar Placeholder.svg"

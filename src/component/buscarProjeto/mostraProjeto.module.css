@@ -168,6 +168,13 @@ input[type="number"] {
     font-size: 1.1em;
 }
 
+.botoes{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
+
 @media screen and (max-width: 800px) {
     .botaoEnviar button {
         width: 40vw;
@@ -209,5 +216,7 @@ input[type="number"] {
     .proposta{
         width: 90vw;
     }
-
+    .botoes{
+        flex-direction: column;
+    }
 }

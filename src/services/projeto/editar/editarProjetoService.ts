@@ -1,26 +1,28 @@
-import api from '../api';
-import { CadastrarProjeto } from "../../interface/projeto.interface";
+import api from "../../api"
+import { getToken } from "../../auth"
 import { AxiosError } from 'axios';
-import { getToken } from '../auth';
 
-export default async function CadastrarProjetoFunction (projeto: CadastrarProjeto): Promise<any> {
+const EditarProjetoService = async (projetoDados: FormData, id: number) => {
     try {
-        const resposta = await api.post('/projeto/cadastrar', projeto, {
+        console.log(projetoDados);
+        const resposta = await api.put(`/projeto/atualizar/${id}`, projetoDados, {
             headers: {
-                Authorization: `Bearer ${getToken()} `
+                Authorization: `Bearer ${getToken()} `,
+                'Content-Type': 'multipart/form-data',
             }
         });
 
-        if (resposta.status === 201) {
+        if (resposta.status === 200) {
             console.log('Projeto cadastrado com sucesso', resposta.data);
             return { status: resposta.status, data: resposta.data };
         } else {
             return { status: resposta.status, message: resposta.data };
         }
-        
     } catch (error) {
         let errorMessage = (error as AxiosError).response?.data as any;
         // errorMessage = errorMessage? || 'Erro ao realizar o cadastro. Por favor, tente novamente mais tarde.';
         throw new Error(errorMessage);
     }
-} 
+}
+
+export default EditarProjetoService;

@@ -1,22 +1,17 @@
 import { Button, FloatingLabel, Form, InputGroup} from "react-bootstrap";
 import React, { useState } from "react";
-import styles from "./criarBolsistas.module.css";
+import styles from "./criarParceiros.module.css";
 import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import CadastrarBolsista from "../../services/projeto/cadastrar/cadastrarBolsistaService";
+import CadastrarParceiro from "../../services/projeto/cadastrar/cadastrarParceiroService";
 
-interface props {
-  idProjeto: string
-}
-
-const CadastroBolsista = (props: props) => {
+const CadastroParceiro = () => {
   const navigate = useNavigate();
   const [nome, setNome] = useState("");
-  const [documento, setDocumento] = useState("");
-  const [rg, setRG] = useState("");
-  const [tipoBolsa, setTipoBolsa] = useState("");
-  const [duracaoBolsa, setDuracaoBolsa] = useState("");
-  const [areaAtuacao, setAreaAtuacao] = useState("");
+  const [cnpj, setCNPJ] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [areaColaboracao, setAreaColaboracao] = useState("");
   const [camposValidados, setValidado] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,30 +25,28 @@ const CadastroBolsista = (props: props) => {
       return;
     }
   
-    const bolsista = {
+    const parceiro = {
       nome,
-      documento: documento,
-      RG: rg,
-      tipoBolsa,
-      duracaoBolsa,
-      areaAtuacao,
-      idProjeto: props.idProjeto,
+      CNPJ: cnpj,
+      email,
+      telefone,
+      areaColaboracao,
     };
   
-    console.log(bolsista);
+    console.log(parceiro);
   
     try {
-      const resposta = await CadastrarBolsista(bolsista);
+      const resposta = await CadastrarParceiro(parceiro);
       console.log(resposta);
       SweetAlert2.fire({
-        title: "Bolsista cadastrado com sucesso!",
+        title: "Parceiro cadastrado com sucesso!",
         icon: "success",
       });
-      navigate("/bolsista/visualizar");
+      navigate("/");
     } catch (error) {
       console.log(error);
       SweetAlert2.fire({
-        title: "Erro ao cadastrar bolsista!",
+        title: "Erro ao cadastrar parceiro!",
         text: error instanceof Error ? error.message : "Erro desconhecido",
         icon: "error",
       });
@@ -71,7 +64,7 @@ const CadastroBolsista = (props: props) => {
           {" "}
           &#x2190;
         </span>
-        <h1 className="titulo"> Cadastrar bolsista </h1>
+        <h1 className="titulo"> Cadastrar parceiros </h1>
       </div>
 
       <section className={styles.formMain}>
@@ -86,29 +79,28 @@ const CadastroBolsista = (props: props) => {
               
               <Form.Control
                 type="text"
-                placeholder="Nome do Bolsista"
+                placeholder="Nome do Parceiro"
                 required
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
-                Por favor, insira o nome do bolsista.
+                Por favor, insira o nome do parceiro.
               </Form.Control.Feedback>
             </FloatingLabel>
             </InputGroup>
             <InputGroup className="mb-3">
             <FloatingLabel
-              label="CPF ou CNPJ"
+              label="CNPJ"
               controlId="validationCustom03"
               className="flex-grow-1"
               style={{ color: "#9C9C9C", zIndex: 1 }}
             >
               <Form.Control
                 type="text"
-                placeholder="CPF ou CNPJ"
-                value={documento}
-                onChange={(e) => setDocumento(e.target.value)}
-                required
+                placeholder="CNPJ"
+                value={cnpj}
+                onChange={(e) => setCNPJ(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o cpf ou cnpj do bolsista.
@@ -118,7 +110,7 @@ const CadastroBolsista = (props: props) => {
 
             <InputGroup className="mb-3">
             <FloatingLabel
-              label="RG"
+              label="Email"
               controlId="validationCustom03"
               className="flex-grow-1"
               style={{ color: "#9C9C9C", zIndex: 1 }}
@@ -126,52 +118,30 @@ const CadastroBolsista = (props: props) => {
               <Form.Control
                 type="text"
                 placeholder="RG"
-                value={rg}
-                onChange={(e) => setRG(e.target.value)}
-                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
-                Por favor, insira o RG do bolsista.
+                Por favor, insira o Email do parceiro.
               </Form.Control.Feedback>
             </FloatingLabel>
             </InputGroup>
 
             <InputGroup className="mb-3">
             <FloatingLabel
-              label="Tipo Bolsa"
+              label="Telefone"
               controlId="validationCustom03"
               className="flex-grow-1"
               style={{ color: "#9C9C9C", zIndex: 1 }}
             >
               <Form.Control
                 type="text"
-                placeholder="tipo Bolsa"
-                value={tipoBolsa}
-                onChange={(e) => setTipoBolsa(e.target.value)}
-                required
+                placeholder="Telefone"
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
-                Por favor, insira o tipo da bolsa.
-              </Form.Control.Feedback>
-            </FloatingLabel>
-            </InputGroup>
-
-            <InputGroup className="mb-3">
-            <FloatingLabel
-              label="Duração Bolsa"
-              controlId="validationCustom03"
-              className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
-            >
-              <Form.Control
-                type="text"
-                placeholder="Duração Bolsa"
-                value={duracaoBolsa}
-                onChange={(e) => setDuracaoBolsa(e.target.value)}
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                Por favor, insira a duração da bolsa.
+                Por favor, insira o telefone do parceiro.
               </Form.Control.Feedback>
             </FloatingLabel>
             </InputGroup>
@@ -179,26 +149,24 @@ const CadastroBolsista = (props: props) => {
             <InputGroup className="mb-3">
 
             <FloatingLabel
-              label="Area de Atuação"
+              label="Area de Colaboração"
               controlId="validationCustom03"
               className="flex-grow-1"
               style={{ color: "#9C9C9C", zIndex: 1 }}
             >
               <Form.Control
                 type="text"
-                placeholder="Area de atuação"
-                value={areaAtuacao}
-                onChange={(e) => setAreaAtuacao(e.target.value)}
-                required
+                placeholder="Area de colaboração"
+                value={areaColaboracao}
+                onChange={(e) => setAreaColaboracao(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
-                Por favor, insira a area de atuação.
+                Por favor, insira a area de colabroação do parceiro.
               </Form.Control.Feedback>
             </FloatingLabel>
             </InputGroup>
-            
           <div className={styles.botaoEnviar}>
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit">Enviar</Button>
           </div>
         </Form>
       </section>
@@ -206,4 +174,4 @@ const CadastroBolsista = (props: props) => {
   );
 };
 
-export default CadastroBolsista;
+export default CadastroParceiro;

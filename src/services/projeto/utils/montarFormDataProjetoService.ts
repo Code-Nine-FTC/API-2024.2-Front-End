@@ -1,5 +1,5 @@
 import { Form } from "react-router-dom"
-import { CadastrarProjetoJson, EditarProjeto } from "../../interface/projeto.interface"
+import { CadastrarProjetoJson, EditarProjeto } from '../../../interface/projeto.interface';
 
 const MontarFormDataCadastro = (
     projeto: CadastrarProjetoJson | EditarProjeto, 

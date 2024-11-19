@@ -9,13 +9,11 @@ import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
 import CadastroMaterial from "../pages/cadastroMaterial";
 import SumarioProjeto from "../pages/sumarioprojetoPage";
-
+import CriarParceiro from "../pages/criarParceiro";
 
 const Rotas: FC = () => {
   const { isAutenticado } = useContext(AuthContext);
-
   
-
   let rotas;
 
   if (isAutenticado) {
@@ -23,10 +21,11 @@ const Rotas: FC = () => {
       <>
         {/* Apenas administradores podem adicionar projetos */}
         <Route path="/adicionarprojeto" element={<CriarProjeto />} />
+        <Route path="/parceiros" element={<CriarParceiro />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/auditorias/" element={<Auditoria />} />
+        <Route path="/auditorias/" element={<Auditoria />}/>
         <Route path="/sumarioProjeto" element={<SumarioProjeto />} />
-        <Route path="/cadastroMaterial" element={<CadastroMaterial />} />
+        <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/>
       </>
     );
   } else {

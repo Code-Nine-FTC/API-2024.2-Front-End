@@ -3,7 +3,7 @@ import { Modal, Button, Form, Container, Row, Col, FloatingLabel } from 'react-b
 import VisualizarMudancasFunction from '../../services/auditoria/vizualizarMudancasService';
 import { Mudanca } from '../../interface/auditoria.interface';
 import { Auditoria } from '../../interface/auditoria.interface';
-import BaixarArquivo from '../../services/projeto/baixarArquivo';
+import BaixarArquivo from '../../services/projeto/utils/baixarArquivo';
 import { parse, format } from 'date-fns';
 
 interface AuditoriaComponentProps {
