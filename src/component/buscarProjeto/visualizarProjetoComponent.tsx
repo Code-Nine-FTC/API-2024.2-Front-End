@@ -27,7 +27,7 @@ import MontarJsonEditado from "../../services/projeto/utils/montarJsonEditado";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
 import FormCadastrarGasto from "../cadastros/cadastroGasto/formCadastrarGastoComponent";
-import CadastroBolsista from "../cadastroBolsista/cadastroBolsista";
+import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
 
 interface MensagemValidacao {
   titulo: string;
