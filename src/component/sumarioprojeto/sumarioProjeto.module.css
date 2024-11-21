@@ -7,9 +7,9 @@
     margin-top: 1%;
 }
 
-.data{
+.form{
     display: flex;
-    justify-content: center;
     flex-direction: row;
     width: 100vw;
+    justify-content: center;
 }

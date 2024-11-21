@@ -9,28 +9,42 @@ interface ChartComponentProps {
 }
 
 const ChartComponent: React.FC<ChartComponentProps> = ({ data }) => {
-  const labels = data.labels || []; // Verifica se labels existe
-  const datasets = data.datasets || []; // Verifica se datasets existe
+    const labels = data.labels || []; // Verifica se labels existe
+    const datasets = data.datasets || []; // Verifica se datasets existe
 
-  const chartData = {
-    labels: labels,
-    datasets: datasets,
-  };
+    const chartData = {
+        labels: labels,
+        datasets: datasets,
+    };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Sumário de Receitas e Gastos',
-      },
-    },
-  };
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top' as const,
+            },
+            title: {
+                display: true,
+                text: 'Sumário de Receitas e Gastos',
+            },
+        },
+        scales: {
+            y: {
+                type: 'linear' as const,
+                title: {
+                    display: true,
+                    text: 'Valor',
+                },
+                ticks: {
+                    callback: function(value: any) {
+                        return Number(value).toLocaleString(); // Formatar os valores do eixo Y
+                    }
+                }
+            }
+        }
+    };
 
-  return <Line data={chartData} options={options} />;
+    return <Line data={chartData} options={options} />;
 };
 
 export default ChartComponent;
