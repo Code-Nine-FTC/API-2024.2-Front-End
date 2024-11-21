@@ -5,7 +5,7 @@ import { getToken } from "../../auth";
 
 export default async function CadastrarMaterialFunction (material: MaterialCadastro): Promise<any> {
     try {
-        const resposta = await api.post('/material/cadastrar', material, {
+        const resposta = await api.post('/material/salvar', material, {
             headers: {
                 Authorization: `Bearer ${getToken()} `
             }
