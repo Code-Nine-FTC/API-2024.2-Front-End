@@ -28,6 +28,7 @@ import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
 import FormCadastrarGasto from "../cadastros/cadastroGasto/formCadastrarGastoComponent";
 import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
+import CadastroReceita from "../cadastros/cadastroReceita/CadastroReceitaComponent";
 
 interface MensagemValidacao {
   titulo: string;
@@ -98,6 +99,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [showModalGasto, setShowModalGasto] = useState(false);
   const [showModalBolsista, setShowModalBolsista] = useState(false);
+  const [showModalReceita, setShowModalReceita] = useState(false);
   const navigate = useNavigate();
 
 
@@ -562,6 +564,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const handleCloseModalGasto = () => setShowModalGasto(false);
   const handleOpenModalBolsista = () => setShowModalBolsista(true);
   const handleCloseModalBolsista = () => setShowModalBolsista(false);
+  const handleOpenModalReceita = () => setShowModalReceita(true);
+  const handleCloseModalReceita = () => setShowModalReceita(false);
 
   return (
     <>
@@ -1175,7 +1179,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             <Card 
               onClick={handleOpenModalBolsista} 
               className="text-center border-light shadow-sm" 
-              style={{ cursor: 'pointer', width: '200px' }}
+              style={{ cursor: 'pointer', width: '200px',marginRight: '3%' }}
             >
               <Card.Body className="bg-white">
                 <Card.Text className="text-primary fw-bold">
@@ -1205,24 +1209,39 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                       </Button>
                   </Modal.Footer>
             </Modal>
-
-            {/* <div className="d-flex justify-content-center pb-3">
-              <Card 
-                onClick={handleOpenModal} 
-                className="text-center border-light shadow-sm" 
-                style={{ cursor: 'pointer', width: '200px', marginRight: '3%' }}
-              >
-                <Card.Body className="bg-white">
-                  <Card.Text className="text-primary fw-bold">
-                    Adicionar Receita
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </div> */}
-
+          <div className="d-flex justify-content-center pb-3">
+            <Card 
+              onClick={handleOpenModalReceita} 
+              className="text-center border-light shadow-sm" 
+              style={{ cursor: 'pointer', width: '200px' }}
+            >
+              <Card.Body className="bg-white">
+                <Card.Text className="text-primary fw-bold">
+                  Adicionar Receita
+                </Card.Text>
+              </Card.Body>
+            </Card>
           </div>
-
-          
+            <Modal 
+                show={showModalReceita} 
+                onHide={handleCloseModalReceita} 
+                size="xl" 
+                aria-labelledby="contained-modal-title-vcenter" 
+                centered
+              >
+                  <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                      <Modal.Title style={{color: "white"}}>Receita</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                      <CadastroReceita projetoId={id ? id.toString() : '' }/>
+                  </Modal.Body>
+                  <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseModalReceita}>
+                          Fechar
+                      </Button>
+                  </Modal.Footer>
+            </Modal>
+          </div>
         )}
       </div>
     </>
