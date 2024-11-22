@@ -10,6 +10,7 @@ import Auditoria from "../pages/auditoria";
 import CadastroMaterial from "../pages/cadastroMaterial";
 import SumarioProjeto from "../pages/sumarioprojetoPage";
 import CriarParceiro from "../pages/criarParceiro";
+import PrestacaoConta from "../component/prestacaoconta/PrestacaoContaComponent";
 
 const Rotas: FC = () => {
   const { isAutenticado } = useContext(AuthContext);
@@ -26,6 +27,7 @@ const Rotas: FC = () => {
         <Route path="/auditorias/" element={<Auditoria />}/>
         <Route path="/sumarioProjeto" element={<SumarioProjeto />} />
         <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/>
+        <Route path="/prestacaoContas" element={<PrestacaoConta />} />
       </>
     );
   } else {
