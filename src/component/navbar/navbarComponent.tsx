@@ -9,6 +9,7 @@ import { useNavigate } from "react-router";
 import Notifications from '../notificacao/notificacaoComponente';
 import styles from './navbar.module.css';
 import CadastrosDropdownComponent from '../cadastros/cadastrosDropdown/CadastrosDropdownComponent';
+import ListagensDropdownComponent from '../listagens/ListagensDropdownComponent';
 
 const NavbarComponent = () => {
     const navigate = useNavigate();
@@ -42,6 +43,9 @@ const NavbarComponent = () => {
                         ))}
                         {logado && (
                             <CadastrosDropdownComponent/>
+                        )}
+                        {logado && (
+                            <ListagensDropdownComponent/>
                         )}
                     </Nav>
                     <Nav className='ms-auto'> 

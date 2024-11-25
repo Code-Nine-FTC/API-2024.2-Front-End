@@ -1,0 +1,67 @@
+.navLink {
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: var(--bs-nav-link-color);
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.dropdownMenu {
+    visibility: hidden; /* Oculto por padrão */
+    margin-top: -12px;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    background-color: #00359a;
+    border: none;
+}
+
+.dropdownToggle {
+    --bs-navbar-active-color: rgba(255, 255, 255, 0.55) !important;
+    display: inline-flex;
+    align-items: center;
+}
+
+.dropdownItem {
+    color: var(--bs-nav-link-color);
+    font-size: var(--bs-nav-link-font-size);
+    padding: 0.5rem 1.5rem;
+    text-decoration: none;
+    background: transparent;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.dropdownItem:hover {
+    color: var(--bs-nav-link-hover-color);
+    background-color: var(--bs-nav-link-hover-bg);
+}
+
+.arrow {
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+}
+
+.dropdownHover:hover .dropdownMenu {
+    visibility: visible; /* Torna visível ao passar o mouse */
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.dropdownHover:hover .dropdownToggle {
+    --bs-navbar-active-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.dropdownHover:hover #nav-dropdown::after {
+    transform: rotate(180deg);
+}
+
+@media-screen (600px) {
+    .dropdownMenu {
+        visibility: visible;
+    }
+}
