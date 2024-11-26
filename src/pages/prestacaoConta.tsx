@@ -1,8 +1,11 @@
-import PrestacaoConta from "../component/prestacaoconta/PrestacaoContaComponent";
+import { useParams } from "react-router-dom";
+import PrestacaoContaComponent from "../component/prestacaoconta/PrestacaoContaComponent";
 
-const PrestacaoContaPage = () => {
+const PrestacaoContaPage: React.FC = () => {
+    const { titulo = '' } = useParams<{ titulo?: string }>();
+
     return(
-        <PrestacaoConta />
+        <PrestacaoContaComponent titulo={titulo}/>
     )
 }
 

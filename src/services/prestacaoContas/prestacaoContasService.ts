@@ -2,19 +2,13 @@ import { AxiosError } from "axios";
 import api from "../api";
 import { getToken } from "../auth";
 
-export default async function VisualizarMudancasFunction(projetoId?: string): Promise<any> {
+export default async function PrestacaoContasFunction(): Promise<any> {
     try {
-        const resposta = projetoId
-            ? await api.get(`/prestacao-contas/${projetoId}`, {
-                headers: {
-                    Authorization: `Bearer ${getToken()}`
-                }
-            })
-            : await api.get(`/prestacao-contas/listar`, {
-                headers: {
-                    Authorization: `Bearer ${getToken()}`
-                }
-            });
+        const resposta = await api.get(`/listar`, {
+            headers: {
+                Authorization: `Bearer ${getToken()}`
+            }
+        });
 
         if (resposta.status === 200) {
             return { status: resposta.status, data: resposta.data };
