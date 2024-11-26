@@ -3,3 +3,46 @@
     justify-content: space-between;
     align-items: center;
 }
+.icones {
+    display: flex;
+    align-items: center;
+    margin: 2%;
+}
+.graficos {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.grafico {
+    width: 45%; 
+    max-width: 400px; 
+}
+
+.grafico2 {
+    width: 100%;
+}
+
+.graficoLinha {
+    margin-top: 20px;
+    width: 80%;
+    margin: 0 auto; 
+}
+
+@media screen and (max-width: 780px) {
+    .graficos {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .grafico {
+        display: flex;
+        width: 90%;
+    }
+    .grafico2 {
+        width: 90%;
+    }
+    .graficoLinha {
+        width: 90%;
+    }
+}
