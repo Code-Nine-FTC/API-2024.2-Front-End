@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, FloatingLabel, Form, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import SweetAlert2 from "sweetalert2";
+import styles from "./demanda.module.css"
 
 
 const CadastroDemandasComponent = () => {
