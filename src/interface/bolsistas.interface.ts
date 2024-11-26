@@ -8,3 +8,13 @@ export interface CadastroBolsista {
     areaAtuacao: string,
     idProjeto: string
 }
+
+export interface VisualizarBolsista {
+    nome: string,
+    documento: string,
+    RG: string,
+    tipoBolsa: string,
+    duracaoBolsa: string,
+    areaAtuacao: string
+}
+

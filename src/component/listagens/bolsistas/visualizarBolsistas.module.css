@@ -1,0 +1,109 @@
+@import url('../variable.css');
+
+.formMain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--title-margin-top);
+    padding: 0% 2%;
+}
+
+.formMain Form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* width: 100%; */
+}
+
+.topoPagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editarExcluir {
+    width: fit-content;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5%;
+}
+
+
+
+.botaoEnviar {
+    margin-top: 2%;
+    margin-bottom: 4%;
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+
+
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+
+
+
+
+.botoesSalvarVoltar {
+    display: flex;
+    margin-top: 1%;
+    margin-bottom: 2%;
+}
+
+.botoesSalvarVoltar Button {
+    margin-right: 6%;
+    font-size: 1.1em;
+}
+
+.botoes{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+    .botaoEnviar button {
+        width: 40vw;
+    }
+
+    .topoPagina {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .editarExcluir{
+        margin-bottom: 5%;
+    }
+    .topoPagina span {
+        align-content: left !important;
+    }
+  
+    .botoesSalvarVoltar {
+        flex-direction: column;
+        width: 60%;
+    }
+
+    .botoesSalvarVoltar Button {
+        width: 100%;
+        margin-bottom: 4%;
+    }
+
+    .botoes{
+        flex-direction: column;
+    }
+}

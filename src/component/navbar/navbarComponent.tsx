@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 import Notifications from '../notificacao/notificacaoComponente';
 import styles from './navbar.module.css';
 import CadastrosDropdownComponent from '../cadastros/cadastrosDropdown/CadastrosDropdownComponent';
-import ListagensDropdownComponent from '../listagens/ListagensDropdownComponent';
+import ListagensDropdownComponent from '../listagens/listagemDropdown/ListagensDropdownComponent';
 
 const NavbarComponent = () => {
     const navigate = useNavigate();
