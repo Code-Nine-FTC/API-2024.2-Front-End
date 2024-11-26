@@ -27,7 +27,7 @@ const CadastroParceiro = () => {
   
     const parceiro = {
       nome,
-      CNPJ: cnpj,
+      cnpj: cnpj,
       email,
       telefone,
       areaColaboracao,

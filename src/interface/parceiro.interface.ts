@@ -1,6 +1,6 @@
 export interface CadastroParceiro {
   nome: string,
-  CNPJ: string,
+  cnpj: string,
   email: string,
   telefone: string,
   areaColaboracao: string,
