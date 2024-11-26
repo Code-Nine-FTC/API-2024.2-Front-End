@@ -12,6 +12,8 @@ import SumarioProjeto from "../pages/sumarioprojetoPage";
 import CriarParceiro from "../pages/criarParceiro";
 import PrestacaoConta from "../component/prestacaoconta/PrestacaoContaComponent";
 import VisualizaBolsistaPage from "../pages/visualizarBolsistaPage";
+import ResultadoProjeto from "../component/resultadoProjeto/resultadoProjetoComponent";
+
 
 const Rotas: FC = () => {
   const { isAutenticado } = useContext(AuthContext);
@@ -30,6 +32,7 @@ const Rotas: FC = () => {
         <Route path="/visualizarbolsista/:id" element={<VisualizaBolsistaPage />} />
         <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/>
         <Route path="/prestacaoContas" element={<PrestacaoConta />} />
+        <Route path="/resultadoProjeto" element={<ResultadoProjeto />} />
       </>
     );
   } else {

@@ -6,7 +6,7 @@ import { VisualizarBolsista } from "../../../interface/bolsistas.interface";
 import VisualizarBolsistaService from "../../../services/bolsista/visualizarBolsistaService";
 import EditarBolsistaService from "../../../services/bolsista/editarBolsistaService";
 import ExcluirBolsista from "../../../services/bolsista/excluirBolsistaService";
-import styles from "./VisualizarBolsistaComponent.module.css";
+import styles from "./visualizarBolsistas.module.css"
 
 interface visualizarbolsistaprops {
     idbolsista: number;
