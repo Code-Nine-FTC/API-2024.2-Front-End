@@ -7,10 +7,7 @@ import AlteraDeletaVisualiza from "../pages/visualizarProjetos";
 import { AuthContext } from "../services/context";
 import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
-import CadastroMaterial from "../pages/cadastroMaterial";
-import SumarioProjeto from "../pages/sumarioprojetoPage";
 import CriarParceiro from "../pages/criarParceiro";
-import PrestacaoConta from "../component/prestacaoconta/PrestacaoContaComponent";
 import VisualizaBolsistaPage from "../pages/visualizarBolsistaPage";
 import ResultadoProjeto from "../component/resultadoProjeto/resultadoProjetoComponent";
 
@@ -28,10 +25,10 @@ const Rotas: FC = () => {
         <Route path="/parceiros" element={<CriarParceiro />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/auditorias/" element={<Auditoria />}/>
-        <Route path="/sumarioProjeto" element={<SumarioProjeto />} />
+        {/* <Route path="/sumarioProjeto" element={<SumarioProjeto />} /> */}
         <Route path="/visualizarbolsista/:id" element={<VisualizaBolsistaPage />} />
-        <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/>
-        <Route path="/prestacaoContas" element={<PrestacaoConta titulo= ''/>} />
+        {/* <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/> */}
+        {/* <Route path="/prestacaoContas" element={<PrestacaoConta titulo= ''/>} /> */}
         <Route path="/resultadoProjeto" element={<ResultadoProjeto />} />
       </>
     );

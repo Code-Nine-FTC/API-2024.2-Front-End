@@ -1,10 +1,13 @@
-import SumarioProjetoComponent from "../component/sumarioprojeto/sumarioProjetoComponent";
+// import SumarioProjetoComponent from "../component/sumarioprojeto/sumarioProjetoComponent";
 
 
-const SumarioProjeto = () => {
-    return(
-        <SumarioProjetoComponent />
-    )
+// const SumarioProjeto = () => {
+//     return(
+//         <SumarioProjetoComponent />
+//     )
+// }
+
+// export default SumarioProjeto;
+
+export default function vazia () {
 }
-
-export default SumarioProjeto;

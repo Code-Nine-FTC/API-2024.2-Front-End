@@ -26,9 +26,8 @@ import VisualizarProjetoService from "../../services/projeto/visualizar/visualiz
 import MontarJsonEditado from "../../services/projeto/utils/montarJsonEditado";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
-import FormCadastrarGasto from "../cadastros/cadastroGasto/formCadastrarGastoComponent";
 import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
-import CadastroReceita from "../cadastros/cadastroReceita/CadastroReceitaComponent";
+
 
 interface MensagemValidacao {
   titulo: string;
@@ -1155,7 +1154,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
           </div>
             
-            <Modal 
+            {/* <Modal 
                 show={showModalGasto} 
                 onHide={handleCloseModalGasto} 
                 size="xl" 
@@ -1173,7 +1172,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                           Fechar
                       </Button>
                   </Modal.Footer>
-            </Modal>
+            </Modal> */}
 
             <div className="d-flex justify-content-center pb-3">
             <Card 
@@ -1222,7 +1221,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               </Card.Body>
             </Card>
           </div>
-            <Modal 
+            {/* <Modal 
                 show={showModalReceita} 
                 onHide={handleCloseModalReceita} 
                 size="xl" 
@@ -1240,7 +1239,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                           Fechar
                       </Button>
                   </Modal.Footer>
-            </Modal>
+            </Modal> */}
           </div>
         )}
       </div>

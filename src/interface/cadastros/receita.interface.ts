@@ -1,3 +1,6 @@
-export interface ReceitaCadastro {
+// export interface ReceitaCadastro {
     
+// }
+
+export default function vazia () {
 }

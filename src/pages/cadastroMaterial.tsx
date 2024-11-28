@@ -1,11 +1,14 @@
-import CadastroMaterialComponent from "../component/cadastros/cadastroMaterial/CadastroMaterialComponent";
+// import CadastroMaterialComponent from "../component/cadastros/cadastroMaterial/CadastroMaterialComponent";
 
-const CadastroMaterial = () => {
-    return (
-        <div>
-            <CadastroMaterialComponent/>
-        </div>
-    )
+// const CadastroMaterial = () => {
+//     return (
+//         <div>
+//             <CadastroMaterialComponent/>
+//         </div>
+//     )
+// }
+
+// export default CadastroMaterial
+
+export default function vazia () {
 }
-
-export default CadastroMaterial
