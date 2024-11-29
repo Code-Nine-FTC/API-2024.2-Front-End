@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form, Container, Row, Col, FloatingLabel } from 'react-bootstrap';
+import { Modal, Button, Form, Container, Row, Col, FloatingLabel, ButtonGroup } from 'react-bootstrap';
 import VisualizarMudancasFunction from '../../services/auditoria/vizualizarMudancasService';
 import { Mudanca } from '../../interface/auditoria.interface';
 import { Auditoria } from '../../interface/auditoria.interface';
@@ -17,6 +17,8 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
     const [error, setError] = useState<string | null>(null);
     const [selectedDado, setSelectedDado] = useState<Auditoria | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [projectsPerPage] = useState(10);
 
     const fetchMudancas = async () => {
         try {
@@ -26,9 +28,10 @@ const AuditoriaComponent: React.FC<AuditoriaComponentProps> = ({ projetoId }) =>
     
             if (result.data) {
                 const dataArray = Array.isArray(result.data) ? result.data : [result.data];
-                setDados(dataArray);
-                setFilteredDados(dataArray);
-                console.log(dataArray);
+                const reversedArray = dataArray.reverse();
+                setDados(reversedArray);
+                setFilteredDados(reversedArray);
+                console.log(reversedArray);
             } else {
                 throw new Error("Dados não encontrados.");
             }
@@ -232,6 +235,15 @@ const renderField = (label: string, oldValue: string | number | undefined | null
         return <div>Erro: {error}</div>;
     }
 
+    const indexOfLastData = currentPage * projectsPerPage;
+    const indexOfFirstData = indexOfLastData - projectsPerPage;
+    const currentData = dados.slice(
+        indexOfFirstData,
+        indexOfLastData
+    );
+
+    const totalPages = Math.ceil(dados.length / projectsPerPage);
+
     return (
         <div>
             <Row className='justify-content-center my-4'>
@@ -266,7 +278,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
             )}
             <div className="row">
                 <div className="row justify-content-center">
-                    {filteredDados.slice().reverse().map((dado) => (
+                    {currentData.map((dado) => (
                         <div className="col-md-11" key={dado.id}>
                             <div
                                 className="card mb-4"
@@ -314,6 +326,31 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <div className="d-flex justify-content-center align-items-center">
+                <ButtonGroup className="mb-2">
+                    <Button
+                        variant="primary"
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        style={{ borderRadius: '20px', padding: '10px 15px' }}
+                    >
+                        {"<"} {/* Ícone ou texto para "anterior" */}
+                    </Button>
+
+                    <span className="d-flex align-items-center" style={{ margin: '0 10px', fontSize: '16px' }}>
+                        Página {currentPage} de {totalPages}
+                    </span>
+
+                    <Button
+                        variant="primary"
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        style={{ borderRadius: '20px', padding: '10px 15px' }}
+                    >
+                        {">"} {/* Ícone ou texto para "próxima" */}
+                    </Button>
+                </ButtonGroup>
+            </div>
         </div>
     );
 };
