@@ -1,4 +1,5 @@
 import { VisualizarDocumento } from "./documento.interface"
+import { VisualizarParceiro } from "./parceiro.interface"
 import { MudancaProjeto } from "./projeto.interface"
 
 export interface Mudanca {
@@ -33,7 +34,7 @@ export interface Auditoria {
     nomeCoordenador?: string;
     titulo_antigo?: string;
     referenciaProjeto: string; 
-    contratante_antigo?: string;
+    parceiro_antigo?: VisualizarParceiro;
     descricao_antiga?: string;
     valor_antigo?: number;
     dataInicio_antiga?: string;
@@ -43,7 +44,7 @@ export interface Auditoria {
     objetivo_antigo?: string;
     links_antigos?: string;
     titulo_novo?: string;
-    contratante_novo?: string;
+    parceiro_novo?: VisualizarParceiro;
     descricao_novo?: string;
     valor_novo?: number;
     dataInicio_novo?: string;
