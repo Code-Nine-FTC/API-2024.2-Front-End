@@ -1,4 +1,4 @@
-import { Button, FloatingLabel, Form, InputGroup } from "react-bootstrap";
+import { Button, FloatingLabel, Form, InputGroup, Modal } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
 import { NumberFormatValues, NumericFormat} from 'react-number-format';
 import styles from "./criarProjeto.module.css";
@@ -7,6 +7,10 @@ import CadastrarProjetoFunction from "../../services/projeto/cadastrar/cadastarP
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from "react-router-dom";
 import { parse, format } from 'date-fns';
+import buscarParceirosService from "../../services/buscar/buscarParceirosService";
+import { VisualizarParceiro } from "../../interface/parceiro.interface";
+import CadastroParceiro from "../cadastros/cadastroParceiro/cadastroParceiro";
+import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
 
 interface MensagemValidacao {
   titulo: string;
@@ -22,7 +26,7 @@ const CriarProjetoComponent = () => {
   const [camposValidados, setValidado] = useState(false);
   const [tituloProjeto, setTituloProjeto] = useState("");
   const [referenciaProjeto, setReferenciaProjeto] = useState("");
-  const [contratante, setContratante] = useState("");
+  const [contratante, setContratante] = useState<Number | null>(null);;
   const [nomeCoordenador, setCoordenador] = useState("");
   const [valor, setValor] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -38,6 +42,8 @@ const CriarProjetoComponent = () => {
   const [hideValor, setHideValor] = useState(false);
   const [hideStatus, setHideStatus] = useState(false);
   const [valorValid, setValorValid] = useState<boolean | null>(null);
+  const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
+  const [showParceiroModal, setShowParceiroModal] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -66,6 +72,8 @@ const CriarProjetoComponent = () => {
 
     const camposOcultosString = camposOcultos.join(", ");
 
+    const selectedParceiro = parceiros.find(parceiro => parceiro.id === contratante);
+
     const projeto = {
       titulo: tituloProjeto,
       referencia: referenciaProjeto,
@@ -74,8 +82,9 @@ const CriarProjetoComponent = () => {
       valor: valorFloat,
       status: status,
       dataTermino: dataTerminoString || "",
-      contratante: contratante,
+      // contratante: "",
       camposOcultos: camposOcultosString,
+      parceiro: selectedParceiro
     };
 
     console.log(projeto);
@@ -108,6 +117,19 @@ const CriarProjetoComponent = () => {
     setStartDateValid(startDate !== null);
     setEndDateValid(endDate !== null && (!startDate || endDate >= startDate));
   };
+
+  async function buscarParceiros() {
+    const resposta = await buscarParceirosService();
+    if (resposta.status === 200) {
+      setParceiros(resposta.data);
+      console.log(resposta.data);
+    } else {
+      console.log(resposta.message);
+    }
+  }
+
+  const handleOpenModalParceiro = () => setShowParceiroModal(true);
+  const handleCloseModalParceiro = () => setShowParceiroModal(false);
 
   useEffect(() => {
     if (mensagemValidacao.titulo && mensagemValidacao.texto) {
@@ -197,14 +219,30 @@ const CriarProjetoComponent = () => {
               className="flex-grow-1"
               style={{ color: "#9C9C9C", zIndex: 1 }}
             >
-              <Form.Control
-                type="text"
-                placeholder="Contratante"
-                value={contratante}
-                onChange={(e) => setContratante(e.target.value)}
-              />
+              <Form.Select
+                // value={contratante}
+                onChange={(e) => {
+                  const selectedValue = e. target.value;
+                  if (selectedValue === "cadastrarParceiro") {
+                    handleOpenModalParceiro();
+                    setContratante(null); 
+                  } else {
+                    setContratante(Number(selectedValue));
+                  }
+                }}
+                onClick={buscarParceiros} 
+                required
+              >
+                <option value="">Selecione um parceiro</option>
+                <option value="cadastrarParceiro"> Cadastrar um parceiro </option>
+                {parceiros.map((parceiro) => (
+                  <option key={parceiro.id} value={parceiro.id}>
+                    {parceiro.nome}
+                  </option>
+                ))}
+              </Form.Select>
               <Form.Control.Feedback type="invalid">
-                Por favor, insira o contratante.
+                Por favor, insira o parceiro.
               </Form.Control.Feedback>
             </FloatingLabel>
             <InputGroup.Checkbox
@@ -315,6 +353,25 @@ const CriarProjetoComponent = () => {
           </div>
         </Form>
       </section>
+      <Modal 
+                show={showParceiroModal} 
+                onHide={handleOpenModalParceiro} 
+                size="xl" 
+                aria-labelledby="contained-modal-title-vcenter" 
+                centered
+              >
+                  <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                      <Modal.Title style={{color: "white"}}>Cadastrar parceiro</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                      <CadastroParceiro setShowParceiroModal={handleCloseModalParceiro}/>
+                  </Modal.Body>
+                  <Modal.Footer>
+                      <Button variant="secondary" onClick={handleCloseModalParceiro}>
+                          Fechar
+                      </Button>
+                  </Modal.Footer>
+            </Modal>
     </>
   );
 };

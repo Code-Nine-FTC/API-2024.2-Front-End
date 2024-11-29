@@ -1,11 +1,15 @@
 import { Button, FloatingLabel, Form, InputGroup} from "react-bootstrap";
 import React, { useState } from "react";
-import styles from "./criarParceiros.module.css";
+import styles from "../../criarProjeto/criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import CadastrarParceiro from "../../services/projeto/cadastrar/cadastrarParceiroService";
+import CadastrarParceiro from "../../../services/projeto/cadastrar/cadastrarParceiroService";
 
-const CadastroParceiro = () => {
+interface CadastroParceiroProps {
+  setShowParceiroModal?: (value: boolean) => void;
+}
+
+const CadastroParceiro = (props: CadastroParceiroProps) => {
   const navigate = useNavigate();
   const [nome, setNome] = useState("");
   const [cnpj, setCNPJ] = useState("");
@@ -42,7 +46,12 @@ const CadastroParceiro = () => {
         title: "Parceiro cadastrado com sucesso!",
         icon: "success",
       });
-      navigate("/");
+      if (props.setShowParceiroModal) {
+        props.setShowParceiroModal(false);
+      }
+      else {
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
       SweetAlert2.fire({
@@ -55,17 +64,19 @@ const CadastroParceiro = () => {
 
   return (
     <>
-      <div className="tituloSetaVoltar">
-        <span
-          className="setaVoltar"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate("/")}
-        >
-          {" "}
-          &#x2190;
-        </span>
-        <h1 className="titulo"> Cadastrar parceiros </h1>
-      </div>
+      {!props.setShowParceiroModal && (
+        <div className="tituloSetaVoltar">
+          <span
+            className="setaVoltar"
+            style={{ cursor: "pointer" }}
+            onClick={() => (navigate("/"))}
+          >
+            {" "}
+            &#x2190;
+          </span>
+          <h1 className="titulo"> Cadastrar parceiros </h1>
+        </div>
+      )}
 
       <section className={styles.formMain}>
         <Form noValidate validated={camposValidados} onSubmit={handleSubmit}>

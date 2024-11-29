@@ -1,4 +1,6 @@
 import { VisualizarDocumento } from "./documento.interface";
+import { VisualizarParceiro } from "./parceiro.interface";
+import { VisualizarDemanda } from "./demanda.interface"
 
 export interface CadastrarProjetoJson {
     titulo: string;
@@ -23,6 +25,8 @@ export interface CadastrarProjeto {
     valor?: number;
     dataTermino?: string;
     contratante?: string;
+    parceiro?: VisualizarParceiro;
+    // classificacaoDemanda: VisualizarDemanda;
 }
 
 export interface EditarProjeto {
@@ -49,7 +53,7 @@ export interface VisualizarProjeto {
     id: number;
     titulo: string;
     referencia: string;
-    contratante: string;
+    // contratante?: string;
     objeto: string;
     descricao: string;
     nomeCoordenador: string;
@@ -60,6 +64,8 @@ export interface VisualizarProjeto {
     status: string;
     links: string;
     documentos: VisualizarDocumento[];
+    parceiro?: VisualizarParceiro;
+    classificacaoDemanda: VisualizarDemanda;
 }
 
 export interface BuscarProjeto {

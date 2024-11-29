@@ -1,21 +1,12 @@
-@import url('../variable.css');
+@import url('../../variable.css');
 
 .formMain {
-  /*   display: flex; */
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: var(--title-margin-top);
-    width: 100%; 
-    padding: 0 20px; 
 }
-
-.formMain .form-floating {
-    width: 100%; /* Ocupa toda a largura */
-    margin-bottom: 15px; /* Espaçamento entre os campos */
-}
-
-
 
 .botaoEnviar {
     margin-top: 20px;

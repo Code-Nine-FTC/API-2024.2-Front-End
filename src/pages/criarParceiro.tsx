@@ -1,4 +1,4 @@
-import CadastroParceiro from "../component/cadastroParceiro/cadastroParceiro";
+import CadastroParceiro from "../component/cadastros/cadastroParceiro/cadastroParceiro";
 
 const CriarParceiro = () => {
     return (

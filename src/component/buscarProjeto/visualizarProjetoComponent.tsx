@@ -27,7 +27,9 @@ import MontarJsonEditado from "../../services/projeto/utils/montarJsonEditado";
 import AuditoriaComponent from "../auditoria/auditoriaComponent";
 import { parse, format } from 'date-fns';
 import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
-
+import { VisualizarParceiro } from "../../interface/parceiro.interface";
+import buscarParceirosService from "../../services/buscar/buscarParceirosService";
+import CadastroParceiro from "../cadastros/cadastroParceiro/cadastroParceiro";
 
 interface MensagemValidacao {
   titulo: string;
@@ -55,9 +57,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [referencia, setReferencia] = useState(
     projetoOriginal?.referencia || ""
   );
-  const [contratante, setContratante] = useState(
-    projetoOriginal?.contratante || ""
-  );
+ const [contratante, setContratante] = useState<Number | null>(null);
   const [integrantes, setIntegrantes] = useState(
     projetoOriginal?.integrantes || ""
   );
@@ -68,6 +68,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [coordenador, setCoordenador] = useState(
     projetoOriginal?.nomeCoordenador || ""
   );
+  const [parceiro, setParceiro] = useState(projetoOriginal?.parceiro || null);
+  const [demanda, setDemanda] = useState(projetoOriginal?.classificacaoDemanda || null);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [valor, setValor] = useState(projetoOriginal?.valor || "");
@@ -99,10 +101,9 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [showModalGasto, setShowModalGasto] = useState(false);
   const [showModalBolsista, setShowModalBolsista] = useState(false);
   const [showModalReceita, setShowModalReceita] = useState(false);
+  const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
   const navigate = useNavigate();
-
-
-  
+  const [showParceiroModal, setShowParceiroModal] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProjeto = async () => {
@@ -145,7 +146,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     if (projetoOriginal) {
       setTitulo(projetoOriginal.titulo || "");
       setReferencia(projetoOriginal.referencia || "");
-      setContratante(projetoOriginal.contratante || "");
+      // setContratante(projetoOriginal.contratante || "");
       setObjeto(projetoOriginal.objeto || "");
       setDescricao(projetoOriginal.descricao || "");
       setCoordenador(projetoOriginal.nomeCoordenador || "");
@@ -155,6 +156,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       setValor(projetoOriginal.valor || "");
       setStartDate(parse(projetoOriginal.dataInicio, 'yyyy-MM-dd', new Date()));
       setEndDate(parse(projetoOriginal.dataTermino, 'yyyy-MM-dd', new Date()));
+      setParceiro(projetoOriginal.parceiro || null);
       // setValor(formatarValorBR(projetoOriginal.valor?.toString() || ""));
       setDocumentos(projetoOriginal.documentos);
       projetoOriginal.documentos.forEach((doc) => {
@@ -194,6 +196,16 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const dataInicioString = startDate ? format(startDate, 'yyyy-MM-dd') : null;
   const dataTerminoString = endDate ? format(endDate, 'yyyy-MM-dd') : null;
 
+  async function buscarParceiros() {
+    const resposta = await buscarParceirosService();
+    if (resposta.status === 200) {
+      setParceiros(resposta.data);
+      console.log(resposta.data);
+    } else {
+      console.log(resposta.message);
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -213,10 +225,13 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     if (camposOcultosString == "") {
       camposOcultosString = "nenhum";
     }
+
+    const selectedParceiro = parceiros.find(parceiro => parceiro.id === contratante);
+
     const camposEditados = {
       titulo: titulo,
       referencia: referencia,
-      contratante: contratante,
+      // contratante: contratante,
       objeto: objeto,
       descricao: descricao,
       nomeCoordenador: coordenador,
@@ -227,6 +242,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       dataTermino: dataTerminoString,
       camposOcultos: camposOcultosString,
       valor: valor.toString(),
+      parceiro: selectedParceiro,
     };
 
     console.log("camposEditados:", camposEditados);
@@ -565,6 +581,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const handleCloseModalBolsista = () => setShowModalBolsista(false);
   const handleOpenModalReceita = () => setShowModalReceita(true);
   const handleCloseModalReceita = () => setShowModalReceita(false);
+  const handleOpenModalParceiro = () => setShowParceiroModal(true);
+  const handleCloseModalParceiro = () => setShowParceiroModal(false);
 
   return (
     <>
@@ -670,14 +688,42 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
        {/* Contratante */}
       <InputGroup className="mb-3">
         <FloatingLabel controlId="validationCustom01" label="Contratante" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
-          <Form.Control
-            type="text"
-            placeholder="Contratante"
-            required
-            value={(!autenticado && hideContratante) ? "" : contratante}
-            onChange={(e) => setContratante(e.target.value)}
-            readOnly={!isEditing}
-          />
+        {!isEditing ? (
+            // Display parceiro.nome in a read-only field when not editing
+            <Form.Control
+              type="text"
+              placeholder="Contratante"
+              required
+              value={(!autenticado && hideContratante) ? "" : parceiro?.nome}
+              readOnly
+            />
+          ) : (
+            // Display a select dropdown when editing
+            <Form.Select
+              aria-label="Selecione um parceiro"
+              required
+              // value={contratante}
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+                if (selectedValue === "cadastrarParceiro") {
+                  handleOpenModalParceiro();
+                  setContratante(null);
+                } else {
+                  setContratante(Number(selectedValue)); // Assuming IDs are numbers
+                }
+              }}
+              onClick={buscarParceiros}
+              disabled={!isEditing}
+            >
+              <option value="">Selecione um parceiro</option>
+              <option value="cadastrarParceiro">Cadastrar um parceiro</option>
+              {parceiros.map((parceiro) => (
+                <option key={parceiro.id} value={parceiro.id}>
+                  {parceiro.nome}
+                </option>
+              ))}
+            </Form.Select>
+          )}
           <Form.Control.Feedback type="invalid">
             Por favor, insira o contratante do projeto.
           </Form.Control.Feedback>
@@ -1139,7 +1185,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                 </Modal.Footer>
             </Modal>
 
-          <div className="d-flex justify-content-center pb-3">
+          {/* <div className="d-flex justify-content-center pb-3">
             <Card 
               onClick={handleOpenModalGasto} 
               className="text-center border-light shadow-sm" 
@@ -1152,7 +1198,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               </Card.Body>
             </Card>
 
-          </div>
+          </div> */}
             
             {/* <Modal 
                 show={showModalGasto} 
@@ -1208,7 +1254,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                       </Button>
                   </Modal.Footer>
             </Modal>
-          <div className="d-flex justify-content-center pb-3">
+          {/* <div className="d-flex justify-content-center pb-3">
             <Card 
               onClick={handleOpenModalReceita} 
               className="text-center border-light shadow-sm" 
@@ -1220,7 +1266,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                 </Card.Text>
               </Card.Body>
             </Card>
-          </div>
+          </div> */}
             {/* <Modal 
                 show={showModalReceita} 
                 onHide={handleCloseModalReceita} 
@@ -1240,6 +1286,27 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                       </Button>
                   </Modal.Footer>
             </Modal> */}
+
+          <Modal
+            show={showParceiroModal}
+            onHide={handleCloseModalParceiro}
+            size="xl"
+            aria-labelledby="cadastrar-parceiro-modal"
+            centered
+          >
+            <Modal.Header style={{ backgroundColor: "#00359A" }} closeButton closeVariant="white">
+              <Modal.Title style={{ color: "white" }}>Cadastrar Parceiro</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {/* Pass the handler to close the modal after successful registration */}
+              <CadastroParceiro setShowParceiroModal={handleCloseModalParceiro} />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseModalParceiro}>
+                Fechar
+              </Button>
+            </Modal.Footer>
+          </Modal>
           </div>
         )}
       </div>
