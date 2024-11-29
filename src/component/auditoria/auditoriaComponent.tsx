@@ -266,7 +266,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
             )}
             <div className="row">
                 <div className="row justify-content-center">
-                    {filteredDados.map((dado) => (
+                    {filteredDados.slice().reverse().map((dado) => (
                         <div className="col-md-11" key={dado.id}>
                             <div
                                 className="card mb-4"
