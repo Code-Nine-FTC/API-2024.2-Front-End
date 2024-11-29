@@ -8,7 +8,7 @@ const EditarBolsistaService = async (bolsistaDados: string, idbolsista: number) 
         const resposta = await api.put(`/bolsista/atualizar/${idbolsista}`, bolsistaDados, {
             headers: {
                 Authorization: `Bearer ${getToken()} `,
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
             }
         });
 

@@ -1,8 +1,12 @@
 import api from "../api";
-
+import { getToken } from "../auth";
 const VisualizarBolsistaService = async (id: number) => {
     try {
-        const response = await api.get(`/bolsista/visualizar/${id}`);
+        const response = await api.get(`/bolsista/visualizar/${id}`, {
+            headers: {
+                Authorization: `Bearer ${getToken()}`
+            }
+        });
         console.log(response.data);
         if (response.status === 200) {
             return { status: response.status, data: response.data };

@@ -6,8 +6,7 @@ import { VisualizarBolsista } from "../../../interface/bolsistas.interface";
 import VisualizarBolsistaService from "../../../services/bolsista/visualizarBolsistaService";
 import EditarBolsistaService from "../../../services/bolsista/editarBolsistaService";
 import ExcluirBolsista from "../../../services/bolsista/excluirBolsistaService";
-import styles from "./visualizarBolsistas.module.css"
-
+import styles from "./visualizarBolsistas.module.css";
 interface visualizarbolsistaprops {
     idbolsista: number;
 }
@@ -24,7 +23,7 @@ const VisualizarBolsistaComponent: React.FC <visualizarbolsistaprops> = ({idbols
     const [duracaoBolsa, setDuracaoBolsa] = useState(bolsistaOriginal?.duracaoBolsa || '');
     const [areaAtuacao, setAreaAtuacao] = useState(bolsistaOriginal?.areaAtuacao || '');
     const navigate = useNavigate();
-
+    
     useEffect(() => {
         const fetchBolsista = async () => {
             try {
