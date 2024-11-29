@@ -5,12 +5,15 @@ import BarGraph from './charts/bar';
 import { getToken } from '../../services/auth';
 import { ChartOptions } from 'chart.js';
 import { NumericFormat} from 'react-number-format';
+import { jsPDF } from "jspdf";
 
 // Definindo a interface para os resultados
 /* interface ResultadoProjeto {
   month: string;
   value: number;
 } */
+
+type Resultados = Record<string, string>
 
 const DashboardFormComponent = () => {
   const [contratante, setContratante] = useState('');
@@ -19,7 +22,7 @@ const DashboardFormComponent = () => {
   const [valorMinimo, setValorMinimo] = useState('');
   const [valorMaximo, setValorMaximo] = useState('');
   const [situacaoProjeto, setSituacaoProjeto] = useState('Todos');
-  const [resultados, setResultados] = useState/* <ResultadoProjeto[]> */([]); // Usando o tipo definido
+  const [resultados, setResultados] = useState<Resultados>({}); // Usando o tipo definido
   const [erroMensagem, setErroMensagem] = useState('');
   const [mostrarGrafico, setMostrarGrafico] = useState(false);
 
@@ -79,6 +82,27 @@ const DashboardFormComponent = () => {
   useEffect(() => {
     console.log(resultados);
   }, [resultados]);
+
+  type Resultados = { [key: string]: number };
+
+  const gerarPDF = (dados: Resultados) => {
+    const document = new jsPDF();
+    let yPosition = 10;
+
+    Object.entries(dados).forEach(([mesAno, quantidade]: [string, number]) => {
+
+      document.text(`Mês/Ano: ${mesAno} - Quantidade: ${quantidade}`, 20, yPosition);
+      
+      yPosition += 10;
+    });
+
+    return document;
+  };
+
+   const handleDownloadPDF = () => {
+    const document = gerarPDF(resultados);
+    document.save('relatorio_projetos.pdf');
+  }; 
 
   const formatarValorBR = (valor: number | string): string => {
     // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
@@ -235,6 +259,15 @@ const DashboardFormComponent = () => {
                           value: value
                       }))}
                   />
+              </div>
+              <div className="d-flex justify-content-center">
+                <button
+                  type="submit"
+                  className="btn btn-primary mt-4 mb-4"
+                  onClick={handleDownloadPDF}
+                >
+                  Baixar PDF
+                </button>
               </div>
           </div>
       )}
