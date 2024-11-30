@@ -124,22 +124,19 @@ const CadastroDemandasComponent = (props: CadastroDemandasProps) => {
           </InputGroup>
 
           <InputGroup className="mb-3">
-            <FloatingLabel controlId="tipoDemanda" label="Tipo de Demanda">
-              <Form.Select
-                aria-label="Selecione o tipo de demanda"
+            <FloatingLabel
+              controlId="tipoDemanda"
+              label="Tipo de Demanda"
+            >
+              <Form.Control
+                type="text"
+                placeholder="Tipo da demanda"
+                required
                 value={tipo}
                 onChange={(e) => setTipo(e.target.value)}
-                required
-              >
-                <option disabled value="">
-                  Selecione o tipo
-                </option>
-                <option value="Urgente">Urgente</option>
-                <option value="Corretiva">Corretiva</option>
-                <option value="Evolutiva">Evolutiva</option>
-              </Form.Select>
+              />
               <Form.Control.Feedback type="invalid">
-                Por favor, selecione o tipo de demanda.
+                Por favor, insira um tipo de demanda.
               </Form.Control.Feedback>
             </FloatingLabel>
           </InputGroup>

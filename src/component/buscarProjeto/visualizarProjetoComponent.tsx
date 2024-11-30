@@ -246,7 +246,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
   const demandaOptions: OptionTypeDemanda[] = demandas.map((demanda) => ({
     value: demanda.id,
-    label: demanda.descricao,
+    label: demanda.tipo,
     demanda: demanda,
   }));
 

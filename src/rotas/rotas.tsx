@@ -28,11 +28,8 @@ const Rotas: FC = () => {
         <Route path="/adicionarDemanda" element={<CadastrarDemanda />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/auditorias/" element={<Auditoria />}/>
-        {/* <Route path="/sumarioProjeto" element={<SumarioProjeto />} /> */}
         <Route path="/visualizarbolsista/:id" element={<VisualizaBolsistaPage />} />
         <Route path="/listagemBolsistas" element={<ListagemBolsistas />} />
-        {/* <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/> */}
-        {/* <Route path="/prestacaoContas" element={<PrestacaoConta titulo= ''/>} /> */}
         <Route path="/resultadoProjeto" element={<ResultadoProjeto />} />
         <Route path="/listardemandas" element={<ListarDemandas />} />
       </>
