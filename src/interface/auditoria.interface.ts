@@ -1,3 +1,4 @@
+import { VisualizarDemanda } from "./demanda.interface"
 import { VisualizarDocumento } from "./documento.interface"
 import { VisualizarParceiro } from "./parceiro.interface"
 import { MudancaProjeto } from "./projeto.interface"
@@ -57,4 +58,6 @@ export interface Auditoria {
     links_novo?: string;
     documentos_novo: VisualizarDocumento[];
     dataAlteracao?: Date;
+    demanda_antiga: VisualizarDemanda;
+    demanda_nova: VisualizarDemanda;
 }

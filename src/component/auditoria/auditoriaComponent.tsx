@@ -120,6 +120,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         {selectedDado?.titulo_novo && renderField('Título', selectedDado?.titulo_antigo, selectedDado?.titulo_novo)}
                         {/* {selectedDado?.contratante_novo && renderField('Contratante', selectedDado?.contratante_antigo, selectedDado?.contratante_novo)} */}
                         {selectedDado?.parceiro_novo?.nome && renderField('Contratante', selectedDado?.parceiro_antigo?.nome, selectedDado?.parceiro_novo.nome)}
+                        {selectedDado?.demanda_nova?.descricao && renderField('Demanda', selectedDado?.demanda_antiga?.descricao, selectedDado?.demanda_nova.descricao)}
                         {selectedDado?.descricao_novo && renderField('Descrição', selectedDado?.descricao_antiga, selectedDado?.descricao_novo)}
                         {selectedDado?.valor_novo && renderField('Valor', selectedDado?.valor_antigo != null ? `${formatarValorBR(selectedDado?.valor_antigo)}` : null, selectedDado?.valor_novo != null ? `${formatarValorBR(selectedDado?.valor_novo)}` : null)}
                         {selectedDado?.dataInicio_novo && renderField('Data de Início', 
@@ -159,6 +160,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                     {/* {selectedDado?.titulo_novo && <p><strong>Título:</strong> {selectedDado?.titulo_novo}</p>} */}
                     {selectedDado?.referenciaProjeto && renderField('Referência', null, selectedDado?.referenciaProjeto)}
                     {selectedDado?.parceiro_novo && renderField('Contratante', null, selectedDado?.parceiro_novo.nome)}
+                    {selectedDado?.demanda_nova && renderField('Demanda', null, selectedDado?.demanda_nova.descricao)}
                     {selectedDado?.descricao_novo && renderField('Descrição', null, selectedDado?.descricao_novo)}
                     {selectedDado?.valor_novo && renderField('Valor', null, selectedDado?.valor_novo != null ? `${formatarValorBR(selectedDado?.valor_novo)}` : null)}
                     {selectedDado?.dataInicio_novo && renderField('Data de Início', 
@@ -184,6 +186,7 @@ const renderField = (label: string, oldValue: string | number | undefined | null
                         {/* {selectedDado?.titulo_novo && <p><strong>Título:</strong> {selectedDado?.titulo_novo}</p>} */}
                         {selectedDado?.referenciaProjeto && renderField('Referência', selectedDado?.referenciaProjeto, null)}
                         {selectedDado?.parceiro_antigo && renderField('Contratante', selectedDado?.parceiro_antigo.nome, null)}
+                        {selectedDado?.demanda_antiga && renderField('Contratante', selectedDado?.demanda_antiga.descricao, null)}
                         {selectedDado?.descricao_antiga && renderField('Descrição', selectedDado?.descricao_antiga, null)}
                         {selectedDado?.valor_antigo && renderField('Valor', selectedDado?.valor_antigo != null ? `${formatarValorBR(selectedDado?.valor_antigo)}` : null, null)}
                         {selectedDado?.dataInicio_antiga && renderField('Data de Início', 
