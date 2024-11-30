@@ -6,6 +6,7 @@ import { getToken } from '../../services/auth';
 import { ChartOptions } from 'chart.js';
 import { NumericFormat} from 'react-number-format';
 import { jsPDF } from "jspdf";
+import * as XLSX from 'xlsx';
 
 // Definindo a interface para os resultados
 /* interface ResultadoProjeto {
@@ -103,6 +104,24 @@ const DashboardFormComponent = () => {
     const document = gerarPDF(resultados);
     document.save('relatorio_projetos.pdf');
   }; 
+
+  const gerarExcel = (dados: Resultados) => {
+    const worksheetData = Object.entries(dados).map(([mesAno, quantidade]) => ({
+      'Mês/Ano': mesAno,
+      'Quantidade': quantidade,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Relatório');
+
+    return workbook;
+  };
+
+  const handleDownloadExcel = () => {
+    const workbook = gerarExcel(resultados);
+    XLSX.writeFile(workbook, 'relatorio_projetos.xlsx');
+  };
 
   const formatarValorBR = (valor: number | string): string => {
     // Verifica se o valor é uma string e faz a substituição da vírgula para ponto para conversão
@@ -260,13 +279,20 @@ const DashboardFormComponent = () => {
                       }))}
                   />
               </div>
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center gap-3">
                 <button
                   type="submit"
                   className="btn btn-primary mt-4 mb-4"
                   onClick={handleDownloadPDF}
                 >
                   Baixar PDF
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary mt-4 mb-4"
+                  onClick={handleDownloadExcel}
+                >
+                  Baixar Excel
                 </button>
               </div>
           </div>
