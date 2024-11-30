@@ -806,7 +806,6 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                   placeholder={"Selecione um parceiro"}
                   classNamePrefix="react-select"
                   noOptionsMessage={() => "Nenhuma opção disponível"}
-                  required
                 />
           )}
           <Form.Control.Feedback type="invalid">
@@ -842,7 +841,6 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                   placeholder={"Selecione uma demanda"}
                   classNamePrefix="react-select"
                   noOptionsMessage={() => "Nenhuma opção disponível"}
-                  required
                 />
           )}
           <Form.Control.Feedback type="invalid">
