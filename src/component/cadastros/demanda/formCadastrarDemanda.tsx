@@ -66,18 +66,19 @@ const CadastroDemandasComponent = (props: CadastroDemandasProps) => {
 
   return (
     <>
-      <div className="tituloSetaVoltar">
-        <span
-          className="setaVoltar"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate("/")}
-        >
-          {" "}
-          &#x2190;
-        </span>
-        <h1 className="titulo">Cadastro de Demandas</h1>
-      </div>
-
+      {!props.setShowDemandaModal && (
+        <div className="tituloSetaVoltar">
+          <span
+            className="setaVoltar"
+            style={{ cursor: "pointer" }}
+            onClick={() => (navigate("/"))}
+          >
+            {" "}
+            &#x2190;
+          </span>
+          <h1 className="titulo"> Cadastrar parceiros </h1>
+        </div>
+      )}
       <section className={styles.formMain}>
         <Form noValidate validated={formValidado} onSubmit={handleSubmit}>
           <InputGroup className="mb-3">

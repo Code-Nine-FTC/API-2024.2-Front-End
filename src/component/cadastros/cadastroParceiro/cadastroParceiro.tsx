@@ -1,4 +1,4 @@
-import { Button, FloatingLabel, Form, InputGroup} from "react-bootstrap";
+import { Button, FloatingLabel, Form, InputGroup, Modal} from "react-bootstrap";
 import React, { useState } from "react";
 import Select, { MultiValue, ActionMeta } from "react-select";
 import styles from "../../criarProjeto/criarProjeto.module.css";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import CadastrarParceiro from "../../../services/projeto/cadastrar/cadastrarParceiroService";
 import { VisualizarDemanda } from "../../../interface/demanda.interface";
 import buscarDemandasService from "../../../services/buscar/buscarDemandasService";
+import CadastroDemandasComponent from "../demanda/formCadastrarDemanda";
 
 interface CadastroParceiroProps {
   setShowParceiroModal?: (value: boolean) => void;
@@ -123,6 +124,9 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
       },
     }),
   };
+
+  const handleOpenModalDemanda = () => setShowDemandaModal(true);
+  const handleCloseModalDemanda = () => setShowDemandaModal(false);
 
   return (
     <>
@@ -243,18 +247,38 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
                   Por favor, selecione pelo menos uma demanda.
                 </Form.Control.Feedback>
               </FloatingLabel>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setShowDemandaModal(true)}
+              >
+                Adicionar Demanda
+              </Button>
             </InputGroup>
-            <Button
-              variant="outline-secondary"
-              onClick={() => setShowDemandaModal(true)}
-              style={{ marginLeft: '10px' }}
-            >
-              Adicionar Demanda
-            </Button>
           <div className={styles.botaoEnviar}>
             <Button type="submit">Enviar</Button>
           </div>
         </Form>
+
+        <Modal 
+          show={showDemandaModal} 
+          onHide={handleOpenModalDemanda} 
+          size="xl" 
+          aria-labelledby="contained-modal-title-vcenter" 
+          centered
+        >
+            <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                <Modal.Title style={{color: "white"}}>Cadastrar demanda</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <CadastroDemandasComponent setShowDemandaModal={handleCloseModalDemanda}/>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseModalDemanda}>
+                    Fechar
+                </Button>
+            </Modal.Footer>
+      </Modal>
       </section>
     </>
   );

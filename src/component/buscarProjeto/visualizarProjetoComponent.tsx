@@ -33,6 +33,7 @@ import buscarParceirosService from "../../services/buscar/buscarParceirosService
 import CadastroParceiro from "../cadastros/cadastroParceiro/cadastroParceiro";
 import buscarDemandasService from "../../services/buscar/buscarDemandasService";
 import { VisualizarDemanda } from "../../interface/demanda.interface";
+import CadastroDemandasComponent from "../cadastros/demanda/formCadastrarDemanda";
 
 interface MensagemValidacao {
   titulo: string;
@@ -121,6 +122,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [demandas, setDemandas] = useState<VisualizarDemanda[]>([]);
   const navigate = useNavigate();
   const [showParceiroModal, setShowParceiroModal] = useState<boolean>(false);
+  const [showDemandaModal, setShowDemandaModal] = useState<boolean>(false);
   const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
   const [selectedDemanda, setSelectedDemanda] = useState<OptionTypeDemanda | null>(null);
 
@@ -682,6 +684,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const handleCloseModalReceita = () => setShowModalReceita(false);
   const handleOpenModalParceiro = () => setShowParceiroModal(true);
   const handleCloseModalParceiro = () => setShowParceiroModal(false);
+  const handleOpenModalDemanda = () => setShowDemandaModal(true);
+  const handleCloseModalDemanda = () => setShowDemandaModal(false);
 
   return (
     <>
@@ -786,9 +790,8 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
        {/* Contratante */}
       <InputGroup className="mb-3">
-        <FloatingLabel controlId="validationCustom01" label={!isEditing && "Parceiro"} className="flex-grow-1" style={{ color: "#9C9C9C"}} onClick={buscarParceiros}>
         {!isEditing ? (
-            // Display parceiro.nome in a read-only field when not editing
+          <FloatingLabel controlId="validationCustom01" label={!isEditing && "Parceiro"} className="flex-grow-1" style={{ color: "#9C9C9C"}}>
             <Form.Control
               type="text"
               placeholder="Parceiro"
@@ -796,34 +799,40 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               value={(!autenticado && hideContratante) ? "" : parceiro?.nome}
               readOnly
             />
+          </FloatingLabel>
           ) : (
-            // Display a select dropdown when editing
-            <Select
-                  styles={customStyles}
-                  options={parceiroOptions}
-                  value={selectedParceiro}
-                  onChange={handleParceirosChange}
-                  placeholder={"Selecione um parceiro"}
-                  classNamePrefix="react-select"
-                  noOptionsMessage={() => "Nenhuma opção disponível"}
-                />
-          )}
-          <Form.Control.Feedback type="invalid">
-            Por favor, insira o contratante do projeto.
-          </Form.Control.Feedback>
-        </FloatingLabel>
-        {isEditing && (
-          <InputGroup.Checkbox
-            aria-label="Checkbox for following text input"
-            checked={hideContratante}
-            onChange={(e) => setHideContratante(e.target.checked)}
-          />
-        )}
+            <>
+              <FloatingLabel controlId="validationCustom01" label={!isEditing && "Parceiro"} className="flex-grow-1" style={{ color: "#9C9C9C"}} onClick={buscarParceiros}>
+                <Select
+                      styles={customStyles}
+                      options={parceiroOptions}
+                      value={selectedParceiro}
+                      onChange={handleParceirosChange}
+                      placeholder={ "Selecione um parceiro"}
+                      classNamePrefix="react-select"
+                      noOptionsMessage={() => "Nenhuma opção disponível"}
+                      // isInvalid={camposValidados && !selectedParceiro}
+                    />
+              </FloatingLabel>
+              <InputGroup.Checkbox
+                aria-label="Checkbox for following text input"
+                checked={hideContratante}
+                onChange={(e) => setHideContratante(e.target.checked)}
+              />
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setShowParceiroModal(true)}
+              >
+                Adicionar Parceiro
+              </Button>
+            </>
+      )}
       </InputGroup>
+      
       <InputGroup className="mb-3">
-        <FloatingLabel controlId="validationCustom01" label={!isEditing && "Demanda"} className="flex-grow-1" style={{ color: "#9C9C9C"}} onClick={buscarDemandas}>
         {!isEditing ? (
-            // Display parceiro.nome in a read-only field when not editing
+          <FloatingLabel controlId="validationCustom01" label={!isEditing && "Demanda"} className="flex-grow-1" style={{ color: "#9C9C9C"}}>
             <Form.Control
               type="text"
               placeholder="Demanda"
@@ -831,22 +840,32 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               value={(!autenticado) ? "" : classificacaoDemanda?.descricao}
               readOnly
             />
+          </FloatingLabel>
           ) : (
-            // Display a select dropdown when editing
-            <Select
-                  styles={customStyles}
-                  options={demandaOptions}
-                  value={selectedDemanda}
-                  onChange={handleDemandasChange}
-                  placeholder={"Selecione uma demanda"}
-                  classNamePrefix="react-select"
-                  noOptionsMessage={() => "Nenhuma opção disponível"}
-                />
+            <>
+              <FloatingLabel controlId="validationCustom01" label={!isEditing && "Demanda"} className="flex-grow-1" style={{ color: "#9C9C9C"}} onClick={buscarDemandas}>
+                <Select
+                      styles={customStyles}
+                      options={demandaOptions}
+                      value={selectedDemanda}
+                      onChange={handleDemandasChange}
+                      placeholder={"Selecione uma demanda"}
+                      classNamePrefix="react-select"
+                      noOptionsMessage={() => "Nenhuma opção disponível"}
+                    />
+              </FloatingLabel>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setShowDemandaModal(true)}
+              >
+                Adicionar Demanda
+              </Button>
+            </>
           )}
           <Form.Control.Feedback type="invalid">
             Por favor, insira a demanda do projeto.
           </Form.Control.Feedback>
-        </FloatingLabel>
       </InputGroup>
 
         {/* Situação do Projeto */}
@@ -1417,6 +1436,25 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               <Button variant="secondary" onClick={handleCloseModalParceiro}>
                 Fechar
               </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal 
+            show={showDemandaModal} 
+            onHide={handleOpenModalDemanda} 
+            size="xl" 
+            aria-labelledby="contained-modal-title-vcenter" 
+            centered
+          >
+            <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                <Modal.Title style={{color: "white"}}>Cadastrar demanda</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <CadastroDemandasComponent setShowDemandaModal={handleCloseModalDemanda}/>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseModalDemanda}>
+                    Fechar
+                </Button>
             </Modal.Footer>
           </Modal>
           </div>
