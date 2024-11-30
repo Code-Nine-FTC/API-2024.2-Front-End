@@ -10,12 +10,12 @@ export interface CadastroBolsista {
 }
 
 export interface VisualizarBolsista {
-    IdBolsista: number,
+    id: number,
     nome: string,
     documento: string,
-    RG: string,
+    rg: string,
     tipoBolsa: string,
-    duracaoBolsa: string,
+    duracao: string,
     areaAtuacao: string
 }
 

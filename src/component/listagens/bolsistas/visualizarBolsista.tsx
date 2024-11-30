@@ -18,9 +18,9 @@ const VisualizarBolsistaComponent: React.FC <visualizarbolsistaprops> = ({idbols
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [nome, setNome] = useState(bolsistaOriginal?.nome || '');
     const [documento, setDocumento] = useState(bolsistaOriginal?.documento || '');
-    const [rg, setRG] = useState(bolsistaOriginal?.RG || '');
+    const [rg, setRG] = useState(bolsistaOriginal?.rg || '');
     const [tipoBolsa, setTipoBolsa] = useState(bolsistaOriginal?.tipoBolsa || '');
-    const [duracaoBolsa, setDuracaoBolsa] = useState(bolsistaOriginal?.duracaoBolsa || '');
+    const [duracaoBolsa, setDuracaoBolsa] = useState(bolsistaOriginal?.duracao || '');
     const [areaAtuacao, setAreaAtuacao] = useState(bolsistaOriginal?.areaAtuacao || '');
     const navigate = useNavigate();
     
@@ -47,9 +47,9 @@ const VisualizarBolsistaComponent: React.FC <visualizarbolsistaprops> = ({idbols
     if (bolsistaOriginal) {
         setNome(bolsistaOriginal.nome);
         setDocumento(bolsistaOriginal.documento);
-        setRG(bolsistaOriginal.RG);
+        setRG(bolsistaOriginal.rg);
         setTipoBolsa(bolsistaOriginal.tipoBolsa);
-        setDuracaoBolsa(bolsistaOriginal.duracaoBolsa);
+        setDuracaoBolsa(bolsistaOriginal.duracao);
         setAreaAtuacao(bolsistaOriginal.areaAtuacao);
     } 
 }, [bolsistaOriginal]);
@@ -64,32 +64,34 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     const camposEditados = {
         nome: nome,
         documento: documento,
-        RG: rg,
+        rg: rg,
         tipoBolsa: tipoBolsa,
-        duracaoBolsa: duracaoBolsa,
+        duracao: duracaoBolsa,
         areaAtuacao: areaAtuacao,
     }
 
     console.log("camposEditados:", camposEditados);
 
-    const FormData = (
-        camposEditados.nome,
-        camposEditados.documento,
-        camposEditados.RG,
-        camposEditados.tipoBolsa,
-        camposEditados.duracaoBolsa,
-        camposEditados.areaAtuacao
-    )
+    const FormData = {
+    nome: camposEditados.nome,
+    documento: camposEditados.documento,
+    rg: camposEditados.rg,
+    tipoBolsa: camposEditados.tipoBolsa,
+    duracao: camposEditados.duracao,
+    areaAtuacao: camposEditados.areaAtuacao,
+};
     try {
         const response = await EditarBolsistaService(FormData,idbolsista);
         if (response.status === 200) {
-            SweetAlert2.fire({
-                icon: 'success',
-                title: 'Bolsista atualizado com sucesso',
-                showConfirmButton: false,
-                timer: 1500
-            });
+          SweetAlert2.fire({
+            title: "Sucesso!",
+            text: "Bolsista atualizado com sucesso.",
+            icon: "success",
+        }).then(() => {
+            navigate(`/listagemBolsistas`);
             setIsEditing(false);
+        });
+        
         } else {
             setError(response.message);
         }

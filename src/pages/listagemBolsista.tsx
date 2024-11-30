@@ -12,7 +12,7 @@ const ListagemBolsistas: React.FC = () => {
     const [isFetching, setIsFetching] = useState(false);
 
     const navegarBolsista = (bolsista: VisualizarBolsista) => {
-        navigate(`/visualizarbolsista/${bolsista.IdBolsista}`);
+        navigate(`/visualizarbolsista/${bolsista.id}`);
     };
 
     const fetchBolsistas = async () => {
@@ -42,13 +42,13 @@ const ListagemBolsistas: React.FC = () => {
             ) : (
                 bolsistas.map((bolsista) => (
                     <div
-                        key={bolsista.IdBolsista}
+                        key={bolsista.id}
                         className={styles.projeto}
                         onClick={() => navegarBolsista(bolsista)}
                     >
                         <FaRegFileLines style={{ fontSize: 34 }} />
                         <p>{bolsista.nome}</p>
-                        <p>{bolsista.RG}</p>
+                        <p>{bolsista.rg}</p>
                     </div>
                 ))
             )}
