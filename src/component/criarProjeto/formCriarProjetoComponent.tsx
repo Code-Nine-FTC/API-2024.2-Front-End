@@ -1,6 +1,6 @@
-import { Button, FloatingLabel, Form, InputGroup, Modal } from "react-bootstrap";
+import { Button, FloatingLabel, Form, InputGroup, Modal, Accordion, Card, Row, Col } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
-import Select, { SingleValue, ActionMeta } from "react-select";
+import Select, { SingleValue, MultiValue, ActionMeta } from "react-select";
 import { NumberFormatValues, NumericFormat} from 'react-number-format';
 import styles from "./criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
@@ -15,6 +15,8 @@ import CadastroDemandasComponent from "../cadastros/demanda/formCadastrarDemanda
 import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
 import { VisualizarDemanda } from "../../interface/demanda.interface";
 import buscarDemandasService from "../../services/buscar/buscarDemandasService";
+import { VisualizarBolsista } from "../../interface/bolsistas.interface";
+import buscarBolsistasService from "../../services/buscar/buscarBolsistasService";
 
 interface MensagemValidacao {
   titulo: string;
@@ -31,6 +33,12 @@ interface OptionTypeDemanda {
   value: number;
   label: string;
   demanda: VisualizarDemanda;
+}
+
+interface OptionTypeBolsista {
+  value: number | string; 
+  label: string;
+  bolsista: VisualizarBolsista;
 }
 
 const CriarProjetoComponent = () => {
@@ -60,11 +68,13 @@ const CriarProjetoComponent = () => {
   const [valorValid, setValorValid] = useState<boolean | null>(null);
   const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
   const [demandas, setDemandas] = useState<VisualizarDemanda[]>([]);
+  const [bolsistas, setBolsistas] = useState<VisualizarBolsista[]>([]);
   const [showParceiroModal, setShowParceiroModal] = useState(false);
   const [showDemandaModal, setShowDemandaModal] = useState<boolean>(false);
   const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
   const [selectedDemanda, setSelectedDemanda] = useState<OptionTypeDemanda | null>(null);
-
+  const [selectedBolsistas, setSelectedBolsistas] = useState<OptionTypeBolsista[]>([]);
+  const [newBolsistas, setNewBolsistas] = useState<VisualizarBolsista[]>([]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -93,6 +103,32 @@ const CriarProjetoComponent = () => {
 
     const camposOcultosString = camposOcultos.join(", ");
 
+    // Extrair bolsistas selecionados (existentes)
+  const bolsistasSelecionados = selectedBolsistas.map(option => ({
+    id: option.bolsista.id,
+    nome: option.bolsista.nome,
+    documento: option.bolsista.documento,
+    rg: option.bolsista.rg,
+    tipoBolsa: option.bolsista.tipoBolsa,
+    duracao: option.bolsista.duracao,
+    areaAtuacao: option.bolsista.areaAtuacao,
+    // Outros campos conforme necessário
+  }));
+
+  // Bolsistas novos (remover o campo 'id')
+  const bolsistasNovos = newBolsistas.map(bolsista => ({
+    nome: bolsista.nome,
+    documento: bolsista.documento,
+    rg: bolsista.rg,
+    tipoBolsa: bolsista.tipoBolsa,
+    duracao: bolsista.duracao,
+    areaAtuacao: bolsista.areaAtuacao,
+    // Não incluir 'id'
+  }));
+
+  // Combinar ambas as listas
+  const todosBolsistas = [...bolsistasSelecionados, ...bolsistasNovos];
+
     const projeto = {
       titulo: tituloProjeto,
       referencia: referenciaProjeto,
@@ -105,6 +141,7 @@ const CriarProjetoComponent = () => {
       camposOcultos: camposOcultosString,
       parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
       classificacaoDemanda: selectedDemanda ? selectedDemanda.demanda : undefined, 
+      bolsistas: todosBolsistas,
     };
 
     console.log(projeto);
@@ -170,6 +207,36 @@ const CriarProjetoComponent = () => {
     demanda: demanda,
   }));
 
+  useEffect (() => {
+    async function buscarBolsistas() {
+      const resposta = await buscarBolsistasService();
+      if (resposta.status === 200) {
+        setBolsistas(resposta.data);
+        console.log(resposta.data);
+      } else {
+        console.log(resposta.message);
+      }
+    }
+    buscarBolsistas();
+  }, []);
+
+  const bolsistaOptions: OptionTypeBolsista[] = bolsistas
+    .filter(bolsista => bolsista.id !== undefined) // Filtrar bolsistas sem id
+    .map((bolsista) => ({
+      value: bolsista.id as number, // Assegura que id não é undefined
+      label: bolsista.nome,
+      bolsista: bolsista,
+    }));
+  
+  const novosBolsistasOptions: OptionTypeBolsista[] = newBolsistas.map((bolsista, index) => ({
+    value: `novo-${index}`,
+    label: bolsista.nome || `Novo Bolsista ${index + 1}`,
+    bolsista: bolsista,
+  }));
+  
+  // // Combinar ambas as listas se necessário
+  // const todasBolsistasOptions: OptionTypeBolsista[] = [...bolsistaOptions, ...novosBolsistasOptions];
+
   const customStyles = {
     control: (provided: any) => ({
       ...provided,
@@ -233,6 +300,38 @@ const CriarProjetoComponent = () => {
     actionMeta: ActionMeta<OptionTypeDemanda>
   ) => {
     setSelectedDemanda(selected);
+  };
+
+  const addNewBolsista = () => {
+    const novoBolsista: VisualizarBolsista = {
+      id: Date.now(),
+      nome: "",
+      documento: "",
+      rg: "",
+      tipoBolsa: "",
+      duracao: "",
+      areaAtuacao: "",
+      // Outros campos conforme necessário
+    };
+    setNewBolsistas([...newBolsistas, novoBolsista]);
+  };
+  
+  // Remover um bolsista pelo índice
+  const removeNewBolsista = (index: number) => {
+    const updatedBolsistas = [...newBolsistas];
+    updatedBolsistas.splice(index, 1);
+    setNewBolsistas(updatedBolsistas);
+  };
+  
+  // Atualizar um campo de um novo bolsista
+  const handleNewBolsistaChange = (
+    index: number,
+    field: keyof VisualizarBolsista,
+    value: string
+  ) => {
+    const updatedBolsistas = [...newBolsistas];
+    updatedBolsistas[index] = { ...updatedBolsistas[index], [field]: value };
+    setNewBolsistas(updatedBolsistas);
   };
 
   const handleOpenModalParceiro = () => setShowParceiroModal(true);
@@ -443,6 +542,155 @@ const CriarProjetoComponent = () => {
               onChange={(e) => setHideCoordenador(e.target.checked)}
             />
           </InputGroup>
+
+          <Form.Group className="mb-3">
+      <Form.Label>Bolsistas Existentes</Form.Label>
+      <Select
+        isMulti
+        styles={customStyles}
+        options={bolsistaOptions}
+        value={selectedBolsistas}
+        onChange={(selectedOptions) =>
+          setSelectedBolsistas(selectedOptions as OptionTypeBolsista[])
+        }
+        placeholder="Selecione bolsistas já cadastrados"
+        classNamePrefix="react-select"
+        noOptionsMessage={() => "Nenhuma opção disponível"}
+      />
+      {/* Validação de erros, se necessário */}
+      {/* {camposValidados && selectedBolsistas.length === 0 && (
+        <div className="text-danger">
+          Por favor, selecione pelo menos um bolsista ou adicione um novo.
+        </div>
+      )} */}
+    </Form.Group>
+
+    {/* Accordion para cadastrar novos bolsistas */}
+    <Accordion defaultActiveKey="0" className="mb-3">
+      <Accordion.Item eventKey="0">
+        <Accordion.Header>Cadastrar Novos Bolsistas</Accordion.Header>
+        <Accordion.Body>
+          {newBolsistas.length === 0 && (
+            <p>Nenhum bolsista adicionado. Clique em "Adicionar Bolsista" para começar.</p>
+          )}
+          {newBolsistas.map((bolsista, index) => (
+            <Card key={index} className="mb-3">
+              <Card.Header>
+                <strong>Bolsista {index + 1}</strong>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  className="float-end"
+                  onClick={() => removeNewBolsista(index)}
+                >
+                  Excluir
+                </Button>
+              </Card.Header>
+              <Card.Body>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId={`newBolsistaNome-${index}`} className="mb-3">
+                      <Form.Label>Nome</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Digite o nome do bolsista"
+                        value={bolsista.nome}
+                        onChange={(e) =>
+                          handleNewBolsistaChange(index, "nome", e.target.value)
+                        }
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId={`newBolsistaDocumento-${index}`} className="mb-3">
+                      <Form.Label>Documento</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Digite o documento do bolsista"
+                        value={bolsista.documento}
+                        onChange={(e) =>
+                          handleNewBolsistaChange(index, "documento", e.target.value)
+                        }
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId={`newBolsistaRG-${index}`} className="mb-3">
+                      <Form.Label>RG</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Digite o RG do bolsista"
+                        value={bolsista.rg}
+                        onChange={(e) =>
+                          handleNewBolsistaChange(index, "rg", e.target.value)
+                        }
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                {/* Adicione outros campos conforme necessário */}
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId={`newBolsistaTipoBolsa-${index}`} className="mb-3">
+                      <Form.Label>Tipo de Bolsa</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Digite o tipo de bolsa"
+                        value={bolsista.tipoBolsa}
+                        onChange={(e) =>
+                          handleNewBolsistaChange(index, "tipoBolsa", e.target.value)
+                        }
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId={`newBolsistaDuracao-${index}`} className="mb-3">
+                      <Form.Label>Duração</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Digite a duração da bolsa"
+                        value={bolsista.duracao}
+                        onChange={(e) =>
+                          handleNewBolsistaChange(index, "duracao", e.target.value)
+                        }
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId={`newBolsistaAreaAtuacao-${index}`} className="mb-3">
+                      <Form.Label>Área de Atuação</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Digite a área de atuação"
+                        value={bolsista.areaAtuacao}
+                        onChange={(e) =>
+                          handleNewBolsistaChange(index, "areaAtuacao", e.target.value)
+                        }
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          ))}
+
+          {/* Botão para adicionar mais bolsistas */}
+          <Button variant="primary" onClick={addNewBolsista}>
+            Adicionar Bolsista
+          </Button>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
 
           <InputGroup className="mb-3">
             <FloatingLabel

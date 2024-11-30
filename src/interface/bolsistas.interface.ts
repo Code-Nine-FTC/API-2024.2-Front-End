@@ -10,7 +10,7 @@ export interface CadastroBolsista {
 }
 
 export interface VisualizarBolsista {
-    id: number,
+    id?: number,
     nome: string,
     documento: string,
     rg: string,
