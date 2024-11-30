@@ -2,17 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Button, FloatingLabel, Form, Row, Col } from 'react-bootstrap';
 import api from '../../services/api';
 import BarGraph from './charts/bar';
+import PieGraph from './charts/pie';
+import { Bar } from 'react-chartjs-2';
 import { getToken } from '../../services/auth';
 import { ChartOptions } from 'chart.js';
 import { NumericFormat} from 'react-number-format';
 import { jsPDF } from "jspdf";
 import * as XLSX from 'xlsx';
-
-// Definindo a interface para os resultados
-/* interface ResultadoProjeto {
-  month: string;
-  value: number;
-} */
 
 type Resultados = Record<string, string>
 
@@ -24,9 +20,12 @@ const DashboardFormComponent = () => {
   const [valorMaximo, setValorMaximo] = useState('');
   const [situacaoProjeto, setSituacaoProjeto] = useState('Todos');
   const [resultados, setResultados] = useState<Resultados>({}); // Usando o tipo definido
+  const [resultadosPie, setResultadosPie] = useState<Resultados>({});
   const [erroMensagem, setErroMensagem] = useState('');
   const [mostrarGrafico, setMostrarGrafico] = useState(false);
-
+  const [mostrarGrafPie, setMostrarGrafPie] = useState(false);
+  const [resultadosValor, setResultadosValor] = useState<{ ano: string, valor: number }[]>([]);
+  const [dadosGraficoValor, setDadosGraficoValor] = useState<{ ano: string, valor: number }[]>([]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,7 +72,41 @@ const DashboardFormComponent = () => {
 
       setResultados(resposta.data);
       setMostrarGrafico(true); 
-      limparFormulario();
+    } catch (erro: any) {
+      console.error('Erro ao enviar os dados:', erro.response ? erro.response : erro);
+      setErroMensagem('Ocorreu um erro ao enviar os dados. Tente novamente.');
+    }
+  };
+
+  const handleValorCoord = async () => {
+    try {
+      const resposta = await api.get(`/dashboard/valorano/${coordenador}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+  
+      const dados = Object.entries(resposta.data).map(([ano, valor]) => ({
+        ano,
+        valor: parseFloat(valor as string),
+      }));
+  
+      setDadosGraficoValor(dados);
+      setResultadosValor(dados);
+      setMostrarGrafico(true);
+    } catch (erro: any) {
+    }
+  };
+
+  const handleGraph = async () => {
+    try{
+      const resposta = await api.get('/dashboard/demandas', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      setResultadosPie(resposta.data);
+      setMostrarGrafPie(true);
     } catch (erro: any) {
       console.error('Erro ao enviar os dados:', erro.response ? erro.response : erro);
       setErroMensagem('Ocorreu um erro ao enviar os dados. Tente novamente.');
@@ -105,6 +138,11 @@ const DashboardFormComponent = () => {
     document.save('relatorio_projetos.pdf');
   }; 
 
+  const handleDownloadPDFPie = () => {
+    const document = gerarPDF(resultadosPie);
+    document.save('relatorio_projetos.pdf');
+  }; 
+
   const gerarExcel = (dados: Resultados) => {
     const worksheetData = Object.entries(dados).map(([mesAno, quantidade]) => ({
       'Mês/Ano': mesAno,
@@ -120,6 +158,11 @@ const DashboardFormComponent = () => {
 
   const handleDownloadExcel = () => {
     const workbook = gerarExcel(resultados);
+    XLSX.writeFile(workbook, 'relatorio_projetos.xlsx');
+  };
+
+  const handleDownloadExcelPie = () => {
+    const workbook = gerarExcel(resultadosPie);
     XLSX.writeFile(workbook, 'relatorio_projetos.xlsx');
   };
 
@@ -155,6 +198,10 @@ const DashboardFormComponent = () => {
     }
     return anos;
   };
+
+  useEffect(() => {
+    handleGraph();
+  }, []);
 
   return (
     <div className="container">
@@ -252,14 +299,16 @@ const DashboardFormComponent = () => {
 
           <Row>
             <Col className="text-center">
-              <Button variant="secondary" type="submit">
+              <Button onClick={(e) => { handleSubmit(e); handleValorCoord(); }} variant="secondary" type="submit" style={{ marginRight: '5px' }}>
                 Gerar
+              </Button>
+              <Button onClick={limparFormulario} variant="secondary" type="button" >
+                Limpar
               </Button>
             </Col>
           </Row>
         </Form>
       </div>
-
       {mostrarGrafico && (
           <div className="container my-4">
               <div 
@@ -297,7 +346,65 @@ const DashboardFormComponent = () => {
               </div>
           </div>
       )}
+{coordenador && dadosGraficoValor.length > 0 && (
+      <div>
+        <h3>Valor por Ano</h3>
+        <Bar
+          data={{
+            labels: dadosGraficoValor.map(item => item.ano),
+            datasets: [
+              {
+                label: 'Valor',
+                data: dadosGraficoValor.map(item => item.valor),
+                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+              },
+            ],
+          }}
+        />
+      </div>
+    )}
+            {mostrarGrafPie && (
+        <div className="container my-4">
+          <h1>Quantidade de Projetos por Demanda</h1>
+          <div 
+            className="card shadow-sm"
+            style={{ 
+              backgroundColor: 'white', 
+              border: '1px solid #ccc', 
+              borderRadius: '10px', 
+              padding: '20px'
+            }}
+          >
+            <PieGraph
+              data={Object.entries(resultadosPie).map(([label, value]) => ({
+                label: label,
+                value: value
+              }))}
+            />
+        </div>
+                  <div className="d-flex justify-content-center gap-3">
+                    <button
+                      type="submit"
+                      className="btn btn-primary mt-4 mb-4"
+                      onClick={handleDownloadPDFPie}
+                    >
+                      Baixar PDF
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary mt-4 mb-4"
+                      onClick={handleDownloadExcelPie}
+                    >
+                      Baixar Excel
+                    </button>
+                  </div>
+              </div>
+)}
+
+      
     </div>
+
+    
   );
 };
 
