@@ -31,6 +31,8 @@ import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
 import { VisualizarParceiro } from "../../interface/parceiro.interface";
 import buscarParceirosService from "../../services/buscar/buscarParceirosService";
 import CadastroParceiro from "../cadastros/cadastroParceiro/cadastroParceiro";
+import buscarDemandasService from "../../services/buscar/buscarDemandasService";
+import { VisualizarDemanda } from "../../interface/demanda.interface";
 
 interface MensagemValidacao {
   titulo: string;
@@ -45,6 +47,12 @@ interface OptionTypeParceiro {
   value: number;
   label: string;
   parceiro: VisualizarParceiro;
+}
+
+interface OptionTypeDemanda {
+  value: number;
+  label: string;
+  demanda: VisualizarDemanda;
 }
 
 const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
@@ -76,6 +84,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     projetoOriginal?.nomeCoordenador || ""
   );
   const [parceiro, setParceiro] = useState(projetoOriginal?.parceiro || null);
+  const [classificacaoDemanda, setClassificacaoDemanda] = useState(projetoOriginal?.classificacaoDemanda || null);
   const [demanda, setDemanda] = useState(projetoOriginal?.classificacaoDemanda || null);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -109,9 +118,11 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [showModalBolsista, setShowModalBolsista] = useState(false);
   const [showModalReceita, setShowModalReceita] = useState(false);
   const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
+  const [demandas, setDemandas] = useState<VisualizarDemanda[]>([]);
   const navigate = useNavigate();
   const [showParceiroModal, setShowParceiroModal] = useState<boolean>(false);
   const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
+  const [selectedDemanda, setSelectedDemanda] = useState<OptionTypeDemanda | null>(null);
 
   useEffect(() => {
     const fetchProjeto = async () => {
@@ -165,6 +176,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       setStartDate(parse(projetoOriginal.dataInicio, 'yyyy-MM-dd', new Date()));
       setEndDate(parse(projetoOriginal.dataTermino, 'yyyy-MM-dd', new Date()));
       setParceiro(projetoOriginal.parceiro || null);
+      setClassificacaoDemanda(projetoOriginal.classificacaoDemanda || null);
       // setValor(formatarValorBR(projetoOriginal.valor?.toString() || ""));
       setDocumentos(projetoOriginal.documentos);
       projetoOriginal.documentos.forEach((doc) => {
@@ -219,6 +231,22 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     label: parceiro.nome,
     parceiro: parceiro,
   }));
+  
+  async function buscarDemandas() {
+    const resposta = await buscarDemandasService();
+    if (resposta.status === 200) {
+      setDemandas(resposta.data);
+      console.log(resposta.data);
+    } else {
+      console.log(resposta.message);
+    }
+  }
+
+  const demandaOptions: OptionTypeDemanda[] = demandas.map((demanda) => ({
+    value: demanda.id,
+    label: demanda.descricao,
+    demanda: demanda,
+  }));
 
   const customStyles = {
     control: (provided: any) => ({
@@ -271,6 +299,13 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     setSelectedParceiro(selected);
   };
 
+  const handleDemandasChange = (
+    selected: SingleValue<OptionTypeDemanda>,
+    actionMeta: ActionMeta<OptionTypeDemanda>
+  ) => {
+    setSelectedDemanda(selected);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -306,6 +341,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       camposOcultos: camposOcultosString,
       valor: valor.toString(),
       parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
+      classificacaoDemanda: selectedDemanda ? selectedDemanda.demanda : undefined, 
     };
 
     console.log("camposEditados:", camposEditados);
@@ -750,7 +786,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
        {/* Contratante */}
       <InputGroup className="mb-3">
-        <FloatingLabel controlId="validationCustom01" label={!isEditing && "Parceiro"} className="flex-grow-1" style={{ color: "#9C9C9C"}}>
+        <FloatingLabel controlId="validationCustom01" label={!isEditing && "Parceiro"} className="flex-grow-1" style={{ color: "#9C9C9C"}} onClick={buscarParceiros}>
         {!isEditing ? (
             // Display parceiro.nome in a read-only field when not editing
             <Form.Control
@@ -759,7 +795,6 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
               required
               value={(!autenticado && hideContratante) ? "" : parceiro?.nome}
               readOnly
-              onClick={buscarParceiros}
             />
           ) : (
             // Display a select dropdown when editing
@@ -785,6 +820,35 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
             onChange={(e) => setHideContratante(e.target.checked)}
           />
         )}
+      </InputGroup>
+      <InputGroup className="mb-3">
+        <FloatingLabel controlId="validationCustom01" label={!isEditing && "Demanda"} className="flex-grow-1" style={{ color: "#9C9C9C"}} onClick={buscarDemandas}>
+        {!isEditing ? (
+            // Display parceiro.nome in a read-only field when not editing
+            <Form.Control
+              type="text"
+              placeholder="Demanda"
+              required
+              value={(!autenticado) ? "" : classificacaoDemanda?.descricao}
+              readOnly
+            />
+          ) : (
+            // Display a select dropdown when editing
+            <Select
+                  styles={customStyles}
+                  options={demandaOptions}
+                  value={selectedDemanda}
+                  onChange={handleDemandasChange}
+                  placeholder={"Selecione uma demanda"}
+                  classNamePrefix="react-select"
+                  noOptionsMessage={() => "Nenhuma opção disponível"}
+                  required
+                />
+          )}
+          <Form.Control.Feedback type="invalid">
+            Por favor, insira a demanda do projeto.
+          </Form.Control.Feedback>
+        </FloatingLabel>
       </InputGroup>
 
         {/* Situação do Projeto */}
