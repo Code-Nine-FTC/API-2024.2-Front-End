@@ -12,7 +12,7 @@ import VisualizaBolsistaPage from "../pages/visualizarBolsistaPage";
 import ResultadoProjeto from "../component/resultadoProjeto/resultadoProjetoComponent";
 import ListagemBolsistas from "../pages/listagemBolsista";
 import CadastrarDemanda from "../pages/cadastrarDemanda";
-
+import ListarDemandas from "../pages/listagemDemandas";
 
 const Rotas: FC = () => {
   const { isAutenticado } = useContext(AuthContext);
@@ -34,6 +34,7 @@ const Rotas: FC = () => {
         {/* <Route path="/cadastroMaterial" element={<CadastroMaterial/>}/> */}
         {/* <Route path="/prestacaoContas" element={<PrestacaoConta titulo= ''/>} /> */}
         <Route path="/resultadoProjeto" element={<ResultadoProjeto />} />
+        <Route path="/listardemandas" element={<ListarDemandas />} />
       </>
     );
   } else {
@@ -43,6 +44,7 @@ const Rotas: FC = () => {
       </>
     );
   }
+
   return (
     <Routes>
       {/* Rotas abertas para todos */}
