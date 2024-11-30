@@ -1,5 +1,6 @@
 import { Button, FloatingLabel, Form, InputGroup, Modal } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
+import Select, { SingleValue, ActionMeta } from "react-select";
 import { NumberFormatValues, NumericFormat} from 'react-number-format';
 import styles from "./criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
@@ -15,6 +16,12 @@ import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
 interface MensagemValidacao {
   titulo: string;
   texto: string;
+}
+
+interface OptionTypeParceiro {
+  value: number;
+  label: string;
+  parceiro: VisualizarParceiro;
 }
 
 const CriarProjetoComponent = () => {
@@ -44,6 +51,8 @@ const CriarProjetoComponent = () => {
   const [valorValid, setValorValid] = useState<boolean | null>(null);
   const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
   const [showParceiroModal, setShowParceiroModal] = useState(false);
+  const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -72,8 +81,6 @@ const CriarProjetoComponent = () => {
 
     const camposOcultosString = camposOcultos.join(", ");
 
-    const selectedParceiro = parceiros.find(parceiro => parceiro.id === contratante);
-
     const projeto = {
       titulo: tituloProjeto,
       referencia: referenciaProjeto,
@@ -84,7 +91,7 @@ const CriarProjetoComponent = () => {
       dataTermino: dataTerminoString || "",
       // contratante: "",
       camposOcultos: camposOcultosString,
-      parceiro: selectedParceiro
+      parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
     };
 
     console.log(projeto);
@@ -127,6 +134,63 @@ const CriarProjetoComponent = () => {
       console.log(resposta.message);
     }
   }
+  
+  const parceiroOptions: OptionTypeParceiro[] = parceiros.map((parceiro) => ({
+    value: parceiro.id,
+    label: parceiro.nome,
+    parceiro: parceiro,
+  }));
+
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      minHeight: '38px', // Altura padrão do Form.Control
+      height: '38px',
+      borderColor: "#ced4da",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#86b7fe",
+      },
+    }),
+    indicatorsContainer: (provided: any) => ({
+      ...provided,
+      height: '38px',
+    }),
+    valueContainer: (provided: any) => ({
+      ...provided,
+      height: '38px',
+      padding: '0 6px', // Ajuste o padding conforme necessário
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      margin: '0',
+      padding: '0',
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: "#495057",
+      lineHeight: '38px', // Alinha verticalmente o texto
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      zIndex: 9999,
+    }),
+    dropdownIndicator: (provided: any) => ({
+      ...provided,
+      padding: '0 8px',
+    }),
+    clearIndicator: (provided: any) => ({
+      ...provided,
+      padding: '0 8px',
+    }),
+  };
+
+  const handleParceirosChange = (
+    selected: SingleValue<OptionTypeParceiro>,
+    actionMeta: ActionMeta<OptionTypeParceiro>
+  ) => {
+    setSelectedParceiro(selected);
+  };
 
   const handleOpenModalParceiro = () => setShowParceiroModal(true);
   const handleCloseModalParceiro = () => setShowParceiroModal(false);
@@ -197,7 +261,7 @@ const CriarProjetoComponent = () => {
               label="Referência de projeto"
               controlId="validationCustom02"
               className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
+              style={{ color: "#9C9C9C"}}
             >
               <Form.Control
                 type="text"
@@ -214,33 +278,22 @@ const CriarProjetoComponent = () => {
 
           <InputGroup className="mb-3">
             <FloatingLabel
-              label="Contratante"
+              label=""
               controlId="validationCustom03"
               className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
+              style={{ color: "#9C9C9C"}}
+              onClick={buscarParceiros}
             >
-              <Form.Select
-                // value={contratante}
-                onChange={(e) => {
-                  const selectedValue = e. target.value;
-                  if (selectedValue === "cadastrarParceiro") {
-                    handleOpenModalParceiro();
-                    setContratante(null); 
-                  } else {
-                    setContratante(Number(selectedValue));
-                  }
-                }}
-                onClick={buscarParceiros} 
-                required
-              >
-                <option value="">Selecione um parceiro</option>
-                <option value="cadastrarParceiro"> Cadastrar um parceiro </option>
-                {parceiros.map((parceiro) => (
-                  <option key={parceiro.id} value={parceiro.id}>
-                    {parceiro.nome}
-                  </option>
-                ))}
-              </Form.Select>
+              <Select
+                  styles={customStyles}
+                  options={parceiroOptions}
+                  value={selectedParceiro}
+                  onChange={handleParceirosChange}
+                  placeholder={"Selecione um parceiro"}
+                  classNamePrefix="react-select"
+                  noOptionsMessage={() => "Nenhuma opção disponível"}
+                  required
+                />
               <Form.Control.Feedback type="invalid">
                 Por favor, insira o parceiro.
               </Form.Control.Feedback>
