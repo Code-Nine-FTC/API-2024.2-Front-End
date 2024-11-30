@@ -1,12 +1,21 @@
 import { Button, FloatingLabel, Form, InputGroup} from "react-bootstrap";
 import React, { useState } from "react";
+import Select, { MultiValue, ActionMeta } from "react-select";
 import styles from "../../criarProjeto/criarProjeto.module.css";
 import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import CadastrarParceiro from "../../../services/projeto/cadastrar/cadastrarParceiroService";
+import { VisualizarDemanda } from "../../../interface/demanda.interface";
+import buscarDemandasService from "../../../services/buscar/buscarDemandasService";
 
 interface CadastroParceiroProps {
   setShowParceiroModal?: (value: boolean) => void;
+}
+
+interface OptionType {
+  value: number;
+  label: string;
+  demanda: VisualizarDemanda;
 }
 
 const CadastroParceiro = (props: CadastroParceiroProps) => {
@@ -17,6 +26,9 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
   const [telefone, setTelefone] = useState("");
   const [areaColaboracao, setAreaColaboracao] = useState("");
   const [camposValidados, setValidado] = useState(false);
+  const [demandas, setDemandas] = useState<VisualizarDemanda[]>([]);
+  const [selectedDemandas, setSelectedDemandas] = useState<OptionType[]>([]);
+  const [showDemandaModal, setShowDemandaModal] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,7 +46,7 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
       cnpj: cnpj,
       email,
       telefone,
-      areaColaboracao,
+      classificacaoDemanda: selectedDemandas.map(option => option.demanda),
     };
   
     console.log(parceiro);
@@ -60,6 +72,56 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
         icon: "error",
       });
     }
+  };
+
+  async function buscarDemandas() {
+    const resposta = await buscarDemandasService();
+    if (resposta.status === 200) {
+      setDemandas(resposta.data);
+      console.log(resposta.data);
+    } else {
+      console.log(resposta.message);
+    }
+  }
+
+  const handleDemandasChange = (
+    selected: MultiValue<OptionType>,
+    actionMeta: ActionMeta<OptionType>
+  ) => {
+    setSelectedDemandas(selected as OptionType[]);
+  };
+
+  const demandaOptions: OptionType[] = demandas.map((demanda) => ({
+    value: demanda.id,
+    label: demanda.descricao,
+    demanda: demanda,
+  }));
+
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      borderColor: "#ced4da",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#86b7fe",
+      },
+    }),
+    multiValue: (provided: any) => ({
+      ...provided,
+      backgroundColor: "#e9ecef",
+    }),
+    multiValueLabel: (provided: any) => ({
+      ...provided,
+      color: "#495057",
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      color: "#495057",
+      ":hover": {
+        backgroundColor: "#ced4da",
+        color: "#495057",
+      },
+    }),
   };
 
   return (
@@ -111,10 +173,11 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
                 type="text"
                 placeholder="CNPJ"
                 value={cnpj}
+                required
                 onChange={(e) => setCNPJ(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
-                Por favor, insira o cpf ou cnpj do bolsista.
+                Por favor, insira o cnpj do parceiro.
               </Form.Control.Feedback>
             </FloatingLabel>
             </InputGroup>
@@ -130,6 +193,7 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
                 type="text"
                 placeholder="RG"
                 value={email}
+                required
                 onChange={(e) => setEmail(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
@@ -149,6 +213,7 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
                 type="text"
                 placeholder="Telefone"
                 value={telefone}
+                required
                 onChange={(e) => setTelefone(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">
@@ -157,25 +222,35 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
             </FloatingLabel>
             </InputGroup>
 
-            <InputGroup className="mb-3">
-
-            <FloatingLabel
-              label="Area de Colaboração"
-              controlId="validationCustom03"
-              className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
-            >
-              <Form.Control
-                type="text"
-                placeholder="Area de colaboração"
-                value={areaColaboracao}
-                onChange={(e) => setAreaColaboracao(e.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                Por favor, insira a area de colabroação do parceiro.
-              </Form.Control.Feedback>
-            </FloatingLabel>
+            <InputGroup className="mb-3" onClick={buscarDemandas}>
+              <FloatingLabel
+                label=""
+                controlId="validationCustomDemandas"
+                className="flex-grow-1"
+                style={{ color: "#9C9C9C", zIndex: 1 }}
+              >
+                <Select
+                  styles={customStyles}
+                  isMulti
+                  options={demandaOptions}
+                  value={selectedDemandas}
+                  onChange={handleDemandasChange}
+                  placeholder="Selecione as demandas"
+                  classNamePrefix="react-select"
+                  noOptionsMessage={() => "Nenhuma opção disponível"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Por favor, selecione pelo menos uma demanda.
+                </Form.Control.Feedback>
+              </FloatingLabel>
             </InputGroup>
+            <Button
+              variant="outline-secondary"
+              onClick={() => setShowDemandaModal(true)}
+              style={{ marginLeft: '10px' }}
+            >
+              Adicionar Demanda
+            </Button>
           <div className={styles.botaoEnviar}>
             <Button type="submit">Enviar</Button>
           </div>

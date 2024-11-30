@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button, FloatingLabel, Form, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import SweetAlert2 from "sweetalert2";
-import styles from "./demanda.module.css"
+import styles from '../../criarProjeto/criarProjeto.module.css';
+import CadastrarDemandaService from "../../../services/demanda/cadastrarDemanda";
 
 
 const CadastroDemandasComponent = () => {
@@ -10,7 +11,7 @@ const CadastroDemandasComponent = () => {
 
   const [descricao, setDescricao] = useState("");
   const [statusAtendimento, setStatusAtendimento] = useState("");
-  const [tipoDemanda, setTipoDemanda] = useState("");
+  const [tipo, setTipo] = useState("");
   const [prioridade, setPrioridade] = useState("");
   const [formValidado, setFormValidado] = useState(false);
 
@@ -26,24 +27,31 @@ const CadastroDemandasComponent = () => {
     const novaDemanda = {
       descricao,
       statusAtendimento,
-      tipoDemanda,
+      tipo,
       prioridade,
     };
 
     console.log("Nova Demanda Cadastrada:", novaDemanda);
 
     try {
-      SweetAlert2.fire({
-        icon: "success",
-        title: "Demanda cadastrada com sucesso!",
-      });
-      navigate("/"); 
-    } catch (error) {
-      console.error("Erro ao cadastrar demanda:", error);
+      const resultado = await CadastrarDemandaService(novaDemanda);
+      console.log(resultado);
+      if (resultado.status === 201) {
+        SweetAlert2.fire({
+          icon: "success",
+          title: "Demanda cadastrada com sucesso!",
+        });
+        navigate("/"); 
+      }
+    } catch (error: any) {
+      let errorMessage =
+        error.message ||
+        "Erro ao cadastrar demanda. Por favor, tente novamente mais tarde.";
+      console.error("Erro ao cadastrar demanda", error);
       SweetAlert2.fire({
         icon: "error",
-        title: "Erro ao cadastrar demanda",
-        text: "Por favor, tente novamente mais tarde.",
+        title: "Erro!",
+        text: errorMessage,
       });
     }
   };
@@ -110,8 +118,8 @@ const CadastroDemandasComponent = () => {
             <FloatingLabel controlId="tipoDemanda" label="Tipo de Demanda">
               <Form.Select
                 aria-label="Selecione o tipo de demanda"
-                value={tipoDemanda}
-                onChange={(e) => setTipoDemanda(e.target.value)}
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
                 required
               >
                 <option disabled value="">

@@ -11,6 +11,7 @@ import CriarParceiro from "../pages/criarParceiro";
 import VisualizaBolsistaPage from "../pages/visualizarBolsistaPage";
 import ResultadoProjeto from "../component/resultadoProjeto/resultadoProjetoComponent";
 import ListagemBolsistas from "../pages/listagemBolsista";
+import CadastrarDemanda from "../pages/cadastrarDemanda";
 
 
 const Rotas: FC = () => {
@@ -24,6 +25,7 @@ const Rotas: FC = () => {
         {/* Apenas administradores podem adicionar projetos */}
         <Route path="/adicionarprojeto" element={<CriarProjeto />} />
         <Route path="/adicionarParceiro" element={<CriarParceiro />} />
+        <Route path="/adicionarDemanda" element={<CadastrarDemanda />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/auditorias/" element={<Auditoria />}/>
         {/* <Route path="/sumarioProjeto" element={<SumarioProjeto />} /> */}

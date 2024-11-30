@@ -4,7 +4,7 @@ import { VisualizarProjeto } from './projeto.interface';
 export interface CadastrarDemanda {
     descricao: string;
     statusAtendimento: string;
-    tipoDemanda: string;
+    tipo: string;
     prioridade: string;
 }
 

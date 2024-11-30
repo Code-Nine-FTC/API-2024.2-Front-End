@@ -3,9 +3,9 @@ import { CadastrarDemanda } from '../../interface/demanda.interface';
 import { AxiosError } from 'axios';
 import { getToken } from '../auth';
 
-export default async function CadastrarDemandaFunction (demanda: CadastrarDemanda): Promise<any> {
+export default async function CadastrarDemandaService(demanda: CadastrarDemanda): Promise<any> {
     try {
-        const resposta = await api.post('/projeto/cadastrar', demanda, {
+        const resposta = await api.post('/classificacao-demanda/cadastrar', demanda, {
             headers: {
                 Authorization: `Bearer ${getToken()} `
             }

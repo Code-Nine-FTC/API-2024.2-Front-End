@@ -7,7 +7,7 @@ export interface CadastroParceiro {
   cnpj: string,
   email: string,
   telefone: string,
-  areaColaboracao: string,
+  classificacaoDemanda: VisualizarDemanda[],
 }
 
 export interface VisualizarParceiro {
