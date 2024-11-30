@@ -1,6 +1,7 @@
 import { VisualizarDocumento } from "./documento.interface";
 import { VisualizarParceiro } from "./parceiro.interface";
 import { VisualizarDemanda } from "./demanda.interface"
+import { VisualizarBolsista } from "./bolsistas.interface";
 
 export interface CadastrarProjetoJson {
     titulo: string;
@@ -66,6 +67,7 @@ export interface VisualizarProjeto {
     documentos: VisualizarDocumento[];
     parceiro?: VisualizarParceiro;
     classificacaoDemanda: VisualizarDemanda;
+    bolsistas: VisualizarBolsista[];
 }
 
 export interface BuscarProjeto {

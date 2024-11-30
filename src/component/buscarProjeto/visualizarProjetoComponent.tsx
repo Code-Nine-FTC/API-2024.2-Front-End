@@ -2,7 +2,7 @@ import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MontarFormDataCadastro from "../../services/projeto/utils/montarFormDataProjetoService";
-import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal, Card } from "react-bootstrap";
+import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal, Card, Accordion, Row, Col, ListGroup, Badge } from "react-bootstrap";
 import Select, { SingleValue, ActionMeta } from "react-select";
 import { NumericFormat } from 'react-number-format';
 import styles from "./mostraProjeto.module.css";
@@ -34,6 +34,8 @@ import CadastroParceiro from "../cadastros/cadastroParceiro/cadastroParceiro";
 import buscarDemandasService from "../../services/buscar/buscarDemandasService";
 import { VisualizarDemanda } from "../../interface/demanda.interface";
 import CadastroDemandasComponent from "../cadastros/demanda/formCadastrarDemanda";
+import { VisualizarBolsista } from "../../interface/bolsistas.interface";
+import buscarBolsistasService from "../../services/buscar/buscarBolsistasService";
 
 interface MensagemValidacao {
   titulo: string;
@@ -54,6 +56,12 @@ interface OptionTypeDemanda {
   value: number;
   label: string;
   demanda: VisualizarDemanda;
+}
+
+interface OptionTypeBolsista {
+  value: number | string; // number para existentes, string para novos
+  label: string;
+  bolsista: VisualizarBolsista;
 }
 
 const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
@@ -87,6 +95,10 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [parceiro, setParceiro] = useState(projetoOriginal?.parceiro || null);
   const [classificacaoDemanda, setClassificacaoDemanda] = useState(projetoOriginal?.classificacaoDemanda || null);
   const [demanda, setDemanda] = useState(projetoOriginal?.classificacaoDemanda || null);
+  const [bolsistas, setBolsistas] = useState<VisualizarBolsista[]>(projetoOriginal?.bolsistas || []);
+  const [newBolsistas, setNewBolsistas] = useState<VisualizarBolsista[]>([]);
+  const [selectedBolsistas, setSelectedBolsistas] = useState<OptionTypeBolsista[]>([]);
+  const [listaBolsistas, setListaBolsistas] = useState<VisualizarBolsista[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [valor, setValor] = useState(projetoOriginal?.valor || "");
@@ -179,6 +191,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       setEndDate(parse(projetoOriginal.dataTermino, 'yyyy-MM-dd', new Date()));
       setParceiro(projetoOriginal.parceiro || null);
       setClassificacaoDemanda(projetoOriginal.classificacaoDemanda || null);
+      setBolsistas(projetoOriginal.bolsistas);
       // setValor(formatarValorBR(projetoOriginal.valor?.toString() || ""));
       setDocumentos(projetoOriginal.documentos);
       projetoOriginal.documentos.forEach((doc) => {
@@ -204,6 +217,15 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       });
     }
   }, [mensagemValidacao]);
+  
+  useEffect(() => {
+    const mapBolsistasSelecionados = bolsistas.map((bolsista) => ({
+      value: bolsista.id as number,
+      label: bolsista.nome,
+      bolsista: bolsista,
+    }));
+    setSelectedBolsistas(mapBolsistasSelecionados);
+  }, [bolsistas]);
 
   const handleBack = (id: number) => {
     setIsEditing(false);
@@ -250,6 +272,46 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     demanda: demanda,
   }));
 
+  useEffect(() => {
+    async function buscarBolsistas() {
+      const resposta = await buscarBolsistasService();
+      if (resposta.status === 200) {
+        setListaBolsistas(resposta.data);
+        console.log(resposta.data);
+      } else {
+        console.log(resposta.message);
+      }
+    }
+    buscarBolsistas();
+  }, []);
+
+  useEffect(() => {
+    if (bolsistas.length > 0) {
+      const mappedSelected = bolsistas.map((bolsista) => ({
+        value: bolsista.id as number,
+        label: bolsista.nome,
+        bolsista: bolsista,
+      }));
+      setSelectedBolsistas(mappedSelected);
+    }
+  }, [bolsistas]);
+
+  const bolsistaOptions: OptionTypeBolsista[] = listaBolsistas
+    .filter(bolsista => bolsista.id !== undefined)
+    .map((bolsista) => ({
+      value: bolsista.id as number,
+      label: bolsista.nome,
+      bolsista: bolsista,
+    }));
+  
+  const novosBolsistasOptions: OptionTypeBolsista[] = newBolsistas.map((bolsista, index) => ({
+    value: `novo-${index}`,
+    label: bolsista.nome || `Novo Bolsista ${index + 1}`,
+    bolsista: bolsista,
+  }));
+  
+  const todasBolsistasOptions: OptionTypeBolsista[] = [...bolsistaOptions, ...novosBolsistasOptions];
+
   const customStyles = {
     control: (provided: any) => ({
       ...provided,
@@ -294,6 +356,25 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     }),
   };
 
+  const addNewBolsista = () => {
+    const novoBolsista: VisualizarBolsista = {
+      nome: "",
+      documento: "",
+      rg: "",
+      tipoBolsa: "",
+      duracao: "",
+      areaAtuacao: "",
+      // Outros campos conforme necessário
+    };
+    setNewBolsistas([...newBolsistas, novoBolsista]);
+  };
+
+  const removeNewBolsista = (index: number) => {
+    const updatedBolsistas = [...newBolsistas];
+    updatedBolsistas.splice(index, 1);
+    setNewBolsistas(updatedBolsistas);
+  };
+
   const handleParceirosChange = (
     selected: SingleValue<OptionTypeParceiro>,
     actionMeta: ActionMeta<OptionTypeParceiro>
@@ -306,6 +387,16 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
     actionMeta: ActionMeta<OptionTypeDemanda>
   ) => {
     setSelectedDemanda(selected);
+  };
+  
+  const handleNewBolsistaChange = (
+    index: number,
+    field: keyof VisualizarBolsista,
+    value: string
+  ) => {
+    const updatedBolsistas = [...newBolsistas];
+    updatedBolsistas[index] = { ...updatedBolsistas[index], [field]: value };
+    setNewBolsistas(updatedBolsistas);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -328,6 +419,33 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       camposOcultosString = "nenhum";
     }
 
+    const bolsistasSelecionados = selectedBolsistas
+      .filter(option => typeof option.value === 'number') // Apenas existentes
+      .map(option => ({
+        id: option.bolsista.id!,
+        nome: option.bolsista.nome,
+        documento: option.bolsista.documento,
+        rg: option.bolsista.rg,
+        tipoBolsa: option.bolsista.tipoBolsa,
+        duracao: option.bolsista.duracao,
+        areaAtuacao: option.bolsista.areaAtuacao,
+        // Outros campos conforme necessário
+      }));
+
+    // Bolsistas novos (remover o campo 'id' se existir)
+    const bolsistasNovos = newBolsistas.map(bolsista => ({
+      nome: bolsista.nome,
+      documento: bolsista.documento,
+      rg: bolsista.rg,
+      tipoBolsa: bolsista.tipoBolsa,
+      duracao: bolsista.duracao,
+      areaAtuacao: bolsista.areaAtuacao,
+      // Não incluir 'id'
+    }));
+
+    // Combinar ambas as listas
+    const todosBolsistas = [...bolsistasSelecionados, ...bolsistasNovos];
+
     const camposEditados = {
       titulo: titulo,
       referencia: referencia,
@@ -344,6 +462,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       valor: valor.toString(),
       parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
       classificacaoDemanda: selectedDemanda ? selectedDemanda.demanda : undefined, 
+      bolsistas: todosBolsistas,
     };
 
     console.log("camposEditados:", camposEditados);
@@ -868,6 +987,182 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
           </Form.Control.Feedback>
       </InputGroup>
 
+      {!isEditing && autenticado && (
+          <Col sm={12}>
+          <Form.Group className="mb-3" controlId="bolsistas">
+            <Form.Label>Bolsistas Existentes</Form.Label>
+            {bolsistas.length === 0 ? (
+              <p>Nenhum bolsista cadastrado.</p>
+            ) : (
+              <ListGroup>
+                {bolsistas.map((bolsista) => (
+                  <ListGroup.Item key={bolsista.id}>
+                    <Row>
+                      <Col xs={12} sm={6}>
+                        <strong>{bolsista.nome}</strong>
+                      </Col>
+                      <Col xs={6} sm={3}>
+                        {bolsista.tipoBolsa}
+                      </Col>
+                      <Col xs={6} sm={3}>
+                        {bolsista.areaAtuacao}
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
+          </Form.Group>
+        </Col>
+          )}
+
+
+      {/* Editable bolsistas no modo de edição */}
+      {isEditing && (
+        <div>
+          {/* Seletor de múltiplas opções para bolsistas existentes e novos */}
+          <Form.Group className="mb-3">
+            <Form.Label>Bolsistas</Form.Label>
+            <Select
+              isMulti
+              styles={customStyles}
+              options={todasBolsistasOptions}
+              value={selectedBolsistas}
+              onChange={(selectedOptions) =>
+                setSelectedBolsistas(selectedOptions as OptionTypeBolsista[])
+              }
+              placeholder="Selecione bolsistas existentes ou adicione novos"
+              classNamePrefix="react-select"
+              noOptionsMessage={() => "Nenhuma opção disponível"}
+            />
+          </Form.Group>
+
+          {/* Accordion para cadastrar novos bolsistas */}
+          <Accordion defaultActiveKey="0" className="mb-3">
+            <Accordion.Item eventKey="0">
+              <Accordion.Header>Cadastrar Novos Bolsistas</Accordion.Header>
+              <Accordion.Body>
+                {newBolsistas.length === 0 && (
+                  <p>Nenhum bolsista adicionado. Clique em "Adicionar Bolsista" para começar.</p>
+                )}
+                {newBolsistas.map((bolsista, index) => (
+                  <Card key={index} className="mb-3">
+                    <Card.Header>
+                      <strong>Bolsista {index + 1}</strong>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="float-end"
+                        onClick={() => removeNewBolsista(index)}
+                      >
+                        Excluir
+                      </Button>
+                    </Card.Header>
+                    <Card.Body>
+                      <Row>
+                        <Col md={6}>
+                          <Form.Group controlId={`newBolsistaNome-${index}`} className="mb-3">
+                            <Form.Label>Nome</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Digite o nome do bolsista"
+                              value={bolsista.nome}
+                              onChange={(e) =>
+                                handleNewBolsistaChange(index, "nome", e.target.value)
+                              }
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                          <Form.Group controlId={`newBolsistaDocumento-${index}`} className="mb-3">
+                            <Form.Label>Documento</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Digite o documento do bolsista"
+                              value={bolsista.documento}
+                              onChange={(e) =>
+                                handleNewBolsistaChange(index, "documento", e.target.value)
+                              }
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={6}>
+                          <Form.Group controlId={`newBolsistaRG-${index}`} className="mb-3">
+                            <Form.Label>RG</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Digite o RG do bolsista"
+                              value={bolsista.rg}
+                              onChange={(e) =>
+                                handleNewBolsistaChange(index, "rg", e.target.value)
+                              }
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                          <Form.Group controlId={`newBolsistaTipoBolsa-${index}`} className="mb-3">
+                            <Form.Label>Tipo de Bolsa</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Digite o tipo de bolsa"
+                              value={bolsista.tipoBolsa}
+                              onChange={(e) =>
+                                handleNewBolsistaChange(index, "tipoBolsa", e.target.value)
+                              }
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={6}>
+                          <Form.Group controlId={`newBolsistaDuracao-${index}`} className="mb-3">
+                            <Form.Label>Duração</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Digite a duração da bolsa"
+                              value={bolsista.duracao}
+                              onChange={(e) =>
+                                handleNewBolsistaChange(index, "duracao", e.target.value)
+                              }
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                          <Form.Group controlId={`newBolsistaAreaAtuacao-${index}`} className="mb-3">
+                            <Form.Label>Área de Atuação</Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Digite a área de atuação"
+                              value={bolsista.areaAtuacao}
+                              onChange={(e) =>
+                                handleNewBolsistaChange(index, "areaAtuacao", e.target.value)
+                              }
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                ))}
+
+                {/* Botão para adicionar mais bolsistas */}
+                <Button variant="primary" onClick={addNewBolsista}>
+                  Adicionar Bolsista
+                </Button>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        </div>
+      )}
+
         {/* Situação do Projeto */}
         <InputGroup className="mb-3">
           <FloatingLabel
@@ -1295,26 +1590,6 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                 </Card.Body>
               </Card>
             </div>
-              
-            <Modal 
-              show={showModal} 
-              onHide={handleCloseModal} 
-              size="xl" 
-              aria-labelledby="contained-modal-title-vcenter" 
-              centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Auditoria</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <AuditoriaComponent projetoId={id ? id.toString() : ''} />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>
-                        Fechar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
 
           {/* <div className="d-flex justify-content-center pb-3">
             <Card 
@@ -1350,41 +1625,6 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
                       </Button>
                   </Modal.Footer>
             </Modal> */}
-
-            <div className="d-flex justify-content-center pb-3">
-            <Card 
-              onClick={handleOpenModalBolsista} 
-              className="text-center border-light shadow-sm" 
-              style={{ cursor: 'pointer', width: '200px',marginRight: '3%' }}
-            >
-              <Card.Body className="bg-white">
-                <Card.Text className="text-primary fw-bold">
-                  Adicionar Bolsista
-                </Card.Text>
-              </Card.Body>
-            </Card>
-
-          </div>
-            
-            <Modal 
-                show={showModalBolsista} 
-                onHide={handleCloseModalBolsista} 
-                size="xl" 
-                aria-labelledby="contained-modal-title-vcenter" 
-                centered
-              >
-                  <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
-                      <Modal.Title style={{color: "white"}}>Bolsista</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                      <CadastroBolsista idProjeto={id ? id.toString() : '' }/>
-                  </Modal.Body>
-                  <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseModalBolsista}>
-                          Fechar
-                      </Button>
-                  </Modal.Footer>
-            </Modal>
           {/* <div className="d-flex justify-content-center pb-3">
             <Card 
               onClick={handleOpenModalReceita} 
