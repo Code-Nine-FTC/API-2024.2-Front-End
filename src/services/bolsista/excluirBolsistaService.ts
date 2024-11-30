@@ -15,8 +15,8 @@ const ExcluirBolsista = async (id: number): Promise<any> => {
             return { status: resposta.status, message: resposta.data };
         }
       } catch (error) {
-        console.error('Erro ao excluir o arquivo', error);
-        throw new Error('Erro ao excluir o arquivo. Tente novamente mais tarde');
+        console.error('Erro ao excluir o bolsista', error);
+        throw new Error('Erro ao excluir o bolsista. Tente novamente mais tarde');
       }
 }
 

@@ -82,7 +82,8 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 };
     try {
         const response = await EditarBolsistaService(FormData,idbolsista);
-        if (response.status === 200) {
+        console.log(response)
+        if (response.status === 201) {
           SweetAlert2.fire({
             title: "Sucesso!",
             text: "Bolsista atualizado com sucesso.",
@@ -91,10 +92,10 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
             navigate(`/listagemBolsistas`);
             setIsEditing(false);
         });
-        
-        } else {
-            setError(response.message);
-        }
+      }
+      else {
+        setError(response.message);
+      }
     } catch (error) {
         setError('Erro ao atualizar os dados do bolsista');
     }
