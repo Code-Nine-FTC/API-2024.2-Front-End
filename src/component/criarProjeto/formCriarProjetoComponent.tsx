@@ -7,11 +7,13 @@ import SweetAlert2 from "sweetalert2";
 import CadastrarProjetoFunction from "../../services/projeto/cadastrar/cadastarProjetoService";
 import Calendario from "../date/calendarioComponent";
 import { useNavigate } from "react-router-dom";
-import { parse, format } from 'date-fns';
+import { parse, format, set } from 'date-fns';
 import buscarParceirosService from "../../services/buscar/buscarParceirosService";
 import { VisualizarParceiro } from "../../interface/parceiro.interface";
 import CadastroParceiro from "../cadastros/cadastroParceiro/cadastroParceiro";
 import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
+import { VisualizarDemanda } from "../../interface/demanda.interface";
+import buscarDemandasService from "../../services/buscar/buscarDemandasService";
 
 interface MensagemValidacao {
   titulo: string;
@@ -22,6 +24,12 @@ interface OptionTypeParceiro {
   value: number;
   label: string;
   parceiro: VisualizarParceiro;
+}
+
+interface OptionTypeDemanda {
+  value: number;
+  label: string;
+  demanda: VisualizarDemanda;
 }
 
 const CriarProjetoComponent = () => {
@@ -50,8 +58,10 @@ const CriarProjetoComponent = () => {
   const [hideStatus, setHideStatus] = useState(false);
   const [valorValid, setValorValid] = useState<boolean | null>(null);
   const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
+  const [demandas, setDemandas] = useState<VisualizarDemanda[]>([]);
   const [showParceiroModal, setShowParceiroModal] = useState(false);
   const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
+  const [selectedDemanda, setSelectedDemanda] = useState<OptionTypeDemanda | null>(null);
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -92,6 +102,7 @@ const CriarProjetoComponent = () => {
       // contratante: "",
       camposOcultos: camposOcultosString,
       parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
+      classificacaoDemanda: selectedParceiro ? selectedParceiro.parceiro : undefined, 
     };
 
     console.log(projeto);
@@ -139,6 +150,22 @@ const CriarProjetoComponent = () => {
     value: parceiro.id,
     label: parceiro.nome,
     parceiro: parceiro,
+  }));
+
+  async function buscarDemandas() {
+    const resposta = await buscarDemandasService();
+    if (resposta.status === 200) {
+      setDemandas(resposta.data);
+      console.log(resposta.data);
+    } else {
+      console.log(resposta.message);
+    }
+  }
+
+  const demandaOptions: OptionTypeDemanda[] = demandas.map((demanda) => ({
+    value: demanda.id,
+    label: demanda.descricao,
+    demanda: demanda,
   }));
 
   const customStyles = {
@@ -190,6 +217,13 @@ const CriarProjetoComponent = () => {
     actionMeta: ActionMeta<OptionTypeParceiro>
   ) => {
     setSelectedParceiro(selected);
+  };
+  
+  const handleDemandasChange = (
+    selected: SingleValue<OptionTypeDemanda>,
+    actionMeta: ActionMeta<OptionTypeDemanda>
+  ) => {
+    setSelectedDemanda(selected);
   };
 
   const handleOpenModalParceiro = () => setShowParceiroModal(true);
@@ -304,6 +338,28 @@ const CriarProjetoComponent = () => {
               onChange={(e) => setHideContratante(e.target.checked)}
             />
           </InputGroup>
+          
+          <InputGroup className="mb-3" onClick={buscarDemandas}>
+              <FloatingLabel
+                label=""
+                controlId="validationCustomDemandas"
+                className="flex-grow-1"
+                style={{ color: "#9C9C9C"}}
+              >
+                <Select
+                  styles={customStyles}
+                  options={demandaOptions}
+                  value={selectedDemanda}
+                  onChange={handleDemandasChange}
+                  placeholder="Selecione as demandas"
+                  classNamePrefix="react-select"
+                  noOptionsMessage={() => "Nenhuma opção disponível"}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Por favor, selecione pelo menos uma demanda.
+                </Form.Control.Feedback>
+              </FloatingLabel>
+            </InputGroup>
 
           <InputGroup className="mb-3">
             <FloatingLabel
