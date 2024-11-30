@@ -3,6 +3,7 @@ import React, { useEffect, useState, SetStateAction, Dispatch } from "react";
 import { useNavigate } from "react-router-dom";
 import MontarFormDataCadastro from "../../services/projeto/utils/montarFormDataProjetoService";
 import { Button, Form, Alert, Spinner, FloatingLabel, InputGroup, Modal, Card } from "react-bootstrap";
+import Select, { SingleValue, ActionMeta } from "react-select";
 import { NumericFormat } from 'react-number-format';
 import styles from "./mostraProjeto.module.css";
 import { getToken, isAuthenticated } from "../../services/auth";
@@ -38,6 +39,12 @@ interface MensagemValidacao {
 
 interface VisualizarProjetoProps {
   id: number;
+}
+
+interface OptionTypeParceiro {
+  value: number;
+  label: string;
+  parceiro: VisualizarParceiro;
 }
 
 const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
@@ -104,6 +111,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
   const navigate = useNavigate();
   const [showParceiroModal, setShowParceiroModal] = useState<boolean>(false);
+  const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
 
   useEffect(() => {
     const fetchProjeto = async () => {
@@ -205,6 +213,63 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       console.log(resposta.message);
     }
   }
+  
+  const parceiroOptions: OptionTypeParceiro[] = parceiros.map((parceiro) => ({
+    value: parceiro.id,
+    label: parceiro.nome,
+    parceiro: parceiro,
+  }));
+
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      minHeight: '38px', // Altura padrão do Form.Control
+      height: '38px',
+      borderColor: "#ced4da",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#86b7fe",
+      },
+    }),
+    indicatorsContainer: (provided: any) => ({
+      ...provided,
+      height: '38px',
+    }),
+    valueContainer: (provided: any) => ({
+      ...provided,
+      height: '38px',
+      padding: '0 6px', // Ajuste o padding conforme necessário
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      margin: '0',
+      padding: '0',
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: "#495057",
+      lineHeight: '38px', // Alinha verticalmente o texto
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      zIndex: 9999,
+    }),
+    dropdownIndicator: (provided: any) => ({
+      ...provided,
+      padding: '0 8px',
+    }),
+    clearIndicator: (provided: any) => ({
+      ...provided,
+      padding: '0 8px',
+    }),
+  };
+
+  const handleParceirosChange = (
+    selected: SingleValue<OptionTypeParceiro>,
+    actionMeta: ActionMeta<OptionTypeParceiro>
+  ) => {
+    setSelectedParceiro(selected);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -226,8 +291,6 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       camposOcultosString = "nenhum";
     }
 
-    const selectedParceiro = parceiros.find(parceiro => parceiro.id === contratante);
-
     const camposEditados = {
       titulo: titulo,
       referencia: referencia,
@@ -242,7 +305,7 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
       dataTermino: dataTerminoString,
       camposOcultos: camposOcultosString,
       valor: valor.toString(),
-      parceiro: selectedParceiro,
+      parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
     };
 
     console.log("camposEditados:", camposEditados);
@@ -687,42 +750,29 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
 
        {/* Contratante */}
       <InputGroup className="mb-3">
-        <FloatingLabel controlId="validationCustom01" label="Contratante" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+        <FloatingLabel controlId="validationCustom01" label={!isEditing && "Parceiro"} className="flex-grow-1" style={{ color: "#9C9C9C"}}>
         {!isEditing ? (
             // Display parceiro.nome in a read-only field when not editing
             <Form.Control
               type="text"
-              placeholder="Contratante"
+              placeholder="Parceiro"
               required
               value={(!autenticado && hideContratante) ? "" : parceiro?.nome}
               readOnly
+              onClick={buscarParceiros}
             />
           ) : (
             // Display a select dropdown when editing
-            <Form.Select
-              aria-label="Selecione um parceiro"
-              required
-              // value={contratante}
-              onChange={(e) => {
-                const selectedValue = e.target.value;
-                if (selectedValue === "cadastrarParceiro") {
-                  handleOpenModalParceiro();
-                  setContratante(null);
-                } else {
-                  setContratante(Number(selectedValue)); // Assuming IDs are numbers
-                }
-              }}
-              onClick={buscarParceiros}
-              disabled={!isEditing}
-            >
-              <option value="">Selecione um parceiro</option>
-              <option value="cadastrarParceiro">Cadastrar um parceiro</option>
-              {parceiros.map((parceiro) => (
-                <option key={parceiro.id} value={parceiro.id}>
-                  {parceiro.nome}
-                </option>
-              ))}
-            </Form.Select>
+            <Select
+                  styles={customStyles}
+                  options={parceiroOptions}
+                  value={selectedParceiro}
+                  onChange={handleParceirosChange}
+                  placeholder={"Selecione um parceiro"}
+                  classNamePrefix="react-select"
+                  noOptionsMessage={() => "Nenhuma opção disponível"}
+                  required
+                />
           )}
           <Form.Control.Feedback type="invalid">
             Por favor, insira o contratante do projeto.
