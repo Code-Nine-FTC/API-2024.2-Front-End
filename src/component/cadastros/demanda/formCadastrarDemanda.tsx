@@ -5,8 +5,11 @@ import SweetAlert2 from "sweetalert2";
 import styles from '../../criarProjeto/criarProjeto.module.css';
 import CadastrarDemandaService from "../../../services/demanda/cadastrarDemanda";
 
+interface CadastroDemandasProps {
+  setShowDemandaModal?: (value: boolean) => void;
+}
 
-const CadastroDemandasComponent = () => {
+const CadastroDemandasComponent = (props: CadastroDemandasProps) => {
   const navigate = useNavigate();
 
   const [descricao, setDescricao] = useState("");
@@ -41,7 +44,12 @@ const CadastroDemandasComponent = () => {
           icon: "success",
           title: "Demanda cadastrada com sucesso!",
         });
-        navigate("/"); 
+        if (props.setShowDemandaModal) {
+          props.setShowDemandaModal(false);
+        }
+        else {
+          navigate("/");
+        }
       }
     } catch (error: any) {
       let errorMessage =

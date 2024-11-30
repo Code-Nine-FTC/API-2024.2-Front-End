@@ -11,6 +11,7 @@ import { parse, format, set } from 'date-fns';
 import buscarParceirosService from "../../services/buscar/buscarParceirosService";
 import { VisualizarParceiro } from "../../interface/parceiro.interface";
 import CadastroParceiro from "../cadastros/cadastroParceiro/cadastroParceiro";
+import CadastroDemandasComponent from "../cadastros/demanda/formCadastrarDemanda";
 import CadastroBolsista from "../cadastros/cadastroBolsista/cadastroBolsista";
 import { VisualizarDemanda } from "../../interface/demanda.interface";
 import buscarDemandasService from "../../services/buscar/buscarDemandasService";
@@ -60,6 +61,7 @@ const CriarProjetoComponent = () => {
   const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
   const [demandas, setDemandas] = useState<VisualizarDemanda[]>([]);
   const [showParceiroModal, setShowParceiroModal] = useState(false);
+  const [showDemandaModal, setShowDemandaModal] = useState<boolean>(false);
   const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
   const [selectedDemanda, setSelectedDemanda] = useState<OptionTypeDemanda | null>(null);
 
@@ -102,7 +104,7 @@ const CriarProjetoComponent = () => {
       // contratante: "",
       camposOcultos: camposOcultosString,
       parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
-      classificacaoDemanda: selectedParceiro ? selectedParceiro.parceiro : undefined, 
+      classificacaoDemanda: selectedDemanda ? selectedDemanda.demanda : undefined, 
     };
 
     console.log(projeto);
@@ -179,6 +181,13 @@ const CriarProjetoComponent = () => {
         borderColor: "#86b7fe",
       },
     }),
+    placeholder: (provided: any, state: any) => ({
+      ...provided,
+      fontSize: window.innerWidth < 576 ? '0.75em' : '1em', // Ajuste responsivo
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    }),
     indicatorsContainer: (provided: any) => ({
       ...provided,
       height: '38px',
@@ -228,6 +237,8 @@ const CriarProjetoComponent = () => {
 
   const handleOpenModalParceiro = () => setShowParceiroModal(true);
   const handleCloseModalParceiro = () => setShowParceiroModal(false);
+  const handleOpenModalDemanda = () => setShowDemandaModal(true);
+  const handleCloseModalDemanda = () => setShowDemandaModal(false);
 
   useEffect(() => {
     if (mensagemValidacao.titulo && mensagemValidacao.texto) {
@@ -310,56 +321,103 @@ const CriarProjetoComponent = () => {
             </FloatingLabel>
           </InputGroup>
 
-          <InputGroup className="mb-3">
-            <FloatingLabel
-              label=""
-              controlId="validationCustom03"
-              className="flex-grow-1"
-              style={{ color: "#9C9C9C"}}
-              onClick={buscarParceiros}
-            >
-              <Select
-                  styles={customStyles}
+          <div className="mb-3 position-relative">
+            <InputGroup onClick={buscarParceiros}>
+              <FloatingLabel
+                label=""
+                controlId="validationCustom03"
+                className="flex-grow-1"
+                style={{ color: "#9C9C9C" }}
+              >
+                <Select
+                  styles={{
+                    ...customStyles,
+                    control: (provided: any) => ({
+                      ...provided,
+                      borderColor:
+                        camposValidados && !selectedParceiro? "#dc3545" : provided.borderColor,
+                      "&:hover": {
+                        borderColor:
+                          camposValidados && !selectedParceiro? "#dc3545" : "#86b7fe",
+                      },
+                    }),
+                  }}
                   options={parceiroOptions}
                   value={selectedParceiro}
                   onChange={handleParceirosChange}
-                  placeholder={"Selecione um parceiro"}
+                  placeholder={ "Selecione um parceiro"}
                   classNamePrefix="react-select"
                   noOptionsMessage={() => "Nenhuma opção disponível"}
                   required
+                  // isInvalid={camposValidados && !selectedParceiro}
                 />
-              <Form.Control.Feedback type="invalid">
-                Por favor, insira o parceiro.
-              </Form.Control.Feedback>
-            </FloatingLabel>
-            <InputGroup.Checkbox
-              aria-label="Checkbox for following text input"
-              checked={hideContratante}
-              onChange={(e) => setHideContratante(e.target.checked)}
-            />
-          </InputGroup>
+              </FloatingLabel>
+              <InputGroup.Checkbox
+                aria-label="Checkbox para ocultar contratante"
+                checked={hideContratante}
+                onChange={(e) => setHideContratante(e.target.checked)}
+                style={{ marginLeft: '10px' }}
+              />
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setShowParceiroModal(true)}
+              >
+                Adicionar Parceiro
+              </Button>
+            </InputGroup>
+            {camposValidados && !selectedParceiro && (
+              <div className="text-danger" style={{ position: "relative", top: "100%", left: 0, marginTop: "5px" }}>
+                Por favor, selecione um parceiro.
+              </div>
+            )}
+          </div>
           
-          <InputGroup className="mb-3" onClick={buscarDemandas}>
+          <div className="mb-3 position-relative">
+            <InputGroup onClick={buscarDemandas}>
               <FloatingLabel
                 label=""
-                controlId="validationCustomDemandas"
+                controlId="validationCustom03"
                 className="flex-grow-1"
-                style={{ color: "#9C9C9C"}}
+                style={{ color: "#9C9C9C" }}
               >
                 <Select
-                  styles={customStyles}
+                  styles={{
+                    ...customStyles,
+                    control: (provided: any) => ({
+                      ...provided,
+                      borderColor:
+                        camposValidados && !selectedDemanda ? "#dc3545" : provided.borderColor,
+                      "&:hover": {
+                        borderColor:
+                          camposValidados && !selectedDemanda? "#dc3545" : "#86b7fe",
+                      },
+                    }),
+                  }}
                   options={demandaOptions}
                   value={selectedDemanda}
                   onChange={handleDemandasChange}
-                  placeholder="Selecione as demandas"
+                  placeholder={ "Selecione uma demanda"}
                   classNamePrefix="react-select"
                   noOptionsMessage={() => "Nenhuma opção disponível"}
+                  required
+                  // isInvalid={camposValidados && !selectedParceiro}
                 />
-                <Form.Control.Feedback type="invalid">
-                  Por favor, selecione pelo menos uma demanda.
-                </Form.Control.Feedback>
               </FloatingLabel>
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={() => setShowDemandaModal(true)}
+              >
+                Adicionar Demanda
+              </Button>
             </InputGroup>
+            {camposValidados && !selectedDemanda && (
+              <div className="text-danger" style={{ position: "relative", top: "100%", left: 0, marginTop: "5px" }}>
+                Por favor, selecione uma demanda.
+              </div>
+            )}
+          </div>
 
           <InputGroup className="mb-3">
             <FloatingLabel
@@ -463,24 +521,43 @@ const CriarProjetoComponent = () => {
         </Form>
       </section>
       <Modal 
-                show={showParceiroModal} 
-                onHide={handleOpenModalParceiro} 
-                size="xl" 
-                aria-labelledby="contained-modal-title-vcenter" 
-                centered
-              >
-                  <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
-                      <Modal.Title style={{color: "white"}}>Cadastrar parceiro</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                      <CadastroParceiro setShowParceiroModal={handleCloseModalParceiro}/>
-                  </Modal.Body>
-                  <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseModalParceiro}>
-                          Fechar
-                      </Button>
-                  </Modal.Footer>
-            </Modal>
+          show={showParceiroModal} 
+          onHide={handleOpenModalParceiro} 
+          size="xl" 
+          aria-labelledby="contained-modal-title-vcenter" 
+          centered
+        >
+            <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                <Modal.Title style={{color: "white"}}>Cadastrar parceiro</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <CadastroParceiro setShowParceiroModal={handleCloseModalParceiro}/>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseModalParceiro}>
+                    Fechar
+                </Button>
+            </Modal.Footer>
+      </Modal>
+      <Modal 
+          show={showDemandaModal} 
+          onHide={handleOpenModalDemanda} 
+          size="xl" 
+          aria-labelledby="contained-modal-title-vcenter" 
+          centered
+        >
+            <Modal.Header style={{backgroundColor: "#00359A"}} closeButton closeVariant="white">
+                <Modal.Title style={{color: "white"}}>Cadastrar demanda</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <CadastroDemandasComponent setShowDemandaModal={handleCloseModalDemanda}/>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseModalDemanda}>
+                    Fechar
+                </Button>
+            </Modal.Footer>
+      </Modal>
     </>
   );
 };
