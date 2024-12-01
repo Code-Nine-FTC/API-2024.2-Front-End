@@ -8,10 +8,8 @@ export interface ConvenioCadastro {
 
 export interface ConvenioVisualizacao {
     id?: string;
-    nome: string;
-    cnpj: string;
-    email: string;
-    telefone: string;
-    areaColaboracao: string;
-    historicoParceria?: string; // Opcional
+    nomeInstituicao: string;
+    dataInicial: string;
+    dataFinal: string;
+    documentoClausulas: string;
 }
