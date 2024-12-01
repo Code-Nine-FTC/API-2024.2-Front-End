@@ -17,6 +17,7 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
   const [dataFinal, setDataFinal] = useState("");
   const [documentoClausulas, setDocumentoClausulas] = useState("");
   const [formValidado, setFormValidado] = useState(false);
+  const [projetoId, setProjetoId] = useState("8")
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,10 +29,11 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
     }
 
     const novoConvenio = {
-      nomeInstituicao,
-      dataInicial,
-      dataFinal,
-      documentoClausulas,
+      nomeInstituicao: nomeInstituicao,
+      dataInicial: dataInicial,
+      dataFinal: dataFinal,
+      documentoClausulas: documentoClausulas,
+/*       projetoId: projetoId */
     };
 
     console.log("Novo Convênio Cadastrado:", novoConvenio);
