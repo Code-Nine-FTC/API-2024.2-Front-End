@@ -180,9 +180,10 @@ return (
           </div>
         )}
         </div>
-        <section className={styles.formMain}>
+        <br />
+      <section className={styles.formMain}>
       <Form onSubmit={handleSubmit}>
-      <FloatingLabel controlId="validationCustom01" label="Nome" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+      <FloatingLabel controlId="validationCustom01" label="Nome" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1, width: '60%', marginBottom: '1%' }}>
             <Form.Control
               type="text"
               placeholder="Nome do Bolsista"
@@ -200,7 +201,7 @@ return (
             </Form.Control.Feedback>
           </FloatingLabel>
 
-          <FloatingLabel controlId="validationCustom01" label="Documento" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+          <FloatingLabel controlId="validationCustom01" label="Documento" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1, width: '60%', marginBottom: '1%' }}>
             <Form.Control
               type="text"
               placeholder="CPF ou CNPJ"
@@ -218,7 +219,7 @@ return (
             </Form.Control.Feedback>
           </FloatingLabel>
 
-          <FloatingLabel controlId="validationCustom01" label="rg" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+          <FloatingLabel controlId="validationCustom01" label="rg" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1, width: '60%', marginBottom: '1%' }}>
             <Form.Control
               type="text"
               placeholder="RG do Bolsista"
@@ -236,7 +237,7 @@ return (
             </Form.Control.Feedback>
           </FloatingLabel>
 
-          <FloatingLabel controlId="validationCustom01" label="tipo" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+          <FloatingLabel controlId="validationCustom01" label="tipo" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1, width: '60%', marginBottom: '1%' }}>
             <Form.Control
               type="text"
               placeholder="Tipo Bolsa"
@@ -254,7 +255,7 @@ return (
             </Form.Control.Feedback>
           </FloatingLabel>
 
-          <FloatingLabel controlId="validationCustom01" label="Duracao" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+          <FloatingLabel controlId="validationCustom01" label="Duracao" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1, width: '60%', marginBottom: '1%' }}>
             <Form.Control
               type="text"
               placeholder="Durçao da Bolsa"
@@ -272,7 +273,7 @@ return (
             </Form.Control.Feedback>
           </FloatingLabel>
 
-          <FloatingLabel controlId="validationCustom01" label="Area" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1 }}>
+          <FloatingLabel controlId="validationCustom01" label="Area" className="flex-grow-1" style={{ color: "#9C9C9C", zIndex: 1, width: '60%', marginBottom: '1%' }}>
             <Form.Control
               type="text"
               placeholder="Área de Atuação"

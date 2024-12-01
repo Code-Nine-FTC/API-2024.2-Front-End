@@ -145,13 +145,13 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
       )}
 
       <section className={styles.formMain}>
-        <Form noValidate validated={camposValidados} onSubmit={handleSubmit}>
-        <InputGroup className="mb-3">
+        <Form noValidate validated={camposValidados} onSubmit={handleSubmit} style={{ width: '60%'}}>
+        <InputGroup className="mb-3" >
             <FloatingLabel
               controlId="validationCustom01"
               label="Nome"
               className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
+              style={{ color: "#9C9C9C", zIndex: 1, width: '60%'}}
             >
               
               <Form.Control
@@ -171,7 +171,7 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
               label="CNPJ"
               controlId="validationCustom03"
               className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
+              style={{ color: "#9C9C9C", zIndex: 1, width: '60%' }}
             >
               <Form.Control
                 type="text"
@@ -211,7 +211,7 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
               label="Telefone"
               controlId="validationCustom03"
               className="flex-grow-1"
-              style={{ color: "#9C9C9C", zIndex: 1 }}
+              style={{ color: "#9C9C9C", zIndex: 1, width: '60%' }}
             >
               <Form.Control
                 type="text"
@@ -231,7 +231,7 @@ const CadastroParceiro = (props: CadastroParceiroProps) => {
                 label=""
                 controlId="validationCustomDemandas"
                 className="flex-grow-1"
-                style={{ color: "#9C9C9C", zIndex: 1 }}
+                style={{ color: "#9C9C9C", zIndex: 1, width: '60%' }}
               >
                 <Select
                   styles={customStyles}

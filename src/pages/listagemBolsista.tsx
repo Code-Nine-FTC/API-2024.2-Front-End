@@ -48,6 +48,8 @@ const ListagemBolsistas: React.FC = () => {
                     >
                         <FaRegFileLines style={{ fontSize: 34 }} />
                         <p>{bolsista.nome}</p>
+                        <p>{bolsista.tipoBolsa}</p>
+                        <p>{bolsista.duracao}</p>
                         <p>{bolsista.rg}</p>
                     </div>
                 ))
