@@ -273,16 +273,18 @@ const VisualizarProjetoComponent: React.FC<VisualizarProjetoProps> = ({
   }));
 
   useEffect(() => {
-    async function buscarBolsistas() {
-      const resposta = await buscarBolsistasService();
-      if (resposta.status === 200) {
-        setListaBolsistas(resposta.data);
-        console.log(resposta.data);
-      } else {
-        console.log(resposta.message);
+      async function buscarBolsistas() {
+        const resposta = await buscarBolsistasService();
+        if (resposta.status === 200) {
+          setListaBolsistas(resposta.data);
+          console.log(resposta.data);
+        } else {
+          console.log(resposta.message);
+        }
       }
+    if (autenticado) {
+      buscarBolsistas();
     }
-    buscarBolsistas();
   }, []);
 
   useEffect(() => {

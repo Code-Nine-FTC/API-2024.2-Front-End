@@ -17,3 +17,12 @@ export interface VisualizarDemanda {
     parceiros?: VisualizarParceiro[];
     projetos?: VisualizarProjeto[];
 }
+
+export interface AtualizarDemanda {
+    descricao: string;
+    statusAtendimento: string;
+    tipo: string;
+    prioridade: string;
+    parceiros?: number[];
+    projetos?: number[];
+}

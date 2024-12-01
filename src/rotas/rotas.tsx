@@ -12,7 +12,8 @@ import VisualizaBolsistaPage from "../pages/visualizarBolsistaPage";
 import ResultadoProjeto from "../component/resultadoProjeto/resultadoProjetoComponent";
 import ListagemBolsistas from "../pages/listagemBolsista";
 import CadastrarDemanda from "../pages/cadastrarDemanda";
-import ListarDemandas from "../pages/listagemDemandas";
+import ListarDemandasPage from "../pages/listagemDemandas";
+import VisualizarDemandaPage from "../pages/visualizarDemanda";
 
 const Rotas: FC = () => {
   const { isAutenticado } = useContext(AuthContext);
@@ -31,7 +32,9 @@ const Rotas: FC = () => {
         <Route path="/visualizarbolsista/:id" element={<VisualizaBolsistaPage />} />
         <Route path="/listagemBolsistas" element={<ListagemBolsistas />} />
         <Route path="/resultadoProjeto" element={<ResultadoProjeto />} />
-        <Route path="/listardemandas" element={<ListarDemandas />} />
+        <Route path="/listagemDemandas" element={<ListarDemandasPage />} />
+        <Route path="/demanda/editar/:id" element={<CadastrarDemanda />} />
+        <Route path="/visualizarDemanda/:id" element={<VisualizarDemandaPage />} />
       </>
     );
   } else {

@@ -1,6 +1,6 @@
 import ListagemDemandasComponent from '../component/listagens/demanda/visualizarDemanda';
 
-const ListarDemandas = () => {
+const ListarDemandasPage = () => {
   return (
     <div>
       <ListagemDemandasComponent />
@@ -8,4 +8,4 @@ const ListarDemandas = () => {
   );
 }
 
-export default ListarDemandas;
+export default ListarDemandasPage;

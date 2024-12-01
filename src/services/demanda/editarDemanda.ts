@@ -1,8 +1,8 @@
 import api from "../api";
-import { VisualizarDemanda } from "../../interface/demanda.interface"; // Importando a interface
+import { AtualizarDemanda } from "../../interface/demanda.interface"; // Importando a interface
 import { getToken } from "../auth";
 
-const EditarDemandaService = async (id: number, dadosEditados: VisualizarDemanda): Promise<any> => {
+const EditarDemandaService = async (id: number, dadosEditados: AtualizarDemanda): Promise<any> => {
     try {
         const resposta = await api.put(`/classificacao-demanda/editar/${id}`, dadosEditados, {
             headers: {

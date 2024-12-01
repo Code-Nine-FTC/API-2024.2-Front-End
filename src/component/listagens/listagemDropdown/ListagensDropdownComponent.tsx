@@ -25,6 +25,7 @@ const ListagensDropdownComponent: React.FC<ListagensDropdownComponentProps> = ({
                 <Dropdown.Menu className={`${styles.dropdownMenu}`}>
                     {/* <Dropdown.Item onClick={() => navigate('/listagemParceiros')} className={styles.dropdownItem}>Parceiros</Dropdown.Item> */}
                     <Dropdown.Item onClick={() => navigate('/listagemBolsistas')} className={styles.dropdownItem}>Bolsistas</Dropdown.Item>
+                    <Dropdown.Item onClick={() => navigate('/listagemDemandas')} className={styles.dropdownItem}>Demandas</Dropdown.Item>
                     {/* <Dropdown.Item onClick={() => navigate('/listagemMateriais')} className={styles.dropdownItem}>Materiais</Dropdown.Item> */}
                     {/* <Dropdown.Item onClick={() => navigate ('/listagemConvenio') } className={styles.dropdownItem}>Convênios</Dropdown.Item> */}
                     {/* <Dropdown.Item href="#/action-1" className={styles.dropdownItem}>Classificação de Demanda</Dropdown.Item> */}
