@@ -23,7 +23,7 @@ const ListagensDropdownComponent: React.FC<ListagensDropdownComponentProps> = ({
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className={`${styles.dropdownMenu}`}>
-                    {/* <Dropdown.Item onClick={() => navigate('/listagemParceiros')} className={styles.dropdownItem}>Parceiros</Dropdown.Item> */}
+                    <Dropdown.Item onClick={() => navigate('/listagemParceiros')} className={styles.dropdownItem}>Parceiros</Dropdown.Item>
                     <Dropdown.Item onClick={() => navigate('/listagemBolsistas')} className={styles.dropdownItem}>Bolsistas</Dropdown.Item>
                     <Dropdown.Item onClick={() => navigate('/listagemDemandas')} className={styles.dropdownItem}>Demandas</Dropdown.Item>
                     {/* <Dropdown.Item onClick={() => navigate('/listagemMateriais')} className={styles.dropdownItem}>Materiais</Dropdown.Item> */}

@@ -80,7 +80,7 @@ const CadastroDemandasComponent = (props: CadastroDemandasProps) => {
         </div>
       )}
       <section className={styles.formMain}>
-        <Form noValidate validated={formValidado} onSubmit={handleSubmit}>
+        <Form noValidate validated={formValidado} onSubmit={handleSubmit} style={{width: '60%'}}>
           <InputGroup className="mb-3">
             <FloatingLabel
               controlId="descricaoDemanda"
