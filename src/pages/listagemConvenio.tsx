@@ -47,10 +47,9 @@ const ListagemConvenio: React.FC = () => {
                         onClick={() => navegarConvenio(convenio)}
                     >
                         <FaRegFileLines style={{ fontSize: 34 }} />
-                        <p>{convenio.nome}</p>
-                        <p>{convenio.cnpj}</p>
-                        <p>{convenio.email}</p>
-                        <p>{convenio.telefone}</p>
+                        <p>{convenio.nomeInstituicao}</p>
+                        <p>Data inicial: {convenio.dataInicial}</p>
+                        <p>Data final: {convenio.dataFinal}</p>
                     </div>
                 ))
             )}
