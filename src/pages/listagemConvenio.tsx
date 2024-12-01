@@ -12,7 +12,7 @@ const ListagemConvenio: React.FC = () => {
     const [isFetching, setIsFetching] = useState(false);
 
     const navegarConvenio = (convenio: ConvenioVisualizacao) => {
-        navigate(`/visualizarconvenio/${convenio.id}`);
+        navigate(`/visualizarConvenio/${convenio.id}`);
     };
 
     const fetchConvenios = async () => {
@@ -22,7 +22,8 @@ const ListagemConvenio: React.FC = () => {
             headers: {
                 Authorization: `Bearer ${getToken()} `
             }});
-            setConvenios(response.data);
+            setConvenios(Array.isArray(response.data) ? response.data : []);
+            console.log(response.data)
         } catch (error) {
             console.error("Erro ao buscar convenios:", error);
         } finally {
