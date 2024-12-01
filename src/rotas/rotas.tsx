@@ -17,6 +17,7 @@ import VisualizarDemandaPage from "../pages/visualizarDemanda";
 import ListarDemandas from "../pages/listagemDemandas";
 import ListarParceiros from "../pages/listagemParceiros";
 import VisualizaParceiroPage from "../pages/visualizarParceiroPage";
+import ListagemConvenio from "../pages/listagemConvenio";
 
 const Rotas: FC = () => {
   const { isAutenticado } = useContext(AuthContext);
@@ -41,6 +42,7 @@ const Rotas: FC = () => {
         <Route path="/listardemandas" element={<ListarDemandas />} />
         <Route path="/listagemParceiros" element={<ListarParceiros />} />
         <Route path="/visualizarparceiro/:id" element={<VisualizaParceiroPage />} />
+        <Route path="/listagemConvenios" element={<ListagemConvenio />}/>
       </>
     );
   } else {
