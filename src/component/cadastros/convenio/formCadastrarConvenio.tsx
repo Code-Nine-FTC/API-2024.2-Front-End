@@ -9,7 +9,7 @@ interface CadastrarConvenioProps {
   setShowConvenioModal?: (value: boolean) => void;
 }
 
-const CadastrarConvenio = (props: CadastrarConvenioProps) => {
+const CadastroConvenio = (props: CadastrarConvenioProps) => {
   const navigate = useNavigate();
 
   const [nomeInstituicao, setNomeInstituicao] = useState("");
@@ -161,4 +161,4 @@ const CadastrarConvenio = (props: CadastrarConvenioProps) => {
   );
 };
 
-export default CadastrarConvenio;
+export default CadastroConvenio;

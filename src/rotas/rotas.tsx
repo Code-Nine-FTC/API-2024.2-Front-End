@@ -8,7 +8,7 @@ import { AuthContext } from "../services/context";
 import Dashboard from "../pages/Dashboard";
 import Auditoria from "../pages/auditoria";
 import CriarParceiro from "../pages/criarParceiro";
-import CadastrarConvenio from "../component/cadastros/convenio/formCadastrarConvenio";
+import CriarConvenio from "../pages/cadastrarConvenio";
 import VisualizaBolsistaPage from "../pages/visualizarBolsistaPage";
 import ResultadoProjeto from "../component/resultadoProjeto/resultadoProjetoComponent";
 import ListagemBolsistas from "../pages/listagemBolsista";
@@ -30,8 +30,8 @@ const Rotas: FC = () => {
       <>
         {/* Apenas administradores podem adicionar projetos */}
         <Route path="/adicionarprojeto" element={<CriarProjeto />} />
+        <Route path="/adicionarConvenio" element={<CriarConvenio />} />
         <Route path="/adicionarParceiro" element={<CriarParceiro />} />
-        <Route path="/adicionarConvenio" element={<CadastrarConvenio />} />
         <Route path="/adicionarDemanda" element={<CadastrarDemanda />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/auditorias/" element={<Auditoria />}/>
@@ -59,7 +59,6 @@ const Rotas: FC = () => {
     <Routes>
       {/* Rotas abertas para todos */}
       <Route path="/" element={<HomeBuscar />} />
-      <Route path="/adicionarConvenio" element={<CadastrarConvenio />} />
       <Route path="/login" element={<Login />} />
       <Route
         path="/projeto/visualizar/:id"

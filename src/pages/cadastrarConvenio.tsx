@@ -1,9 +1,9 @@
-import CadastrarConvenio from "../component/cadastros/convenio/formCadastrarConvenio";
+import CadastroConvenio from "../component/cadastros/convenio/formCadastrarConvenio";
 
 const CriarConvenio = () => {
     return (
         <div>
-            <CadastrarConvenio />
+            <CadastroConvenio />
         </div>
     );
 }
