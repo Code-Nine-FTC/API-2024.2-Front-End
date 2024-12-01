@@ -6,6 +6,14 @@ export interface ConvenioCadastro {
     documentoClausulas: string;
 }
 
+export interface ConvenioCadastro2 {
+    nome_instituicao: string;
+    data_inicial: string;
+    data_final: string;
+    documento_clausulas: string;
+    projeto_id: string;
+}
+
 export interface ConvenioVisualizacao {
     id?: string;
     nomeInstituicao: string;
