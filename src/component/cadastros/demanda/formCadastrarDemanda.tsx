@@ -76,7 +76,7 @@ const CadastroDemandasComponent = (props: CadastroDemandasProps) => {
             {" "}
             &#x2190;
           </span>
-          <h1 className="titulo"> Cadastrar parceiros </h1>
+          <h1 className="titulo"> Cadastrar demandas </h1>
         </div>
       )}
       <section className={styles.formMain}>
