@@ -56,31 +56,29 @@ const ListagemDemandas: React.FC = () => {
     }
 
     return (
-        <div className={`${styles.container}`}>
-            <h1 className={styles.titulo}>Listagem de Demandas</h1>
-            {demandas.length === 0 ? (
-                <p>Nenhuma demanda cadastrada.</p>
+        <body>
+            <p className={styles.titulo}>Resultados Encontrados</p>
+            {isFetching ? (
+                <p>Carregando...</p>
             ) : (
-                <div className={styles.listagem}>
-                    {demandas.map((demanda) => (
-                        <div
-                            key={demanda.id}
-                            className={styles.itemListagem}
-                            onClick={() => navegarDemanda(demanda)}
-                        >
-                            <FaRegFileLines style={{ fontSize: 34, marginRight: '10px' }} />
-                            <div>
-                                <p><strong>Descrição:</strong> {demanda.descricao}</p>
-                                <p><strong>Status:</strong> {demanda.statusAtendimento}</p>
-                                <p><strong>Tipo:</strong> {demanda.tipo}</p>
-                                <p><strong>Prioridade:</strong> {demanda.prioridade}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                demandas.map((demanda) => (
+                    <div
+                        key={demanda.id}
+                        className={styles.projeto}
+                        onClick={() => navegarDemanda(demanda)}
+                    >
+                    <FaRegFileLines style={{ fontSize: 34, marginRight: '10px' }} />
+                        <p><strong>Descrição:</strong> {demanda.descricao}</p>
+                        <p><strong>Status:</strong> {demanda.statusAtendimento}</p>
+                        <p><strong>Tipo:</strong> {demanda.tipo}</p>
+                        <p><strong>Prioridade:</strong> {demanda.prioridade}</p>
+                    </div>
+                ))
             )}
-        </div>
+        </body>
     );
 };
 
 export default ListagemDemandas;
+
+
