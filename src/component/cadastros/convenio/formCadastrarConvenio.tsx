@@ -191,7 +191,6 @@ const excluirArquivo = (notaFiscal: File | null) => {
               <Form.Control
                 type="date"
                 placeholder="Data final"
-                required
                 value={dataFinal}
                 onChange={(e) => setDataFinal(e.target.value)}
               />
