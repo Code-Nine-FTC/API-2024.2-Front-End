@@ -17,6 +17,8 @@ import { VisualizarDemanda } from "../../interface/demanda.interface";
 import buscarDemandasService from "../../services/buscar/buscarDemandasService";
 import { VisualizarBolsista } from "../../interface/bolsistas.interface";
 import buscarBolsistasService from "../../services/buscar/buscarBolsistasService";
+import { ConvenioVisualizacao } from "../../interface/cadastros/convenio.interface";
+import buscarConveniosService from "../../services/buscar/buscarConveniosService";
 
 interface MensagemValidacao {
   titulo: string;
@@ -39,6 +41,12 @@ interface OptionTypeBolsista {
   value: number | string; 
   label: string;
   bolsista: VisualizarBolsista;
+}
+
+interface OptionTypeConvenio {
+  value: number;
+  label: string;
+  convenio: ConvenioVisualizacao;
 }
 
 const CriarProjetoComponent = () => {
@@ -67,12 +75,14 @@ const CriarProjetoComponent = () => {
   const [hideStatus, setHideStatus] = useState(false);
   const [valorValid, setValorValid] = useState<boolean | null>(null);
   const [parceiros, setParceiros] = useState<VisualizarParceiro[]>([]);
+  const [convenios, setConvenios] = useState<ConvenioVisualizacao[]>([]);
   const [demandas, setDemandas] = useState<VisualizarDemanda[]>([]);
   const [bolsistas, setBolsistas] = useState<VisualizarBolsista[]>([]);
   const [showParceiroModal, setShowParceiroModal] = useState(false);
   const [showDemandaModal, setShowDemandaModal] = useState<boolean>(false);
   const [selectedParceiro, setSelectedParceiro] = useState<OptionTypeParceiro | null>(null);
   const [selectedDemanda, setSelectedDemanda] = useState<OptionTypeDemanda | null>(null);
+  const [selectedConvenio, setSelectedConvenio] = useState<OptionTypeConvenio | null>(null);
   const [selectedBolsistas, setSelectedBolsistas] = useState<OptionTypeBolsista[]>([]);
   const [newBolsistas, setNewBolsistas] = useState<VisualizarBolsista[]>([]);
 
@@ -142,6 +152,7 @@ const CriarProjetoComponent = () => {
       parceiro: selectedParceiro ? selectedParceiro.parceiro : undefined, 
       classificacaoDemanda: selectedDemanda ? selectedDemanda.demanda : undefined, 
       bolsistas: todosBolsistas,
+      convenio: selectedConvenio ? selectedConvenio.convenio : undefined
     };
 
     console.log(projeto);
@@ -184,11 +195,26 @@ const CriarProjetoComponent = () => {
       console.log(resposta.message);
     }
   }
+
+  async function buscarConvenios() {
+    const resposta = await buscarConveniosService();
+    if (resposta.status === 200) {
+      setConvenios(resposta.data);
+      console.log(resposta.data);
+    } else {
+      console.log(resposta.message)
+  }}
   
   const parceiroOptions: OptionTypeParceiro[] = parceiros.map((parceiro) => ({
     value: parceiro.id,
     label: parceiro.nome,
     parceiro: parceiro,
+  }));
+
+  const convenioOptions: OptionTypeConvenio[] = convenios.map((convenio) => ({
+    value: convenio.id,
+    label: convenio.nomeInstituicao,
+    convenio: convenio,
   }));
 
   async function buscarDemandas() {
@@ -293,6 +319,13 @@ const CriarProjetoComponent = () => {
     actionMeta: ActionMeta<OptionTypeParceiro>
   ) => {
     setSelectedParceiro(selected);
+  };
+
+  const handleConvenioChange = (
+    selected: SingleValue<OptionTypeConvenio>,
+    actionMeta: ActionMeta<OptionTypeConvenio>
+  ) => {
+    setSelectedConvenio(selected);
   };
   
   const handleDemandasChange = (
@@ -419,6 +452,45 @@ const CriarProjetoComponent = () => {
               </Form.Control.Feedback>
             </FloatingLabel>
           </InputGroup>
+
+          <div className="mb-3 position-relative">
+            <InputGroup onClick={buscarConvenios}>
+              <FloatingLabel
+                label=""
+                controlId="validationCustom03"
+                className="flex-grow-1"
+                style={{ color: "#9C9C9C" }}
+              >
+                <Select
+                  styles={{
+                    ...customStyles,
+                    control: (provided: any) => ({
+                      ...provided,
+                      borderColor:
+                        camposValidados && !selectedConvenio? "#dc3545" : provided.borderColor,
+                      "&:hover": {
+                        borderColor:
+                          camposValidados && !selectedConvenio? "#dc3545" : "#86b7fe",
+                      },
+                    }),
+                  }}
+                  options={convenioOptions}
+                  value={selectedConvenio}
+                  onChange={handleConvenioChange}
+                  placeholder={ "Selecione um convenio"}
+                  classNamePrefix="react-select"
+                  noOptionsMessage={() => "Nenhuma opção disponível"}
+                  required
+                  // isInvalid={camposValidados && !selectedParceiro}
+                />
+              </FloatingLabel>
+            </InputGroup>
+            {camposValidados && !selectedConvenio && (
+              <div className="text-danger" style={{ position: "relative", top: "100%", left: 0, marginTop: "5px" }}>
+                Por favor, selecione um Convenio.
+              </div>
+            )}
+          </div>
 
           <div className="mb-3 position-relative">
             <InputGroup onClick={buscarParceiros}>

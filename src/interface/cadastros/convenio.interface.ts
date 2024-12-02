@@ -15,7 +15,7 @@ export interface ConvenioCadastro2 {
 }
 
 export interface ConvenioVisualizacao {
-    id?: string;
+    id: number;
     nomeInstituicao: string;
     dataInicial: string;
     dataFinal: string;
