@@ -1,9 +1,9 @@
+import { FileOrVisualizarDocumento, VisualizarDocumento } from "../documento.interface";
+
 // src/interfaces/convenio.interface.ts
 export interface ConvenioCadastro {
-    nomeInstituicao: string;
-    dataInicial: string;
-    dataFinal: string;
-    documentoClausulas: string;
+    convenio: string;
+    documentoClausulas: File | null;
 }
 
 export interface ConvenioCadastro2 {
@@ -19,5 +19,5 @@ export interface ConvenioVisualizacao {
     nomeInstituicao: string;
     dataInicial: string;
     dataFinal: string;
-    documentoClausulas: string;
+    documentoClausulas: VisualizarDocumento[];
 }

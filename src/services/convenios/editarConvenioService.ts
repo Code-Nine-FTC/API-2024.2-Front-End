@@ -3,7 +3,7 @@ import { getToken } from "../auth";
 import { AxiosError } from 'axios';
 import { ConvenioCadastro } from "../../interface/cadastros/convenio.interface";
 
-const EditarConvenioService = async (convenioDados: ConvenioCadastro, id: number) => {
+const EditarConvenioService = async (convenioDados: FormData, id: number) => {
     try {
         console.log(convenioDados);
         const resposta = await api.put(`/convenio/atualizar/${id}`, convenioDados, {

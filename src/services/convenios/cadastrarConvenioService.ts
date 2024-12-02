@@ -4,11 +4,12 @@ import { getToken } from "../auth";
 import { ConvenioCadastro } from "../../interface/cadastros/convenio.interface";
 import { AxiosError } from "axios";
 
-export default async function CadastrarConvenioService(convenioData: ConvenioCadastro): Promise<any> {
+export default async function CadastrarConvenioService(convenioData: FormData): Promise<any> {
     try {
         const resposta = await api.post('/convenio/cadastrar', convenioData, {
             headers: {
-                Authorization: `Bearer ${getToken()} `
+                Authorization: `Bearer ${getToken()} `,
+                'Content-Type': 'multipart/form-data',
             }
         });
 

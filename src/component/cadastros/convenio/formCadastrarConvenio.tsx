@@ -1,12 +1,21 @@
 import { Button, FloatingLabel, Form, InputGroup, Modal } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SweetAlert2 from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import styles from "../../criarProjeto/criarProjeto.module.css";
 import CadastrarConvenioService from "../../../services/convenios/cadastrarConvenioService";
+import ValidadorDeArquivos from "../../../functions/validadorDeArquivos";
+import separarMensagens from "../../../functions/separarMensagens";
+import attach from '../../../assets/criarProjeto/attach.svg';
+import arquivoIcon from '../../../assets/criarProjeto/arquivo.svg';
 
 interface CadastrarConvenioProps {
   setShowConvenioModal?: (value: boolean) => void;
+}
+
+interface MensagemValidacao {
+  titulo: string;
+  texto: string;
 }
 
 const CadastroConvenio = (props: CadastrarConvenioProps) => {
@@ -15,10 +24,20 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
   const [nomeInstituicao, setNomeInstituicao] = useState("");
   const [dataInicial, setDataInicial] = useState("");
   const [dataFinal, setDataFinal] = useState("");
-  const [documentoClausulas, setDocumentoClausulas] = useState("");
+  const [documentoClausulas, setDocumentoClaususulas] = useState<File | null>(null);
   const [formValidado, setFormValidado] = useState(false);
-  const [projetoId, setProjetoId] = useState("8")
+  const [mensagemValidacao, setMensagemValidacao] = useState<MensagemValidacao>({ titulo: "", texto: "" });
 
+  useEffect(() => {
+    if (mensagemValidacao.titulo && mensagemValidacao.texto) {
+      SweetAlert2.fire({
+        icon: "error",
+        title: mensagemValidacao.titulo,
+        text: mensagemValidacao.texto,
+      });
+    }
+  }, [mensagemValidacao]);
+  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -32,14 +51,19 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
       nomeInstituicao: nomeInstituicao,
       dataInicial: dataInicial,
       dataFinal: dataFinal,
-      documentoClausulas: documentoClausulas,
 /*       projetoId: projetoId */
     };
+
+    const formData = new FormData();
+    formData.append("convenio", JSON.stringify(novoConvenio));
+    if (documentoClausulas) {
+      formData.append("documentoClausulas", documentoClausulas);
+    }
 
     console.log("Novo Convênio Cadastrado:", novoConvenio);
 
     try {
-      const resultado = await CadastrarConvenioService(novoConvenio);
+      const resultado = await CadastrarConvenioService(formData);
       console.log(resultado);
       if (resultado.status === 201) {
         SweetAlert2.fire({
@@ -64,6 +88,47 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
       });
     }
   };
+
+  const atualizarMensagem = (mensagens: string) => {
+    const [tituloErro, ...textoErro] = mensagens.split(". ");
+    const text = textoErro.join(". ");
+    setMensagemValidacao({ titulo: tituloErro, texto: text });
+    return;
+  };
+
+  const handleArquivo = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (documentoClausulas) {
+        setMensagemValidacao({
+            titulo: "Apenas um arquivo pode ser adicionado.",
+            texto: "Por favor, remova o arquivo atual para adicionar outro.",
+          });
+          return;
+    }
+    const arquivo = event.target.files ? event.target.files[0] : null;
+    if (!arquivo) {
+        return;
+    }
+    const arquivoValidado = ValidadorDeArquivos([arquivo]);
+    const mensagem = separarMensagens(arquivoValidado);
+    if (mensagem) {
+        atualizarMensagem(mensagem);
+        return;
+      } else {
+        setDocumentoClaususulas(arquivo);
+        SweetAlert2.fire({
+          icon: "success",
+          title: "Arquivo adicionado com sucesso",
+        });
+        return;
+      }
+}
+
+const excluirArquivo = (notaFiscal: File | null) => {
+    if (!notaFiscal) {
+        return;
+    }
+    setDocumentoClaususulas(null);
+}
 
   return (
     <>
@@ -106,7 +171,7 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
               label="Data Inicial"
             >
               <Form.Control
-                type="text"
+                type="date"
                 placeholder="Data inicial"
                 required
                 value={dataInicial}
@@ -124,7 +189,7 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
               label="Data Final"
             >
               <Form.Control
-                type="text"
+                type="date"
                 placeholder="Data final"
                 required
                 value={dataFinal}
@@ -136,23 +201,33 @@ const CadastroConvenio = (props: CadastrarConvenioProps) => {
             </FloatingLabel>
           </InputGroup>
 
-          <InputGroup className="mb-3">
-            <FloatingLabel
-              controlId="documentoClausulas"
-              label="Documento de Cláusulas"
-            >
-              <Form.Control
-                type="text"
-                placeholder="Documento de cláusulas"
-                required
-                value={documentoClausulas}
-                onChange={(e) => setDocumentoClausulas(e.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                Por favor, insira um documento válido.
-              </Form.Control.Feedback>
-            </FloatingLabel>
-          </InputGroup>
+          <div className={styles.adicionarArquivo}>
+                    <label htmlFor="enviararquivo">
+                    <img src={attach} alt="Adicionar arquivo" />
+                    <span>Adicionar documento de clausulas</span>
+                    </label>
+                    <input
+                    type="file"
+                    id="enviararquivo"
+                    accept=".pdf,.xls,.xlsx"
+                    onChange={(e) => handleArquivo(e)}
+                    style={{ display: "none" }}
+                    />
+                </div>
+                {documentoClausulas && (
+              <div className={styles.arquivosEscolhidos}>
+                <img src={arquivoIcon} alt="Arquivo" />
+                <span className={styles.arquivoSpan}>
+                    {documentoClausulas.name}
+                </span>
+                <span
+                  className={styles.arquivoSpanExcluir}
+                  onClick={() => excluirArquivo(documentoClausulas)}
+                >
+                  &#10006;
+                </span>
+              </div>
+            )}
 
           <div className={styles.botaoEnviar}>
             <Button type="submit">Enviar</Button>
